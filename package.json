@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,11 @@
     "url": "https://github.com/ViniGom3/repool-server/issues"
   },
   "homepage": "https://github.com/ViniGom3/repool-server#readme",
+  "lint-staged": {
+    "*.ts": [
+      "eslint 'src/**' --fix"
+    ]
+  },
   "devDependencies": {
     "@types/node": "^14.14.35",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
@@ -26,6 +32,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "git-commit-msg-linter": "^3.0.4",
+    "husky": "^5.1.3",
+    "lint-staged": "^10.5.4",
     "typescript": "^4.2.3"
   }
 }
