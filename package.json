@@ -20,7 +20,7 @@
   "homepage": "https://github.com/ViniGom3/repool-server#readme",
   "lint-staged": {
     "*.ts": [
-      "eslint 'src/**' --fix"
+      "npx eslint 'src/**' --fix"
     ]
   },
   "devDependencies": {
