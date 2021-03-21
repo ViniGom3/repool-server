@@ -4,6 +4,11 @@
         "module": "commonjs",
         "target": "es2020",
         "esModuleInterop": true,
-        "allowJs": true
-    }
+        "allowJs": true,
+        "sourceMap": true,
+        "rootDir": "src"
+    },
+    "include": [
+        "src"
+    ]
 }
