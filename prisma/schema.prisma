@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  userId Int     @unique
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(100)
+  password  String   @db.VarChar(255)
+  role      String   @db.VarChar(5)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique @db.VarChar(255)
+  name      String     @db.VarChar(100)
+  password  String     @db.VarChar(255)
+  role      String     @db.VarChar(5)
+  avatar    String?
+  profile   Profile?
+  isMan     Boolean    @default(false)
+  tel       Int
+  cel       Int
+  property  Property[] @relation(name: "ownProperty")
+  interests Property[] @relation(name: "interestingProperties")
+  favorited Property[] @relation(name: "favoritesProperties")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Property {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(100)
+  description   String?
+  img           String[]
+  type          String
+  vacancyPrice  Float
+  cep           String    @db.VarChar(8)
+  street        String    @db.VarChar(100)
+  neighborhood  String    @db.VarChar(50)
+  city          String    @db.VarChar(50)
+  uf            String    @db.VarChar(2)
+  country       String    @db.VarChar(2)
+  number        String?   @db.VarChar(4)
+  hasGarage     Boolean   @default(false)
+  hasGourmet    Boolean   @default(false)
+  hasInternet   Boolean   @default(false)
+  isPetFriendly Boolean   @default(false)
+  ownerId       Int       @unique
+  owner         User      @relation(name: "ownProperty", fields: [ownerId], references: [id])
+  interests     User[]    @relation(name: "interestingProperties")
+  favorited     User[]    @relation(name: "favoritesProperties")
+  ad            Ad?
+  vacancy       Vacancy[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Ad {
+  id         Int      @id @default(autoincrement())
+  propertyId Int      @unique
+  property   Property @relation(fields: [propertyId], references: [id])
+  viewed     Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Vacancy {
+  id         Int      @id @default(autoincrement())
+  propertyId Int      @unique
+  property   Property @relation(fields: [propertyId], references: [id])
+  rent       Rent?
+  isOccupied Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Rent {
+  id            Int      @id @default(autoincrement())
+  vacancyId     Int      @unique
+  vacancy       Vacancy  @relation(fields: [vacancyId], references: [id])
+  uConfirmation Boolean  @default(false)
+  pConfirmation Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
