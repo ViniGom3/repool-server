@@ -8,6 +8,7 @@ router.get("/users", async (req, res) => {
   try {
     const allUsers = await prisma.user.findMany({
       select: {
+        id: true,
         password: false,
         name: true,
         email: true,
@@ -23,10 +24,29 @@ router.get("/users", async (req, res) => {
   }
 })
 
-router.get("/ownerss", async (req, res) => {
-  res.json({
-    "hi": "hello saddois"
-  })
+router.get("/:id", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.id)
+    console.log(userId)
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        id: true,
+        password: false,
+        name: true,
+        email: true,
+        role: true,
+        tel: true,
+        cel: true
+      }
+    })
+
+    res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 export default router
