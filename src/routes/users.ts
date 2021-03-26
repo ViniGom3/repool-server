@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
-import { findEmail } from '../helpers/user'
+import { findEmail, findByEmail } from '../helpers/user'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -18,7 +18,8 @@ router.get("/users", async (req, res) => {
         tel: true,
         cel: true,
         profile: {
-        }
+        },
+        createdAt: true
       }
     })
 
@@ -57,7 +58,7 @@ router.post("/user", async (req, res) => {
     console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
 
-    const user = findEmail(email)
+    const user = await findEmail(email)
 
     if (user) {
       res.status(400).json({ error: "email já existe" })
@@ -101,6 +102,32 @@ router.get("/email", async (req, res) => {
   }
 })
 
+router.post("/signup", async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const user = await findByEmail(email)
+
+    if (!user) {
+      res.status(404).json({ error: "Usuário não encontrado" })
+
+    } else {
+      const { password: hash } = user
+
+      const isValid = await argon2.verify(hash, password)
+
+      if (!isValid) {
+        res.status(401).json({ error: "Senha incorreta" })
+      } else {
+        //Send jwt here
+        res.json(user)
+      }
+    }
+  } catch (err) {
+    console.log(err)
+  }
+
+
+})
 
 export default router
 
