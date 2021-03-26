@@ -56,6 +56,7 @@ router.post("/user", async (req, res) => {
   try {
     console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
+
     const user = findEmail(email)
 
     if (user) {
@@ -64,7 +65,7 @@ router.post("/user", async (req, res) => {
 
       const hash = await argon2.hash(password);
 
-      const user = await prisma.user.create({
+      const createdUser = await prisma.user.create({
         data: {
           name,
           email,
@@ -81,12 +82,25 @@ router.post("/user", async (req, res) => {
         }
       })
 
-      res.json(user)
+      res.json(createdUser)
     }
   } catch (err) {
     console.log(err)
   }
 })
+
+router.get("/email", async (req, res) => {
+  try {
+    const { email } = req.body
+
+    const user = await findEmail(email)
+
+    res.json(!!user)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 
 export default router
 
