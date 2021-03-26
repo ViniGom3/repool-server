@@ -5,9 +5,13 @@ const prisma = new PrismaClient()
 const router = Router()
 
 router.get("/users", async (req, res) => {
-  const allUsers = await prisma.user.findMany({})
+  try {
+    const allUsers = await prisma.user.findMany({})
 
-  res.json(allUsers)
+    res.json(allUsers)
+  } catch (err) {
+    console.log(err)
+  }
 })
 
 router.get("/ownerss", async (req, res) => {
