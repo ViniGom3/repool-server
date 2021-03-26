@@ -13,7 +13,6 @@ async function main() {
       name: 'Alice',
       email: 'alice@prisma.io',
       password: '12345678',
-      role: 'owner',
       property: {
         create: {
           name: 'Casa verde',

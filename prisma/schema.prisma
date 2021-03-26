@@ -22,7 +22,7 @@ model Admin {
   email     String   @unique @db.VarChar(255)
   name      String   @db.VarChar(100)
   password  String   @db.VarChar(255)
-  role      String   @db.VarChar(5)
+  role      userRole @default(ADMIN)
   avatar    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,7 +33,7 @@ model User {
   email     String     @unique @db.VarChar(255)
   name      String     @db.VarChar(100)
   password  String     @db.VarChar(255)
-  role      String     @db.VarChar(5)
+  role      userRole   @default(USER)
   avatar    String?
   profile   Profile?
   isMan     Boolean    @default(false)
@@ -100,4 +100,10 @@ model Rent {
   pConfirmation Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+enum userRole {
+  USER
+  OWNER
+  ADMIN
 }
