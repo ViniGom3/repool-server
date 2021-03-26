@@ -36,8 +36,8 @@ async function main() {
           bio: 'Eu adoro ter uma casa'
         }
       },
-      tel: 25252525,
-      cel: 252525252
+      tel: "25252525",
+      cel: "252525252"
     }
   })
 

@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
+import { findEmail } from '../helpers/user'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -55,14 +56,7 @@ router.post("/user", async (req, res) => {
   try {
     console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
-    const user = await prisma.user.findUnique({
-      where: {
-        email
-      },
-      select: {
-        id: true
-      }
-    })
+    const user = findEmail(email)
 
     if (user) {
       res.status(400).json({ error: "email já existe" })
@@ -82,8 +76,8 @@ router.post("/user", async (req, res) => {
               bio
             }
           },
-          tel: parseInt(tel),
-          cel: parseInt(cel)
+          tel,
+          cel
         }
       })
 
