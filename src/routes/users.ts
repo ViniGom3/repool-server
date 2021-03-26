@@ -14,7 +14,9 @@ router.get("/users", async (req, res) => {
         email: true,
         role: true,
         tel: true,
-        cel: true
+        cel: true,
+        profile: {
+        }
       }
     })
 
@@ -24,13 +26,12 @@ router.get("/users", async (req, res) => {
   }
 })
 
-router.get("/:id", async (req, res) => {
+router.get("/:id/user", async (req, res) => {
   try {
-    const userId = parseInt(req.params.id)
-    console.log(userId)
+    const id = parseInt(req.params.id)
     const user = await prisma.user.findUnique({
       where: {
-        id: userId
+        id
       },
       select: {
         id: true,
@@ -42,6 +43,48 @@ router.get("/:id", async (req, res) => {
         cel: true
       }
     })
+
+    res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.post("/user", async (req, res) => {
+  try {
+    const { name, email, password, role, tel, cel, isMan, bio } = req.body;
+    const user = await prisma.user.findUnique({
+      where: {
+        email
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if (!user) {
+      res.status(400).json({ error: "email já existe" })
+    } else {
+
+      //hashing password here
+
+      const user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          password,
+          role,
+          isMan,
+          profile: {
+            create: {
+              bio
+            }
+          },
+          tel,
+          cel
+        }
+      })
+    }
 
     res.json(user)
   } catch (err) {
