@@ -37,8 +37,8 @@ model User {
   avatar    String?
   profile   Profile?
   isMan     Boolean    @default(false)
-  tel       Int
-  cel       Int
+  tel       String
+  cel       String
   property  Property[] @relation(name: "ownProperty")
   interests Property[] @relation(name: "interestingProperties")
   favorited Property[] @relation(name: "favoritesProperties")

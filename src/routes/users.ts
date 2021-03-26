@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
+import argon2 from 'argon2'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -52,6 +53,7 @@ router.get("/:id/user", async (req, res) => {
 
 router.post("/user", async (req, res) => {
   try {
+    console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
     const user = await prisma.user.findUnique({
       where: {
@@ -62,17 +64,17 @@ router.post("/user", async (req, res) => {
       }
     })
 
-    if (!user) {
+    if (user) {
       res.status(400).json({ error: "email já existe" })
     } else {
 
-      //hashing password here
+      const hash = await argon2.hash(password);
 
       const user = await prisma.user.create({
         data: {
           name,
           email,
-          password,
+          password: hash,
           role,
           isMan,
           profile: {
@@ -80,13 +82,13 @@ router.post("/user", async (req, res) => {
               bio
             }
           },
-          tel,
-          cel
+          tel: parseInt(tel),
+          cel: parseInt(cel)
         }
       })
-    }
 
-    res.json(user)
+      res.json(user)
+    }
   } catch (err) {
     console.log(err)
   }
