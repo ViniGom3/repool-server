@@ -55,7 +55,7 @@ router.get("/:id/user", async (req, res) => {
   }
 })
 
-router.post("/user", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
@@ -104,7 +104,7 @@ router.get("/email", async (req, res) => {
   }
 })
 
-router.post("/signup", async (req, res) => {
+router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await findByEmail(email)
@@ -120,7 +120,6 @@ router.post("/signup", async (req, res) => {
       if (!isValid) {
         res.status(401).json({ error: "Senha incorreta" })
       } else {
-        //Send jwt here
         const jwt = jsonwebtoken.sign({ id }, process.env.TOKEN_JWT, { expiresIn: "6h" });
         res.json(jwt)
       }
