@@ -37,7 +37,7 @@ export function verifyJWT(req, res, next) {
       console.log(err)
       return res.status(500).json({ error: 'Falha na autentica' });
     } else {
-      req.user.id = decoded.id
+      req.userId = decoded.id
     }
   })
   next()
