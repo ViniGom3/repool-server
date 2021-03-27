@@ -1,7 +1,9 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
+import jsonwebtoken from 'jsonwebtoken';
 import { findEmail, findByEmail } from '../helpers/user'
+
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -111,7 +113,7 @@ router.post("/signup", async (req, res) => {
       res.status(404).json({ error: "Usuário não encontrado" })
 
     } else {
-      const { password: hash } = user
+      const { password: hash, id } = user
 
       const isValid = await argon2.verify(hash, password)
 
@@ -119,7 +121,8 @@ router.post("/signup", async (req, res) => {
         res.status(401).json({ error: "Senha incorreta" })
       } else {
         //Send jwt here
-        res.json(user)
+        const jwt = jsonwebtoken.sign({ id }, process.env.TOKEN_JWT, { expiresIn: "6h" });
+        res.json(jwt)
       }
     }
   } catch (err) {
