@@ -33,7 +33,6 @@ router.get("/users", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    console.log(req.body)
     const { name, email, password, role, tel, cel, isMan, bio } = req.body;
 
     const user = await findEmail(email)
@@ -113,7 +112,6 @@ router.get("/ad", async (req, res) => {
       property: true
     }
   })
-  console.log(ad)
 
   res.json(ad)
 })
