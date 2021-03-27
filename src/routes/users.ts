@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
 import jsonwebtoken from 'jsonwebtoken';
 import { findEmail, findByEmail } from '../helpers/user'
+import { verifyJWT } from '../helpers/user'
 
 
 const prisma = new PrismaClient()
@@ -129,6 +130,17 @@ router.post("/signin", async (req, res) => {
   }
 
 
+})
+
+router.get("/ad", async (req, res) => {
+  const ad = await prisma.ad.findMany({
+    include: {
+      property: true
+    }
+  })
+  console.log(ad)
+
+  res.json(ad)
 })
 
 export default router
