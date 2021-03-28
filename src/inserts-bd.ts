@@ -1,18 +1,12 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-// async function main() {
-// ... you will write your Prisma Client queries here
 
-// }
-
-// eslint-disable-next-line @typescript-eslint/space-before-function-paren
 async function main() {
   await prisma.user.create({
     data: {
-      name: 'Alice',
-      email: 'alice@prisma.io',
-      password: '12345678',
+      name: 'Admin',
+      email: 'admin@repool.com.br',
+      password: 'password',
       property: {
         create: {
           name: 'Casa verde',
@@ -33,16 +27,16 @@ async function main() {
       },
       profile: {
         create: {
-          bio: 'Eu adoro ter uma casa'
+          bio: 'Administrador geral'
         }
       },
-      tel: "25252525",
-      cel: "252525252"
+      tel: "xxxxxxxx",
+      cel: "xxxxxxxxx"
     }
   })
 
-  const allProperty = await prisma.property.findMany({})
-  console.log(allProperty)
+  const allUsers = await prisma.user.findMany({})
+  console.log(allUsers)
 }
 main()
   .catch(e => {
