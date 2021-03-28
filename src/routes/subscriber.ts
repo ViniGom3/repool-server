@@ -10,28 +10,19 @@ const router = Router()
 router.get("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    const user = await prisma.user.findUnique({
+    const result = await prisma.user.findUnique({
       where: {
         id
-      },
-      select: {
-        id: true,
-        password: false,
-        name: true,
-        email: true,
-        role: true,
-        tel: true,
-        cel: true
       }
     })
-
+    const { password, ...user } = result
     res.json(user)
   } catch (err) {
     console.log(err)
   }
 })
 
-router.post("/:id/user", async (req, res) => {
+router.patch("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     const { name, avatar, tel, cel } = req.body
@@ -39,7 +30,7 @@ router.post("/:id/user", async (req, res) => {
     if (id !== req.loggedUserId) {
       res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
     } else {
-      const user = await prisma.user.update({
+      const result = await prisma.user.update({
         where: {
           id
         },
@@ -49,14 +40,18 @@ router.post("/:id/user", async (req, res) => {
           avatar,
           tel,
           cel
-        },
-      })
+        }
+      }
+      )
 
+      const { password, ...user } = result
       res.json(user)
     }
   } catch (err) {
     console.log(err)
   }
 })
+
+
 
 export default router
