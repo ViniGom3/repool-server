@@ -35,11 +35,12 @@ export function verifyJWT(req, res, next) {
   jsonwebtoken.verify(token, process.env.TOKEN_JWT, (err, decoded) => {
     if (err) {
       console.log(err)
-      return res.status(500).json({ error: 'Falha na autentica' });
+      return res.status(500).json({ error: 'Falha na autenticação' });
     } else {
-      req.userId = decoded.id
+      req.loggedUserId = decoded.id
     }
   })
   next()
 }
+
 
