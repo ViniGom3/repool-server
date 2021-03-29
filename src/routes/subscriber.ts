@@ -27,6 +27,7 @@ router.patch("/:id/user", async (req, res) => {
     const id = parseInt(req.params.id)
     const { name, avatar, tel, cel } = req.body
     const { isMan } = req.body as unknown as { isMan: boolean }
+    // @ts-ignore
     if (id !== req.loggedUserId) {
       res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
     } else {
