@@ -52,6 +52,38 @@ router.patch("/:id/user", async (req, res) => {
   }
 })
 
+router.delete("/:id/user", async (req, res) => {
+  const id = parseInt(req.params.id)
+  console.log()
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id
+      }
+    })
 
+    if (!user) {
+      res.status(404).json({ "error": "objeto não encontrado" })
+    }
+
+    const deleteProfile = prisma.profile.delete({
+      where: {
+        userId: id
+      }
+    })
+
+    const deleteUser = prisma.user.delete({
+      where: {
+        id
+      }
+    })
+
+    const transaction = await prisma.$transaction([deleteProfile, deleteUser])
+
+    res.json(!!transaction)
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 export default router
