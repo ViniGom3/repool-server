@@ -25,6 +25,34 @@ router.get("/:id/user", async (req, res) => {
   }
 })
 
+router.get("/:id/full-user", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+    // @ts-ignore
+    if (id !== req.loggedUserId) {
+      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
+    } else {
+      const result = await prisma.user.findUnique({
+        where: {
+          id
+        },
+        include: {
+          profile: true,
+          property: true,
+          interests: true,
+          favorited: true,
+          evaluate: true
+        }
+      })
+      const { password, ...user } = result
+      res.json(user)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 router.patch("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
