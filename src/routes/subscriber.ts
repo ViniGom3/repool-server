@@ -32,22 +32,22 @@ router.get("/:id/full-user", async (req, res) => {
     // @ts-ignore
     if (id !== req.loggedUserId) {
       res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    } else {
-      const result = await prisma.user.findUnique({
-        where: {
-          id
-        },
-        include: {
-          profile: true,
-          property: true,
-          interests: true,
-          favorited: true,
-          evaluate: true
-        }
-      })
-      const { password, ...user } = result
-      res.json(user)
     }
+    const result = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      include: {
+        profile: true,
+        property: true,
+        interests: true,
+        favorited: true,
+        evaluate: true
+      }
+    })
+    const { password, ...user } = result
+    res.json(user)
+
   } catch (err) {
     console.log(err)
   }
@@ -61,32 +61,36 @@ router.patch("/:id/user", async (req, res) => {
     // @ts-ignore
     if (id !== req.loggedUserId) {
       res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    } else {
-      const result = await prisma.user.update({
-        where: {
-          id
-        },
-        data: {
-          name,
-          isMan,
-          avatar,
-          tel,
-          cel
-        }
-      }
-      )
-
-      const { password, ...user } = result
-      res.json(user)
     }
+    const result = await prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        isMan,
+        avatar,
+        tel,
+        cel
+      }
+    }
+    )
+
+    const { password, ...user } = result
+    res.json(user)
+
   } catch (err) {
     console.log(err)
   }
 })
 
 router.delete("/:id/user", async (req, res) => {
-  const id = parseInt(req.params.id)
   try {
+    const id = parseInt(req.params.id)
+    // @ts-ignore
+    if (id !== req.loggedUserId) {
+      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
+    }
     const user = await prisma.user.findUnique({
       where: {
         id
@@ -118,8 +122,12 @@ router.delete("/:id/user", async (req, res) => {
 })
 
 router.get("/:id/favorites", async (req, res) => {
-  const id = parseInt(req.params.id)
   try {
+    const id = parseInt(req.params.id)
+    // @ts-ignore
+    if (id !== req.loggedUserId) {
+      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
+    }
     const user = await prisma.user.findUnique({
       where: {
         id
@@ -136,9 +144,13 @@ router.get("/:id/favorites", async (req, res) => {
 })
 
 router.patch("/:id/favorites", async (req, res) => {
-  const userId = parseInt(req.params.id)
-  const { id } = req.body
   try {
+    const userId = parseInt(req.params.id)
+    // @ts-ignore
+    if (userId !== req.loggedUserId) {
+      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
+    }
+    const { id } = req.body
     const favorites = await prisma.user.findUnique({
       where: {
         id: userId
@@ -183,6 +195,29 @@ router.patch("/:id/favorites", async (req, res) => {
 
     const { password, ...user } = result
     res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get("/:id/evaluate", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    // @ts-ignore
+    if (id !== req.loggedUserId) {
+      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
+    }
+
+    const evaluate = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: {
+        evaluate: true
+      }
+    })
+
+    res.json(evaluate)
   } catch (err) {
     console.log(err)
   }
