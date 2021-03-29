@@ -104,4 +104,28 @@ router.get("/:id/favorites", async (req, res) => {
   }
 })
 
+router.patch("/:id/favorites", async (req, res) => {
+  const userId = parseInt(req.params.id)
+  const { id } = req.body
+  try {
+    const result = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        favorited: {
+          connect: {
+            id
+          }
+        }
+      }
+    })
+
+    const { password, ...user } = result
+    res.json(user)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 export default router
