@@ -55,7 +55,6 @@ router.patch("/:id/user", async (req, res) => {
 
 router.delete("/:id/user", async (req, res) => {
   const id = parseInt(req.params.id)
-  console.log()
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -82,6 +81,24 @@ router.delete("/:id/user", async (req, res) => {
     const transaction = await prisma.$transaction([deleteProfile, deleteUser])
 
     res.json(!!transaction)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get("/:id/favorites", async (req, res) => {
+  const id = parseInt(req.params.id)
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: {
+        favorited: true
+      }
+    })
+
+    res.json(user)
   } catch (err) {
     console.log(err)
   }
