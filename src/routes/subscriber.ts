@@ -7,12 +7,18 @@ const router = Router()
 router.get("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    const result = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id
+      },
+      select: {
+        name: true,
+        avatar: true,
+        isMan: true,
+        profile: true,
+        property: true
       }
     })
-    const { password, ...user } = result
     res.json(user)
   } catch (err) {
     console.log(err)
