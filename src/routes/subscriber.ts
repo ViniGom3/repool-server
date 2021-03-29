@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
+import { checkIfSameUser } from '../helpers/subscribers'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -30,9 +31,8 @@ router.get("/:id/full-user", async (req, res) => {
     const id = parseInt(req.params.id)
 
     // @ts-ignore
-    if (id !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(id, req.loggedUserId, res)
+
     const result = await prisma.user.findUnique({
       where: {
         id
@@ -59,9 +59,8 @@ router.patch("/:id/user", async (req, res) => {
     const { name, avatar, tel, cel } = req.body
     const { isMan } = req.body as unknown as { isMan: boolean }
     // @ts-ignore
-    if (id !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(id, req.loggedUserId, res)
+
     const result = await prisma.user.update({
       where: {
         id
@@ -88,9 +87,8 @@ router.delete("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     // @ts-ignore
-    if (id !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(id, req.loggedUserId, res)
+
     const user = await prisma.user.findUnique({
       where: {
         id
@@ -125,9 +123,8 @@ router.get("/:id/favorites", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     // @ts-ignore
-    if (id !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(id, req.loggedUserId, res)
+
     const user = await prisma.user.findUnique({
       where: {
         id
@@ -147,9 +144,8 @@ router.patch("/:id/favorites", async (req, res) => {
   try {
     const userId = parseInt(req.params.id)
     // @ts-ignore
-    if (userId !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(userId, req.loggedUserId, res)
+
     const { id } = req.body
     const favorites = await prisma.user.findUnique({
       where: {
@@ -204,9 +200,7 @@ router.get("/:id/evaluate", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     // @ts-ignore
-    if (id !== req.loggedUserId) {
-      res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-    }
+    checkIfSameUser(id, req.loggedUserId, res)
 
     const evaluate = await prisma.user.findUnique({
       where: {
