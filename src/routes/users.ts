@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
 import jsonwebtoken from 'jsonwebtoken';
-import { findEmail, findByEmail } from '../helpers/user'
+import { findEmail, findByEmail, createJWT } from '../helpers/user'
 
 
 const prisma = new PrismaClient()
@@ -60,7 +60,9 @@ router.post("/signup", async (req, res) => {
         }
       })
 
-      res.json(createdUser)
+      const jwt = await createJWT(createdUser.id)
+      const userAndJwt = [createdUser, jwt]
+      res.json(userAndJwt)
     }
   } catch (err) {
     console.log(err)
@@ -95,7 +97,7 @@ router.post("/signin", async (req, res) => {
       if (!isValid) {
         res.status(401).json({ error: "Senha incorreta" })
       } else {
-        const jwt = jsonwebtoken.sign({ id }, process.env.TOKEN_JWT, { expiresIn: "6h" });
+        const jwt = await createJWT(id)
         res.json(jwt)
       }
     }

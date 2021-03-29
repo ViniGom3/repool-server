@@ -43,4 +43,8 @@ export function verifyJWT(req, res, next) {
   next()
 }
 
+export const createJWT = async (id) => {
+  return jsonwebtoken.sign({ id }, process.env.TOKEN_JWT, { expiresIn: "7d" })
+}
+
 
