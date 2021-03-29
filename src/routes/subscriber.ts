@@ -108,18 +108,47 @@ router.patch("/:id/favorites", async (req, res) => {
   const userId = parseInt(req.params.id)
   const { id } = req.body
   try {
-    const result = await prisma.user.update({
+    const favorites = await prisma.user.findUnique({
       where: {
         id: userId
       },
-      data: {
+      select: {
         favorited: {
-          connect: {
+          where: {
             id
           }
         }
       }
     })
+
+    let result
+    if (favorites.favorited.length === 0) {
+      result = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          favorited: {
+            connect: {
+              id
+            }
+          }
+        }
+      })
+    } else {
+      result = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          favorited: {
+            disconnect: {
+              id
+            }
+          }
+        }
+      })
+    }
 
     const { password, ...user } = result
     res.json(user)
