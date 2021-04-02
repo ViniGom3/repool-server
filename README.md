@@ -1,6 +1,6 @@
 # repool-server
 
-🔴🟡🟢✔
+ 🔴 🟢
 ## Users endpoints
 ✔ get all users
 
@@ -35,56 +35,56 @@
 
 ## Casos de uso a serem implementados
 ### Esquema de cores
-- <span style="background-color:red">vermelho</span> é super importante
-- <span style="background-color:orange">laranja</span> é importante
-- <span style="background-color:blue">azul</span> é mais ou menos importante
-- <span style="background-color:green">verde</span> é "pode nao chegar à versão final se não der tempo"
+- 🔴 é super importante
+- 🟠 é importante
+- 🔵 é mais ou menos importante
+- 🟢 é "pode nao chegar à versão final se não der tempo"
 
 ### autenticação
-<li style="background-color:red">fazer login</li>
+- fazer login 🔴
 
 &nbsp;
 ### cadastro
-<li style="background-color:red">cadastrar usuário</li>
-<li style="background-color:red">cadastrar propriedade</li>
-<li style="background-color:red">cadastrar anúncio</li>
+- cadastrar usuário 🔴
+- cadastrar propriedade 🔴
+- cadastrar anúncio 🔴
 
 &nbsp;
 ### delete
-<li style="background-color:green">deletar usuário</li>
-<li style="background-color:green">deletar propriedade</li>
+- deletar usuário 🟢
+- deletar propriedade 🟢
 
 &nbsp;
 
 ### edição
-<li style="background-color:blue">editar usuário</li>
-<li style="background-color:blue">editar propriedade</li>
+- editar usuário 🔵
+- editar propriedade 🔵
 
 &nbsp;
 ### toggle
-<li style="background-color:red">demonstar interesse</li>
-<li style="background-color:orange">remover interesse </li>
-<li style="background-color:blue">favoritar propriedade</li>
-<li style="background-color:blue">desfavoritar propriedade</li>
+- demonstar interesse 🔴
+- remover interesse 🟠
+- favoritar propriedade 🔵
+- desfavoritar propriedade 🔵
 
 &nbsp;
 ### função principal do app
-<li style="background-color:red">confirmar aluguel</li>
-<li style="background-color:orange">remover aluguel</li>
+- confirmar aluguel 🔴
+- remover aluguel 🟠
 
 &nbsp;
 ### visualização
-<li style="background-color:red">visualizar propriedades próprias</li>
-<li style="background-color:red">visualizar interessados em suas propriedades</li>
-<li style="background-color:orange">visualizar propriedades favoritas </li>
-<li style="background-color:orange">visualizar propriedades onde é inquilino </li>
-<li style="background-color:orange">visualizar usuários com aluguel ativo </li>
-<li style="background-color:orange">visualizar usuários com aluguel pendente </li>
-<li style="background-color:red">visualizar anúncios</li>
+- visualizar propriedades próprias 🔴
+- visualizar interessados em suas propriedades 🔴
+- visualizar propriedades favoritas  🟠
+- visualizar propriedades onde é inquilino  🟠
+- visualizar usuários com aluguel ativo  🟠
+- visualizar usuários com aluguel pendente  🟠
+- visualizar anúncios 🔴
 
 &nbsp;
 ### outros
-<li style="background-color:green">buscar anúncios por texto</li>
-<li style="background-color:green">filtrar anúncios</li>
-<li style="background-color:green">avaliar propriedade</li>
-<li style="background-color:orange">interromper anúncio</li>
+- buscar anúncios por texto 🟢
+- filtrar anúncios 🟢
+- avaliar propriedade 🟢
+- interromper anúncio 🟠
