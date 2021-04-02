@@ -281,4 +281,67 @@ router.get("/rent/:id/property", async (req, res) => {
   }
 })
 
+router.patch("/user/:user_id/property/:property_id/interest", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.user_id)
+    const id = parseInt(req.params.property_id)
+
+    // @ts-ignore
+    checkIfSameUser(userId, req.loggedUserId, res)
+
+    const interest = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        interests: {
+          where: {
+            id
+          }
+        }
+      }
+    })
+
+    let result
+    if (interest.interests.length === 0) {
+      result = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          interests: {
+            connect: {
+              id
+            }
+          }
+        },
+        include: {
+          interests: true
+        }
+      })
+    } else {
+      result = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          interests: {
+            disconnect: {
+              id
+            }
+          }
+        },
+        include: {
+          interests: true
+        }
+      })
+    }
+
+    res.json(result)
+
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 export default router
