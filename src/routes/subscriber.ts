@@ -196,7 +196,7 @@ router.patch("/:id/favorites", async (req, res) => {
   }
 })
 
-router.get("/:id/evaluate", async (req, res) => {
+router.get("/user/:id/evaluate", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     // @ts-ignore
