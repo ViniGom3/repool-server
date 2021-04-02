@@ -103,18 +103,66 @@ router.post("/signin", async (req, res) => {
   } catch (err) {
     console.log(err)
   }
-
-
 })
 
 router.get("/ad", async (req, res) => {
-  const ad = await prisma.ad.findMany({
-    include: {
-      property: true
-    }
-  })
+  const { search } = req.query as unknown as { search: string }
 
-  res.json(ad)
+  let result
+  if (!!search) {
+    result = await prisma.ad.findMany({
+      select: {
+        property: {
+          select: {
+            id: true,
+            name: true,
+            city: true,
+            neighborhood: true,
+            street: true
+          }
+        }
+      },
+      where: {
+        OR: [
+          {
+            property: {
+              name: {
+                contains: search
+              }
+            }
+          }, {
+            property: {
+              neighborhood: {
+                contains: search
+              }
+            }
+          },
+          {
+            property: {
+              city: {
+                contains: search
+              }
+            }
+          },
+          {
+            property: {
+              description: {
+                contains: search
+              }
+            }
+          }
+        ]
+      }
+    })
+  } else {
+    result = await prisma.ad.findMany({
+      include: {
+        property: true
+      }
+    })
+  }
+
+  res.json(result)
 })
 
 export default router
