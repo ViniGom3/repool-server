@@ -1,6 +1,6 @@
 # repool-server
 
- 🔴 🟢
+ 🔴🟡🟢✔
 ## Users endpoints
 ✔ get all users
 
@@ -13,6 +13,10 @@
 ✔ login
 
 ✔ get add
+
+🔴 get ad by string
+
+🟢 get ad filtred
 
 ## Subscriber endpoints
 ✔ get user infos
@@ -29,62 +33,46 @@
 
 ✔ remove favorit
 
+🔴 create interest
+
+🔴 confirm vacanty
+
+🟡 remove interest
+
+🟡 remove vacanty
+
+🟢 create evaluate
+
+✔ get evaluate from property
+
+🟢 get rent property
+
 ## Owner endpoints
+🔴 create property
+
+🔴 create ad
+
+🔴 confirm vacancy
+
+🟡 get property
+
+🟡 update property
+
+🟡 remove vacancy
+
+🟡 get interesteds
+
+🟢 delete property
+
+🟢 get users with activ vacancy
+
+🟢 delete ad
+
+🟢 get user with partial vacancy
+
+🟢 update ad
+
+🔴 create relatorio
 
 ## Admin endpoints
-
-## Casos de uso a serem implementados
-### Esquema de cores
-- 🔴 é super importante
-- 🟠 é importante
-- 🔵 é mais ou menos importante
-- 🟢 é "pode nao chegar à versão final se não der tempo"
-
-### autenticação
-- fazer login 🔴
-
-&nbsp;
-### cadastro
-- cadastrar usuário 🔴
-- cadastrar propriedade 🔴
-- cadastrar anúncio 🔴
-
-&nbsp;
-### delete
-- deletar usuário 🟢
-- deletar propriedade 🟢
-
-&nbsp;
-
-### edição
-- editar usuário 🔵
-- editar propriedade 🔵
-
-&nbsp;
-### toggle
-- demonstar interesse 🔴
-- remover interesse 🟠
-- favoritar propriedade 🔵
-- desfavoritar propriedade 🔵
-
-&nbsp;
-### função principal do app
-- confirmar aluguel 🔴
-- remover aluguel 🟠
-
-&nbsp;
-### visualização
-- visualizar propriedades próprias 🔴
-- visualizar interessados em suas propriedades 🔴
-- visualizar propriedades favoritas  🟠
-- visualizar propriedades onde é inquilino  🟠
-- visualizar usuários com aluguel ativo  🟠
-- visualizar usuários com aluguel pendente  🟠
-- visualizar anúncios 🔴
-
-&nbsp;
-### outros
-- buscar anúncios por texto 🟢
-- filtrar anúncios 🟢
-- avaliar propriedade 🟢
-- interromper anúncio 🟠
+🔴 create relatorio
