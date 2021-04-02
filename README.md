@@ -70,9 +70,7 @@
 
 🟢 get user with partial vacancy
 
-🟢 update ad
-
-🔴 create relatorio
+🔴 create report
 
 ## Admin endpoints
-🔴 create relatorio
+🔴 create report
