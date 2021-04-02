@@ -28,6 +28,7 @@ model User {
   isMan     Boolean    @default(false)
   tel       String
   cel       String
+  rent      Rent?
   property  Property[] @relation(name: "ownProperty")
   interests Property[] @relation(name: "interestingProperties")
   favorited Property[] @relation(name: "favoritesProperties")
@@ -85,6 +86,8 @@ model Vacancy {
 
 model Rent {
   id            Int      @id @default(autoincrement())
+  renterId      Int      @unique
+  renter        User     @relation(fields: [renterId], references: [id])
   vacancyId     Int      @unique
   vacancy       Vacancy  @relation(fields: [vacancyId], references: [id])
   uConfirmation Boolean  @default(false)
