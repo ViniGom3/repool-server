@@ -245,4 +245,23 @@ router.get("/property/:id/evaluate", async (req, res) => {
   }
 })
 
+router.get("/rent/:id/property", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+    const result = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      include: {
+        rent: true
+      }
+    })
+
+    res.json(result.rent)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 export default router
