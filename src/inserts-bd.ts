@@ -1,12 +1,17 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
+import argon2 from 'argon2'
 
 async function main() {
+
+  const hash = await argon2.hash(process.env.ADMIN_PASSWORD);
+
   await prisma.user.create({
     data: {
       name: 'Admin',
       email: 'admin@repool.com.br',
-      password: 'password',
+      password: hash,
+      role: 'ADMIN',
       property: {
         create: {
           name: 'Casa verde',
@@ -35,8 +40,8 @@ async function main() {
     }
   })
 
-  const allUsers = await prisma.user.findMany({})
-  console.log(allUsers)
+  const result = await prisma.user.findMany({})
+  console.log(result)
 }
 main()
   .catch(e => {

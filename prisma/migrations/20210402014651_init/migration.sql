@@ -77,6 +77,7 @@ CREATE TABLE "Vacancy" (
 -- CreateTable
 CREATE TABLE "Rent" (
     "id" SERIAL NOT NULL,
+    "renterId" INTEGER NOT NULL,
     "vacancyId" INTEGER NOT NULL,
     "uConfirmation" BOOLEAN NOT NULL DEFAULT false,
     "pConfirmation" BOOLEAN NOT NULL DEFAULT false,
@@ -128,6 +129,9 @@ CREATE UNIQUE INDEX "Ad.propertyId_unique" ON "Ad"("propertyId");
 CREATE UNIQUE INDEX "Vacancy.propertyId_unique" ON "Vacancy"("propertyId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Rent.renterId_unique" ON "Rent"("renterId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Rent.vacancyId_unique" ON "Rent"("vacancyId");
 
 -- CreateIndex
@@ -153,6 +157,9 @@ ALTER TABLE "Ad" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON D
 
 -- AddForeignKey
 ALTER TABLE "Vacancy" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Rent" ADD FOREIGN KEY ("renterId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Rent" ADD FOREIGN KEY ("vacancyId") REFERENCES "Vacancy"("id") ON DELETE CASCADE ON UPDATE CASCADE;

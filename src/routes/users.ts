@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
-import jsonwebtoken from 'jsonwebtoken';
 import { findEmail, findByEmail, createJWT } from '../helpers/user'
 
 
