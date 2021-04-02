@@ -107,6 +107,7 @@ router.post("/signin", async (req, res) => {
 
 router.get("/ad", async (req, res) => {
   const { search } = req.query as unknown as { search: string }
+  const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly } = req.query as unknown as { hasPool: boolean, hasGarage: boolean, hasGourmet: boolean, hasInternet: boolean, isPetFriendly: boolean };
 
   let result
   if (!!search) {
@@ -127,28 +128,50 @@ router.get("/ad", async (req, res) => {
           {
             property: {
               name: {
-                contains: search
-              }
+                contains: search,
+                mode: "insensitive"
+              },
+              hasGarage: !!hasGarage,
+              hasGourmet: !!hasGourmet,
+              hasInternet: !!hasInternet,
+              hasPool: !!hasPool,
+              isPetFriendly: !!isPetFriendly
             }
           }, {
             property: {
               neighborhood: {
-                contains: search
-              }
+                contains: search,
+              },
+              hasGarage: !!hasGarage,
+              hasGourmet: !!hasGourmet,
+              hasInternet: !!hasInternet,
+              hasPool: !!hasPool,
+              isPetFriendly: !!isPetFriendly
             }
           },
           {
             property: {
               city: {
-                contains: search
-              }
+                contains: search,
+              },
+              hasGarage: !!hasGarage,
+              hasGourmet: !!hasGourmet,
+              hasInternet: !!hasInternet,
+              hasPool: !!hasPool,
+              isPetFriendly: !!isPetFriendly
             }
           },
           {
             property: {
               description: {
-                contains: search
-              }
+                contains: search,
+                mode: "insensitive"
+              },
+              hasGarage: !!hasGarage,
+              hasGourmet: !!hasGourmet,
+              hasInternet: !!hasInternet,
+              hasPool: !!hasPool,
+              isPetFriendly: !!isPetFriendly
             }
           }
         ]
@@ -158,6 +181,15 @@ router.get("/ad", async (req, res) => {
     result = await prisma.ad.findMany({
       include: {
         property: true
+      },
+      where: {
+        property: {
+          hasGarage: !!hasGarage,
+          hasGourmet: !!hasGourmet,
+          hasInternet: !!hasInternet,
+          hasPool: !!hasPool,
+          isPetFriendly: !!isPetFriendly
+        }
       }
     })
   }

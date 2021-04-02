@@ -51,6 +51,7 @@ model Property {
   uf            String     @db.VarChar(2)
   country       String     @db.VarChar(2)
   number        String?    @db.VarChar(4)
+  hasPool       Boolean    @default(false)
   hasGarage     Boolean    @default(false)
   hasGourmet    Boolean    @default(false)
   hasInternet   Boolean    @default(false)

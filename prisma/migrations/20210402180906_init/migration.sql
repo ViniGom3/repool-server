@@ -42,6 +42,7 @@ CREATE TABLE "Property" (
     "uf" VARCHAR(2) NOT NULL,
     "country" VARCHAR(2) NOT NULL,
     "number" VARCHAR(4),
+    "hasPool" BOOLEAN NOT NULL DEFAULT false,
     "hasGarage" BOOLEAN NOT NULL DEFAULT false,
     "hasGourmet" BOOLEAN NOT NULL DEFAULT false,
     "hasInternet" BOOLEAN NOT NULL DEFAULT false,
