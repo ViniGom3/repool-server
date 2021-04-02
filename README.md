@@ -33,7 +33,7 @@
 
 ✔ remove favorit
 
-🔴 create interest
+✔ create interest
 
 🔴 confirm vacanty
 
@@ -48,19 +48,21 @@
 🟢 get rent property
 
 ## Owner endpoints
+🔴 get interesteds
+
 🔴 create property
 
 🔴 create ad
 
 🔴 confirm vacancy
 
+🔴 create report
+
 🟡 get property
 
 🟡 update property
 
 🟡 remove vacancy
-
-🟡 get interesteds
 
 🟢 delete property
 
@@ -69,8 +71,6 @@
 🟢 delete ad
 
 🟢 get user with partial vacancy
-
-🔴 create report
 
 ## Admin endpoints
 🔴 create report
