@@ -140,13 +140,13 @@ router.get("/:id/favorites", async (req, res) => {
   }
 })
 
-router.patch("/:id/favorites", async (req, res) => {
+router.patch("/user/:user_id/property/:property_id/favorites", async (req, res) => {
   try {
-    const userId = parseInt(req.params.id)
+    const userId = parseInt(req.params.user_id)
+    const id = parseInt(req.params.property_id)
     // @ts-ignore
     checkIfSameUser(userId, req.loggedUserId, res)
 
-    const { id } = req.body
     const favorites = await prisma.user.findUnique({
       where: {
         id: userId
@@ -172,6 +172,9 @@ router.patch("/:id/favorites", async (req, res) => {
               id
             }
           }
+        },
+        include: {
+          favorited: true
         }
       })
     } else {
@@ -185,6 +188,9 @@ router.patch("/:id/favorites", async (req, res) => {
               id
             }
           }
+        },
+        include: {
+          favorited: true
         }
       })
     }
@@ -269,7 +275,7 @@ router.get("/rent/:id/property", async (req, res) => {
       }
     })
 
-    res.json(result.rent)
+    res.json(result)
   } catch (err) {
     console.log(err)
   }
