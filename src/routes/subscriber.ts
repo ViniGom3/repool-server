@@ -217,4 +217,32 @@ router.get("/user/:id/evaluate", async (req, res) => {
   }
 })
 
+router.get("/property/:id/evaluate", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+
+    const result = await prisma.property.findUnique({
+      where: {
+        id
+      },
+      select: {
+        owner: {
+          select: {
+            id: true
+          }
+        },
+        evaluate: true
+      }
+    })
+
+    // @ts-ignore
+    checkIfSameUser(result.owner.id, req.loggedUserId, res)
+
+    res.json(result.evaluate)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
 export default router
