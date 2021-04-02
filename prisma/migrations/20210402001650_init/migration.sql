@@ -11,30 +11,16 @@ CREATE TABLE "Profile" (
 );
 
 -- CreateTable
-CREATE TABLE "Admin" (
+CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" VARCHAR(255) NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "role" "userRole" NOT NULL DEFAULT E'USER',
     "avatar" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "email" VARCHAR(255) NOT NULL,
-    "name" VARCHAR(100) NOT NULL,
-    "password" VARCHAR(255) NOT NULL,
-    "role" VARCHAR(5) NOT NULL,
-    "avatar" TEXT,
     "isMan" BOOLEAN NOT NULL DEFAULT false,
-    "tel" INTEGER NOT NULL,
-    "cel" INTEGER NOT NULL,
+    "tel" TEXT NOT NULL,
+    "cel" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -101,6 +87,20 @@ CREATE TABLE "Rent" (
 );
 
 -- CreateTable
+CREATE TABLE "Evaluate" (
+    "id" SERIAL NOT NULL,
+    "value" INTEGER NOT NULL,
+    "comment" TEXT NOT NULL,
+    "authorId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "propertyId" INTEGER NOT NULL,
+
+    PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_interestingProperties" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
@@ -114,9 +114,6 @@ CREATE TABLE "_favoritesProperties" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Profile.userId_unique" ON "Profile"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Admin.email_unique" ON "Admin"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
@@ -159,6 +156,12 @@ ALTER TABLE "Vacancy" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id")
 
 -- AddForeignKey
 ALTER TABLE "Rent" ADD FOREIGN KEY ("vacancyId") REFERENCES "Vacancy"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Evaluate" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Evaluate" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_interestingProperties" ADD FOREIGN KEY ("A") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
