@@ -14,7 +14,7 @@
 
 ✔ get add
 
-🔴 get ad by string
+✔ get ad by string
 
 🟢 get ad filtred
 
