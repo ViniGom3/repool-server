@@ -25,6 +25,7 @@ async function main() {
           uf: 'rj',
           country: 'br',
           vacancyPrice: 555.0,
+          hasGarage: true,
           ad: {
             create: {}
           }
