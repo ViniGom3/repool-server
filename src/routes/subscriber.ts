@@ -249,12 +249,23 @@ router.get("/rent/:id/property", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
+    // @ts-ignore
+    checkIfSameUser(id, req.loggedUserId, res)
+
     const result = await prisma.user.findUnique({
       where: {
         id
       },
       include: {
-        rent: true
+        rent: {
+          include: {
+            vacancy: {
+              include: {
+                property: true
+              }
+            }
+          }
+        }
       }
     })
 
