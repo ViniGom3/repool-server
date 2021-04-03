@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
-import { findEmail, findByEmail, createJWT } from '../helpers/user'
+import { findEmail, findByEmail, createJWT, parseBoolean } from '../helpers/user'
 
 
 const prisma = new PrismaClient()
@@ -107,23 +107,27 @@ router.post("/signin", async (req, res) => {
 
 router.get("/ad", async (req, res) => {
   const { search } = req.query as unknown as { search: string }
+  const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly } = req.query as unknown as { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string }
+
+  const pool = parseBoolean(hasPool)
+  const garage = parseBoolean(hasGarage)
+  const gourmet = parseBoolean(hasGourmet)
+  const internet = parseBoolean(hasInternet)
+  const petFriendly = parseBoolean(isPetFriendly)
 
   let result
   if (!!search) {
     result = await prisma.ad.findMany({
-      select: {
-        property: {
-          select: {
-            id: true,
-            name: true,
-            city: true,
-            neighborhood: true,
-            street: true
-          }
-        }
+      include: {
+        property: true
       },
       where: {
         property: {
+          hasGarage: garage,
+          hasPool: pool,
+          hasGourmet: gourmet,
+          hasInternet: internet,
+          isPetFriendly: petFriendly,
           OR: [
             {
               name: {
@@ -146,13 +150,21 @@ router.get("/ad", async (req, res) => {
             }
           ]
         }
-
       }
     })
   } else {
     result = await prisma.ad.findMany({
       include: {
         property: true
+      },
+      where: {
+        property: {
+          hasGarage: garage,
+          hasPool: pool,
+          hasGourmet: gourmet,
+          hasInternet: internet,
+          isPetFriendly: petFriendly
+        }
       }
     })
   }
