@@ -16,7 +16,7 @@
 
 ✔ get ad by string
 
-🟢 get ad filtred
+✔ get ad filtred
 
 ## Subscriber endpoints
 ✔ get user infos
