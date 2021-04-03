@@ -35,6 +35,12 @@
 
 ✔ create interest
 
+✔ get rent from user
+
+✔ get rent from property
+
+✔ get evaluate from property
+
 🔴 confirm vacanty
 
 🟡 remove interest
@@ -42,10 +48,6 @@
 🟡 remove vacanty
 
 🟢 create evaluate
-
-✔ get evaluate from property
-
-🟢 get rent property
 
 ## Owner endpoints
 🔴 get interesteds
