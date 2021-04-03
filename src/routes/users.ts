@@ -123,37 +123,30 @@ router.get("/ad", async (req, res) => {
         }
       },
       where: {
-        OR: [
-          {
-            property: {
+        property: {
+          OR: [
+            {
               name: {
                 contains: search,
                 mode: "insensitive"
               }
-            }
-          }, {
-            property: {
+            }, {
               neighborhood: {
                 contains: search,
               }
-            }
-          },
-          {
-            property: {
+            }, {
               city: {
                 contains: search,
               }
-            }
-          },
-          {
-            property: {
+            }, {
               description: {
                 contains: search,
                 mode: "insensitive"
               }
             }
-          }
-        ]
+          ]
+        }
+
       }
     })
   } else {
