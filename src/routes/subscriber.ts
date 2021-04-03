@@ -251,7 +251,7 @@ router.get("/property/:id/evaluate", async (req, res) => {
   }
 })
 
-router.get("/rent/:id/property", async (req, res) => {
+router.get("/rent/user/:id/property", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
@@ -262,12 +262,42 @@ router.get("/rent/:id/property", async (req, res) => {
       where: {
         id
       },
-      include: {
+      select: {
         rent: {
-          include: {
+          select: {
             vacancy: {
-              include: {
+              select: {
                 property: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.get("/rent/property/:id/user", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+    // @ts-ignore
+    checkIfSameUser(id, req.loggedUserId, res)
+
+    const result = await prisma.property.findUnique({
+      where: {
+        id
+      },
+      select: {
+        vacancy: {
+          select: {
+            rent: {
+              select: {
+                renter: true
               }
             }
           }
