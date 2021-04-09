@@ -32,7 +32,6 @@ router.get("/users", async (req, res) => {
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, role, tel, cel, sex, bio } = req.body;
-
     const user = await findEmail(email)
 
     if (user) {
@@ -54,8 +53,10 @@ router.post("/signup", async (req, res) => {
         }
       })
 
+      const { password: pass, ...user } = createdUser
+      console.log(password)
       const jwt = await createJWT(createdUser.id)
-      const userAndJwt = [createdUser, jwt]
+      const userAndJwt = [user, jwt]
       res.json(userAndJwt)
     }
   } catch (err) {
