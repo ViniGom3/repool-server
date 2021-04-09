@@ -374,4 +374,107 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
   }
 })
 
+router.post("/property/:id/evaluate", async (req, res) => {
+
+  // TODO: refazer as relações e concluir operacao
+  try {
+    const property_id = parseInt(req.params.id)
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const { value, comment } = req.body as unknown as { value: number, comment: string }
+
+    const result = prisma.evaluate.create({
+      data: {
+        value,
+        comment,
+        Property: {
+          connect: { id: property_id }
+        },
+        User: {
+          connect: { id: userId }
+        }
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.post("/user/:id/property", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    const { name,
+      description,
+      category,
+      vacancyPrice,
+      cep,
+      street,
+      neighborhood,
+      city,
+      uf,
+      country,
+      number,
+      hasPool,
+      hasGarage,
+      hasGourmet,
+      hasInternet,
+      isPetFriendly } = req.body as unknown as {
+        name: string,
+        description: string,
+        category: string,
+        vacancyPrice: number,
+        cep: string,
+        street: string,
+        neighborhood: string,
+        city: string,
+        uf: string,
+        country: string,
+        number: string,
+        hasPool: boolean,
+        hasGarage: boolean,
+        hasGourmet: boolean,
+        hasInternet: boolean,
+        isPetFriendly: boolean
+      }
+
+    const result = prisma.property.create({
+      data: {
+        name,
+        description,
+        category,
+        vacancyPrice,
+        cep,
+        street,
+        neighborhood,
+        city,
+        uf,
+        country,
+        number,
+        hasPool,
+        hasGarage,
+        hasGourmet,
+        hasInternet,
+        isPetFriendly,
+        owner: {
+          connect: {
+            id
+          }
+        },
+        vacancy: {
+          create: {}
+        }
+      }
+    })
+
+    res.json(result)
+
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+router.patch
+
 export default router
