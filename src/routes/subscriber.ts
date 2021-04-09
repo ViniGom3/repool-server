@@ -367,6 +367,45 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
   }
 })
 
+
+router.post("/user/:user_id/property/:property_id/interest", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.user_id)
+    const propertyId = parseInt(req.params.property_id)
+
+    // @ts-ignore
+    checkIfSameUser(userId, req.loggedUserId, res)
+
+    const interest = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        interests: {
+          where: {
+            propertyId
+          }
+        }
+      }
+    })
+
+    if (interest.interests.length !== 0) res.status(400).json({ "error": "Interesse nesta propriedade já foi cadastrado" })
+
+    const result = await prisma.interest.create({
+      data: {
+        userId,
+        propertyId
+      }
+    })
+
+    res.status(201).json(result)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.patch("/rent/:id/evaluate", async (req, res) => {
 
   try {
