@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient, propertyCategory } from '@prisma/client'
 import { checkIfSameUser } from '../helpers/subscribers'
+import { nextTick } from 'node:process'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -171,6 +172,7 @@ router.patch("/user/:user_id/property/:property_id/favorites", async (req, res) 
     })
 
     let result
+
     if (favorites.favorited.length === 0) {
       result = await prisma.user.update({
         where: {
@@ -209,6 +211,7 @@ router.patch("/user/:user_id/property/:property_id/favorites", async (req, res) 
     res.json(user)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -235,6 +238,7 @@ router.get("/user/:id/evaluate", async (req, res) => {
     res.json(evaluate)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -255,10 +259,11 @@ router.get("/property/:id/rent", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
-router.get("/rent/user/:id/property", async (req, res) => {
+router.get("/user/:id/rent", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
@@ -281,6 +286,7 @@ router.get("/rent/user/:id/property", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -289,13 +295,14 @@ router.get("/rent/property/:id/user", async (req, res) => {
     const id = parseInt(req.params.id)
 
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const userId = req.loggedUserId
 
     const result = await prisma.property.findUnique({
       where: {
         id
       },
       select: {
+        ownerId: true,
         rent: {
           select: {
             renter: true
@@ -304,16 +311,19 @@ router.get("/rent/property/:id/user", async (req, res) => {
       }
     })
 
+    checkIfSameUser(userId, result.ownerId, res)
+
     res.json(result)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
 router.patch("/user/:user_id/property/:property_id/interest", async (req, res) => {
   try {
     const userId = parseInt(req.params.user_id)
-    const id = parseInt(req.params.property_id)
+    const propertyId = parseInt(req.params.property_id)
 
     // @ts-ignore
     checkIfSameUser(userId, req.loggedUserId, res)
@@ -325,7 +335,7 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
       select: {
         interests: {
           where: {
-            id
+            propertyId
           }
         }
       }
@@ -333,43 +343,27 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
 
     let result
     if (interest.interests.length === 0) {
-      result = await prisma.user.update({
-        where: {
-          id: userId
-        },
+      result = await prisma.interest.create({
         data: {
-          interests: {
-            connect: {
-              id
-            }
-          }
-        },
-        include: {
-          interests: true
+          userId,
+          propertyId
         }
       })
     } else {
-      result = await prisma.user.update({
+      result = await prisma.interest.deleteMany({
         where: {
-          id: userId
+          userId,
+          propertyId
         },
-        data: {
-          interests: {
-            disconnect: {
-              id
-            }
-          }
-        },
-        include: {
-          interests: true
-        }
+
       })
     }
 
-    res.json(result)
+    res.status(204).json(interest)
 
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -396,6 +390,7 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -466,9 +461,8 @@ router.post("/user/:id/property", async (req, res) => {
 
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
-
-router.patch
 
 export default router
