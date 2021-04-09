@@ -9,7 +9,7 @@ async function main() {
   await prisma.user.create({
     data: {
       name: 'Admin',
-      email: 'admin@repool.com.br',
+      email: 'admiiin@repool.com.br',
       password: hash,
       role: 'ADMIN',
       property: {
@@ -26,12 +26,18 @@ async function main() {
           country: 'br',
           vacancyPrice: 555.0,
           hasGarage: true,
+          hasGourmet: true,
+          hasInternet: true,
+          isPetFriendly: true,
           isAdversiment: true,
         }
       },
       bio: "oi",
       tel: "x",
       cel: "y"
+    },
+    include: {
+      property: true
     }
   })
 

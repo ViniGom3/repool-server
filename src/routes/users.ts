@@ -19,7 +19,8 @@ router.get("/users", async (req, res) => {
         tel: true,
         cel: true,
         bio: true,
-        createdAt: true
+        createdAt: true,
+        sex: true
       }
     })
 

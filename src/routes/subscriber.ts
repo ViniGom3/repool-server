@@ -98,13 +98,32 @@ router.delete("/:id/user", async (req, res) => {
       res.status(404).json({ "error": "objeto não encontrado" })
     }
 
+    const deleteInterest = prisma.interest.deleteMany({
+      where: {
+        userId: id
+      }
+    })
+
+    const deleteRent = prisma.rent.deleteMany({
+      where: {
+        renterId: id
+      }
+    })
+
+    const deleteProperty = prisma.property.delete({
+      where: {
+        ownerId: id
+      }
+    })
+
     const deleteUser = prisma.user.delete({
       where: {
         id
       }
     })
 
-    res.status(204)
+    const transactional = await prisma.$transaction([deleteInterest, deleteRent, deleteProperty, deleteUser])
+    res.status(204).json(transactional)
   } catch (err) {
     console.log(err)
   }
