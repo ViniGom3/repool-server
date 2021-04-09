@@ -17,7 +17,7 @@ async function main() {
           name: 'Casa verde',
           description: 'Uma casa muito verde',
           img: 'https://i.pinimg.com/564x/0b/a0/a7/0ba0a7778e66f8605d41d3ba50846f3d.jpg',
-          type: 'casa',
+          category: 'HOUSE',
           cep: '22222222',
           street: 'rua das ruas',
           neighborhood: 'bairro',
@@ -26,18 +26,12 @@ async function main() {
           country: 'br',
           vacancyPrice: 555.0,
           hasGarage: true,
-          ad: {
-            create: {}
-          }
+          isAdversiment: true,
         }
       },
-      profile: {
-        create: {
-          bio: 'Administrador geral'
-        }
-      },
-      tel: "xxxxxxxx",
-      cel: "xxxxxxxxx"
+      bio: "oi",
+      tel: "x",
+      cel: "y"
     }
   })
 

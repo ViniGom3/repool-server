@@ -18,8 +18,7 @@ router.get("/users", async (req, res) => {
         role: true,
         tel: true,
         cel: true,
-        profile: {
-        },
+        bio: true,
         createdAt: true
       }
     })
@@ -32,7 +31,7 @@ router.get("/users", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, role, tel, cel, isMan, bio } = req.body;
+    const { name, email, password, role, tel, cel, sex, bio } = req.body;
 
     const user = await findEmail(email)
 
@@ -48,12 +47,8 @@ router.post("/signup", async (req, res) => {
           email,
           password: hash,
           role,
-          isMan,
-          profile: {
-            create: {
-              bio
-            }
-          },
+          sex,
+          bio,
           tel,
           cel
         }
@@ -117,54 +112,45 @@ router.get("/ad", async (req, res) => {
 
   let result
   if (!!search) {
-    result = await prisma.ad.findMany({
-      include: {
-        property: true
-      },
+    result = await prisma.property.findMany({
       where: {
-        property: {
-          hasGarage: garage,
-          hasPool: pool,
-          hasGourmet: gourmet,
-          hasInternet: internet,
-          isPetFriendly: petFriendly,
-          OR: [
-            {
-              name: {
-                contains: search,
-                mode: "insensitive"
-              }
-            }, {
-              neighborhood: {
-                contains: search,
-              }
-            }, {
-              city: {
-                contains: search,
-              }
-            }, {
-              description: {
-                contains: search,
-                mode: "insensitive"
-              }
+        isAdversiment: true,
+        hasGarage: garage,
+        hasPool: pool,
+        hasGourmet: gourmet,
+        hasInternet: internet,
+        isPetFriendly: petFriendly,
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: "insensitive"
             }
-          ]
-        }
+          }, {
+            neighborhood: {
+              contains: search,
+            }
+          }, {
+            city: {
+              contains: search,
+            }
+          }, {
+            description: {
+              contains: search,
+              mode: "insensitive"
+            }
+          }
+        ]
       }
     })
   } else {
-    result = await prisma.ad.findMany({
-      include: {
-        property: true
-      },
+    result = await prisma.property.findMany({
       where: {
-        property: {
-          hasGarage: garage,
-          hasPool: pool,
-          hasGourmet: gourmet,
-          hasInternet: internet,
-          isPetFriendly: petFriendly
-        }
+        hasGarage: garage,
+        hasPool: pool,
+        hasGourmet: gourmet,
+        hasInternet: internet,
+        isPetFriendly: petFriendly
       }
     })
   }
