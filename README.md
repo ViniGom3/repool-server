@@ -18,6 +18,8 @@
 
 ✔ get ad filtred
 
+🟢 get ad filtred by maximum price and minimum price
+
 ## Subscriber endpoints
 ✔ get user infos
 
@@ -41,13 +43,17 @@
 
 ✔ get evaluate from property
 
-🔴 confirm vacanty
+🔴 confirm rent
+
+🔴🟡🟢 create property
 
 🟡 remove interest
 
-🟡 remove vacanty
+🟡 remove rent
 
-🟢 create evaluate
+🟡 update vacancy
+
+🔴🟡🟢 create evaluate
 
 ## Owner endpoints
 🔴 get interesteds
