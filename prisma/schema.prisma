@@ -10,13 +10,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  userId Int     @unique
-  user   User    @relation(fields: [userId], references: [id])
-}
-
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique @db.VarChar(255)
@@ -24,95 +17,106 @@ model User {
   password  String     @db.VarChar(255)
   role      userRole   @default(USER)
   avatar    String?
-  profile   Profile?
-  isMan     Boolean    @default(false)
+  bio       String?
+  sex       userSex    @default(NOTKNOW)
   tel       String
   cel       String
-  rent      Rent?
+  rent      Rent[]
   property  Property[] @relation(name: "ownProperty")
-  interests Property[] @relation(name: "interestingProperties")
   favorited Property[] @relation(name: "favoritesProperties")
-  evaluate  Evaluate[] @relation(name: "userEvaluation")
+  interests Interest[] @relation(name: "userInterest")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
 
-model Property {
-  id            Int        @id @default(autoincrement())
-  name          String     @db.VarChar(100)
-  description   String?
-  img           String[]
-  type          String
-  vacancyPrice  Float
-  cep           String     @db.VarChar(8)
-  street        String     @db.VarChar(100)
-  neighborhood  String     @db.VarChar(50)
-  city          String     @db.VarChar(50)
-  uf            String     @db.VarChar(2)
-  country       String     @db.VarChar(2)
-  number        String?    @db.VarChar(4)
-  hasPool       Boolean    @default(false)
-  hasGarage     Boolean    @default(false)
-  hasGourmet    Boolean    @default(false)
-  hasInternet   Boolean    @default(false)
-  isPetFriendly Boolean    @default(false)
-  ownerId       Int        @unique
-  owner         User       @relation(name: "ownProperty", fields: [ownerId], references: [id])
-  interests     User[]     @relation(name: "interestingProperties")
-  favorited     User[]     @relation(name: "favoritesProperties")
-  ad            Ad?        @relation(name: "adProperty")
-  vacancy       Vacancy[]
-  evaluate      Evaluate[] @relation(name: "propertyEvaluation")
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+model Interest {
+  id            Int       @id @default(autoincrement())
+  uConfirmation Boolean   @default(false)
+  pConfirmation Boolean   @default(false)
+  User          User?     @relation("userInterest", fields: [userId], references: [id])
+  userId        Int?
+  Property      Property? @relation("interestProperties", fields: [propertyId], references: [id])
+  propertyId    Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
-model Ad {
-  id         Int      @id @default(autoincrement())
-  propertyId Int      @unique
-  property   Property @relation("adProperty", fields: [propertyId], references: [id])
-  viewed     Int      @default(0)
-  createdAt  DateTime @default(now())
+model Property {
+  id            Int              @id @default(autoincrement())
+  name          String           @db.VarChar(100)
+  description   String?
+  img           String[]
+  category      propertyCategory @default(HOUSE)
+  vacancyPrice  Float
+  cep           String           @db.VarChar(8)
+  street        String           @db.VarChar(100)
+  neighborhood  String           @db.VarChar(50)
+  city          String           @db.VarChar(50)
+  uf            String           @db.VarChar(2)
+  country       String           @db.VarChar(2)
+  number        String?          @db.VarChar(4)
+  hasPool       Boolean          @default(false)
+  hasGarage     Boolean          @default(false)
+  hasGourmet    Boolean          @default(false)
+  hasInternet   Boolean          @default(false)
+  isPetFriendly Boolean          @default(false)
+  isAdversiment Boolean          @default(false)
+  viewed        Int              @default(0)
+  ownerId       Int              @unique
+  owner         User             @relation(name: "ownProperty", fields: [ownerId], references: [id])
+  interests     Interest[]       @relation(name: "interestProperties")
+  favorited     User[]           @relation(name: "favoritesProperties")
+  vacancy       Vacancy[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 }
 
 model Vacancy {
   id         Int      @id @default(autoincrement())
   propertyId Int      @unique
   property   Property @relation(fields: [propertyId], references: [id])
-  rent       Rent?
+  rent       Rent[]
   isOccupied Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
 model Rent {
-  id            Int      @id @default(autoincrement())
-  renterId      Int      @unique
-  renter        User     @relation(fields: [renterId], references: [id])
-  vacancyId     Int      @unique
-  vacancy       Vacancy  @relation(fields: [vacancyId], references: [id])
-  uConfirmation Boolean  @default(false)
-  pConfirmation Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id         Int       @id @default(autoincrement())
+  renterId   Int       @unique
+  renter     User      @relation(fields: [renterId], references: [id])
+  vacancyId  Int       @unique
+  vacancy    Vacancy   @relation(fields: [vacancyId], references: [id])
+  evaluate   Evaluate? @relation(name: "propertyEvaluation", fields: [evaluateId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  evaluateId Int?
 }
 
 model Evaluate {
-  id         Int      @id @default(autoincrement())
-  value      Int
-  comment    String
-  authorId   Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  User       User     @relation("userEvaluation", fields: [userId], references: [id])
-  userId     Int
-  Property   Property @relation("propertyEvaluation", fields: [propertyId], references: [id])
-  propertyId Int
-
+  id        Int      @id @default(autoincrement())
+  value     Int
+  comment   String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Rent      Rent[]   @relation("propertyEvaluation")
 }
 
 enum userRole {
   USER
   OWNER
   ADMIN
+}
+
+enum propertyCategory {
+  HOUSE
+  APARTMENT
+}
+
+enum userSex {
+  NOTKNOW
+  MALE
+  FEMALE
+  NOTAPPLICABLE
 }
