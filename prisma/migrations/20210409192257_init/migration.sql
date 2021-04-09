@@ -13,9 +13,9 @@ CREATE TABLE "User" (
     "email" VARCHAR(255) NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
-    "role" "userRole" NOT NULL DEFAULT E'USER',
     "avatar" TEXT,
     "bio" TEXT,
+    "role" "userRole" NOT NULL DEFAULT E'USER',
     "sex" "userSex" NOT NULL DEFAULT E'NOTKNOW',
     "tel" TEXT NOT NULL,
     "cel" TEXT NOT NULL,
@@ -58,6 +58,7 @@ CREATE TABLE "Property" (
     "hasGourmet" BOOLEAN NOT NULL DEFAULT false,
     "hasInternet" BOOLEAN NOT NULL DEFAULT false,
     "isPetFriendly" BOOLEAN NOT NULL DEFAULT false,
+    "vacancyNumber" INTEGER NOT NULL DEFAULT 1,
     "isAdversiment" BOOLEAN NOT NULL DEFAULT false,
     "viewed" INTEGER NOT NULL DEFAULT 0,
     "ownerId" INTEGER NOT NULL,
@@ -68,34 +69,12 @@ CREATE TABLE "Property" (
 );
 
 -- CreateTable
-CREATE TABLE "Vacancy" (
-    "id" SERIAL NOT NULL,
-    "propertyId" INTEGER NOT NULL,
-    "isOccupied" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Rent" (
-    "id" SERIAL NOT NULL,
-    "renterId" INTEGER NOT NULL,
-    "vacancyId" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "evaluateId" INTEGER,
-
-    PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Evaluate" (
     "id" SERIAL NOT NULL,
     "value" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "renterId" INTEGER NOT NULL,
+    "propertyId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -115,13 +94,7 @@ CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 CREATE UNIQUE INDEX "Property.ownerId_unique" ON "Property"("ownerId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Vacancy.propertyId_unique" ON "Vacancy"("propertyId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Rent.renterId_unique" ON "Rent"("renterId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Rent.vacancyId_unique" ON "Rent"("vacancyId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_favoritesProperties_AB_unique" ON "_favoritesProperties"("A", "B");
@@ -139,16 +112,10 @@ ALTER TABLE "Interest" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id"
 ALTER TABLE "Property" ADD FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Vacancy" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Rent" ADD FOREIGN KEY ("renterId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rent" ADD FOREIGN KEY ("vacancyId") REFERENCES "Vacancy"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Rent" ADD FOREIGN KEY ("evaluateId") REFERENCES "Evaluate"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Rent" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_favoritesProperties" ADD FOREIGN KEY ("A") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;

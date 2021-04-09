@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, propertyCategory } from '@prisma/client'
 import { checkIfSameUser } from '../helpers/subscribers'
 
 const prisma = new PrismaClient()
@@ -15,8 +15,8 @@ router.get("/:id/user", async (req, res) => {
       select: {
         name: true,
         avatar: true,
-        isMan: true,
-        profile: true,
+        sex: true,
+        bio: true,
         property: true
       }
     })
@@ -38,11 +38,10 @@ router.get("/:id/full-user", async (req, res) => {
         id
       },
       include: {
-        profile: true,
         property: true,
         interests: true,
         favorited: true,
-        evaluate: true
+        rent: true
       }
     })
     const { password, ...user } = result
@@ -57,7 +56,7 @@ router.patch("/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     const { name, avatar, tel, cel } = req.body
-    const { isMan } = req.body as unknown as { isMan: boolean }
+    const { sex } = req.body
     // @ts-ignore
     checkIfSameUser(id, req.loggedUserId, res)
 
@@ -67,7 +66,7 @@ router.patch("/:id/user", async (req, res) => {
       },
       data: {
         name,
-        isMan,
+        sex,
         avatar,
         tel,
         cel
@@ -99,21 +98,13 @@ router.delete("/:id/user", async (req, res) => {
       res.status(404).json({ "error": "objeto não encontrado" })
     }
 
-    const deleteProfile = prisma.profile.delete({
-      where: {
-        userId: id
-      }
-    })
-
     const deleteUser = prisma.user.delete({
       where: {
         id
       }
     })
 
-    const transaction = await prisma.$transaction([deleteProfile, deleteUser])
-
-    res.json(!!transaction)
+    res.status(204)
   } catch (err) {
     console.log(err)
   }
@@ -213,7 +204,12 @@ router.get("/user/:id/evaluate", async (req, res) => {
         id
       },
       select: {
-        evaluate: true
+        rent: {
+          select: {
+            value: true,
+            comment: true
+          }
+        }
       }
     })
 
@@ -223,7 +219,7 @@ router.get("/user/:id/evaluate", async (req, res) => {
   }
 })
 
-router.get("/property/:id/evaluate", async (req, res) => {
+router.get("/property/:id/rent", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
@@ -233,19 +229,11 @@ router.get("/property/:id/evaluate", async (req, res) => {
         id
       },
       select: {
-        owner: {
-          select: {
-            id: true
-          }
-        },
-        evaluate: true
+        rent: {}
       }
     })
 
-    // @ts-ignore
-    checkIfSameUser(result.owner.id, req.loggedUserId, res)
-
-    res.json(result.evaluate)
+    res.json(result)
   } catch (err) {
     console.log(err)
   }
@@ -265,11 +253,7 @@ router.get("/rent/user/:id/property", async (req, res) => {
       select: {
         rent: {
           select: {
-            vacancy: {
-              select: {
-                property: true
-              }
-            }
+            property: true
           }
         }
       }
@@ -293,13 +277,9 @@ router.get("/rent/property/:id/user", async (req, res) => {
         id
       },
       select: {
-        vacancy: {
+        rent: {
           select: {
-            rent: {
-              select: {
-                renter: true
-              }
-            }
+            renter: true
           }
         }
       }
@@ -374,26 +354,24 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
   }
 })
 
-router.post("/property/:id/evaluate", async (req, res) => {
+router.patch("/rent/:id/evaluate", async (req, res) => {
 
-  // TODO: refazer as relações e concluir operacao
   try {
-    const property_id = parseInt(req.params.id)
+    const rent_id = parseInt(req.params.id)
     // @ts-ignore
     const userId = req.loggedUserId;
     const { value, comment } = req.body as unknown as { value: number, comment: string }
 
-    const result = prisma.evaluate.create({
+    const result = prisma.rent.update({
+      where: {
+        id: rent_id,
+        renterId: userId
+      },
       data: {
-        value,
         comment,
-        Property: {
-          connect: { id: property_id }
-        },
-        User: {
-          connect: { id: userId }
-        }
+        value
       }
+
     })
 
     res.json(result)
@@ -423,7 +401,7 @@ router.post("/user/:id/property", async (req, res) => {
       isPetFriendly } = req.body as unknown as {
         name: string,
         description: string,
-        category: string,
+        category: propertyCategory,
         vacancyPrice: number,
         cep: string,
         street: string,
@@ -461,9 +439,6 @@ router.post("/user/:id/property", async (req, res) => {
           connect: {
             id
           }
-        },
-        vacancy: {
-          create: {}
         }
       }
     })
