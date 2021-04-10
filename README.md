@@ -53,6 +53,8 @@
 
 ✔ create evaluate
 
+✔ create rent by double confirmation
+
 ## Owner endpoints
 🔴 get interesteds
 
