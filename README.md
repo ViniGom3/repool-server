@@ -47,7 +47,7 @@
 
 ✔ confirm interest
 
-🟡 remove interest
+✔ remove interest
 
 🟡 remove rent
 
@@ -69,6 +69,8 @@
 🟡 get property
 
 🟡 update property
+
+🟡 remove rent
 
 🟡 remove vacancy
 
