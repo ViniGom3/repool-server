@@ -418,6 +418,7 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
+    if (!query) res.status(404).json({ "error": "interest não encontrado" })
     checkIfSameUser(userId, query.userId, res)
 
     const result = await prisma.interest.update({
