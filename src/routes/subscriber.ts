@@ -449,6 +449,14 @@ router.post("/rent/evaluate", async (req, res) => {
     // @ts-ignore
     checkIfSameUser(userId, req.loggedUserId, res)
 
+    const checkEvaluate = await prisma.rent.findUnique({
+      where: {
+        renterId: userId
+      }
+    })
+
+    if (!checkEvaluate) res.status(400).json({ "error": "Usuário já avaliou" })
+
     const result = await prisma.rent.create({
       data: {
         comment,
@@ -465,6 +473,8 @@ router.post("/rent/evaluate", async (req, res) => {
         }
       }
     })
+
+    res.json(result)
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
@@ -533,7 +543,7 @@ router.post("/property", async (req, res) => {
         isPetFriendly: boolean
       }
 
-    const result = await prisma.property.create({
+    const propertyResult = prisma.property.create({
       data: {
         name,
         description,
@@ -559,7 +569,18 @@ router.post("/property", async (req, res) => {
       }
     })
 
-    res.json(result)
+    const ownerResult = prisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        role: 'OWNER'
+      }
+    })
+
+    const transactional = await prisma.$transaction([propertyResult, ownerResult])
+
+    res.json(transactional)
 
   } catch (err) {
     console.log(err)

@@ -43,9 +43,9 @@
 
 ✔ get evaluate from property
 
-🔴 confirm rent
+✔ create property
 
-🔴🟡🟢 create property
+🔴 confirm rent
 
 🟡 remove interest
 
@@ -53,7 +53,7 @@
 
 🟡 update vacancy
 
-🔴🟡🟢 create evaluate
+✔ create evaluate
 
 ## Owner endpoints
 🔴 get interesteds
