@@ -474,6 +474,36 @@ router.delete("/user/:user_id/property/:property_id/interest", async (req, res) 
   }
 })
 
+router.delete("/:id/interest", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    const propertyId = parseInt(req.params.property_id)
+
+    const interest = await prisma.interest.findUnique({
+      where: {
+        id
+      }
+    })
+
+    // @ts-ignore
+    checkIfSameUser(interest.userId, req.loggedUserId, res)
+
+    if (interest) res.status(400).json({ "error": "Não interesse cadastrado para que possa ser deletado" })
+
+    const result = await prisma.interest.delete({
+      where: {
+        id
+      }
+    })
+
+    res.status(204).json(result)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.post("/rent/evaluate", async (req, res) => {
   try {
     const { comment, value, userId, propertyId } = req.body
