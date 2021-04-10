@@ -252,7 +252,11 @@ router.get("/property/:id/rent", async (req, res) => {
         id
       },
       select: {
-        rent: {}
+        rent: {
+          include: {
+            guest: true
+          }
+        }
       }
     })
 
@@ -276,7 +280,7 @@ router.get("/user/:id/rent", async (req, res) => {
       },
       select: {
         rent: {
-          select: {
+          include: {
             property: true
           }
         }
