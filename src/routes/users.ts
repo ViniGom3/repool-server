@@ -27,6 +27,7 @@ router.get("/users", async (req, res) => {
     res.json(allUsers)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -61,6 +62,7 @@ router.post("/signup", async (req, res) => {
     }
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -73,6 +75,7 @@ router.get("/email", async (req, res) => {
     res.json(!!user)
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
@@ -98,65 +101,71 @@ router.post("/signin", async (req, res) => {
     }
   } catch (err) {
     console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
 
 router.get("/ad", async (req, res) => {
-  const { search } = req.query as unknown as { search: string }
-  const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly } = req.query as unknown as { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string }
+  try {
+    const { search } = req.query as unknown as { search: string }
+    const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly } = req.query as unknown as { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string }
 
-  const pool = parseBoolean(hasPool)
-  const garage = parseBoolean(hasGarage)
-  const gourmet = parseBoolean(hasGourmet)
-  const internet = parseBoolean(hasInternet)
-  const petFriendly = parseBoolean(isPetFriendly)
+    const pool = parseBoolean(hasPool)
+    const garage = parseBoolean(hasGarage)
+    const gourmet = parseBoolean(hasGourmet)
+    const internet = parseBoolean(hasInternet)
+    const petFriendly = parseBoolean(isPetFriendly)
 
-  let result
-  if (!!search) {
-    result = await prisma.property.findMany({
-      where: {
-        isAdversiment: true,
-        hasGarage: garage,
-        hasPool: pool,
-        hasGourmet: gourmet,
-        hasInternet: internet,
-        isPetFriendly: petFriendly,
-        OR: [
-          {
-            name: {
-              contains: search,
-              mode: "insensitive"
+    let result
+    if (!!search) {
+      result = await prisma.property.findMany({
+        where: {
+          isAdversiment: true,
+          hasGarage: garage,
+          hasPool: pool,
+          hasGourmet: gourmet,
+          hasInternet: internet,
+          isPetFriendly: petFriendly,
+          OR: [
+            {
+              name: {
+                contains: search,
+                mode: "insensitive"
+              }
+            }, {
+              neighborhood: {
+                contains: search,
+              }
+            }, {
+              city: {
+                contains: search,
+              }
+            }, {
+              description: {
+                contains: search,
+                mode: "insensitive"
+              }
             }
-          }, {
-            neighborhood: {
-              contains: search,
-            }
-          }, {
-            city: {
-              contains: search,
-            }
-          }, {
-            description: {
-              contains: search,
-              mode: "insensitive"
-            }
-          }
-        ]
-      }
-    })
-  } else {
-    result = await prisma.property.findMany({
-      where: {
-        hasGarage: garage,
-        hasPool: pool,
-        hasGourmet: gourmet,
-        hasInternet: internet,
-        isPetFriendly: petFriendly
-      }
-    })
+          ]
+        }
+      })
+    } else {
+      result = await prisma.property.findMany({
+        where: {
+          hasGarage: garage,
+          hasPool: pool,
+          hasGourmet: gourmet,
+          hasInternet: internet,
+          isPetFriendly: petFriendly
+        }
+      })
+    }
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
-
-  res.json(result)
 })
 
 export default router
