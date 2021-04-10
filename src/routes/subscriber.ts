@@ -111,7 +111,7 @@ router.delete("/:id/user", async (req, res) => {
       }
     })
 
-    const deleteProperty = prisma.property.delete({
+    const deleteProperty = prisma.property.deleteMany({
       where: {
         ownerId: id
       }
@@ -367,7 +367,6 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
   }
 })
 
-
 router.post("/user/:user_id/property/:property_id/interest", async (req, res) => {
   try {
     const userId = parseInt(req.params.user_id)
@@ -405,7 +404,6 @@ router.post("/user/:user_id/property/:property_id/interest", async (req, res) =>
     res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
-
 
 router.delete("/user/:user_id/property/:property_id/interest", async (req, res) => {
   try {
@@ -445,24 +443,48 @@ router.delete("/user/:user_id/property/:property_id/interest", async (req, res) 
   }
 })
 
-router.patch("/rent/:id/evaluate", async (req, res) => {
-
+router.post("/rent/evaluate", async (req, res) => {
   try {
-    const rent_id = parseInt(req.params.id)
+    const { comment, value, userId, propertyId } = req.body
+    // @ts-ignore
+    checkIfSameUser(userId, req.loggedUserId, res)
+
+    const result = await prisma.rent.create({
+      data: {
+        comment,
+        value,
+        renter: {
+          connect: {
+            id: userId
+          }
+        },
+        property: {
+          connect: {
+            id: propertyId
+          }
+        }
+      }
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
+router.patch("/rent/evaluate", async (req, res) => {
+  try {
     // @ts-ignore
     const userId = req.loggedUserId;
     const { value, comment } = req.body as unknown as { value: number, comment: string }
 
-    const result = prisma.rent.update({
+    const result = await prisma.rent.update({
       where: {
-        id: rent_id,
         renterId: userId
       },
       data: {
         comment,
         value
       }
-
     })
 
     res.json(result)
@@ -472,9 +494,11 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
   }
 })
 
-router.post("/user/:id/property", async (req, res) => {
+router.post("/property", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    // @ts-ignore
+    const id = req.loggedUserId;
+
     const { name,
       description,
       category,
@@ -509,7 +533,7 @@ router.post("/user/:id/property", async (req, res) => {
         isPetFriendly: boolean
       }
 
-    const result = prisma.property.create({
+    const result = await prisma.property.create({
       data: {
         name,
         description,

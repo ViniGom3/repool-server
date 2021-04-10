@@ -63,7 +63,7 @@ model Property {
   vacancyNumber Int              @default(1)
   isAdversiment Boolean          @default(false)
   viewed        Int              @default(0)
-  ownerId       Int              @unique
+  ownerId       Int
   rent          Rent[]           @relation(name: "propertyRent")
   owner         User             @relation(name: "ownProperty", fields: [ownerId], references: [id])
   interests     Interest[]       @relation(name: "interestProperties")

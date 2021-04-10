@@ -82,7 +82,7 @@ CREATE TABLE "Rent" (
 );
 
 -- CreateTable
-CREATE TABLE "_favoritesProperties" (
+CREATE TABLE "_favoriteProperties" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
@@ -91,16 +91,13 @@ CREATE TABLE "_favoritesProperties" (
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Property.ownerId_unique" ON "Property"("ownerId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Rent.renterId_unique" ON "Rent"("renterId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_favoritesProperties_AB_unique" ON "_favoritesProperties"("A", "B");
+CREATE UNIQUE INDEX "_favoriteProperties_AB_unique" ON "_favoriteProperties"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_favoritesProperties_B_index" ON "_favoritesProperties"("B");
+CREATE INDEX "_favoriteProperties_B_index" ON "_favoriteProperties"("B");
 
 -- AddForeignKey
 ALTER TABLE "Interest" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -118,7 +115,7 @@ ALTER TABLE "Rent" ADD FOREIGN KEY ("renterId") REFERENCES "User"("id") ON DELET
 ALTER TABLE "Rent" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_favoritesProperties" ADD FOREIGN KEY ("A") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_favoriteProperties" ADD FOREIGN KEY ("A") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_favoritesProperties" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_favoriteProperties" ADD FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
