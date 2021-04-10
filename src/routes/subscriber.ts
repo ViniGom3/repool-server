@@ -455,7 +455,7 @@ router.post("/rent/evaluate", async (req, res) => {
       }
     })
 
-    if (!checkEvaluate) res.status(400).json({ "error": "Usuário já avaliou" })
+    if (checkEvaluate.value) res.status(400).json({ "error": "Usuário já avaliou" })
 
     const result = await prisma.rent.create({
       data: {
