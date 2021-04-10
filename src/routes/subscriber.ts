@@ -320,6 +320,44 @@ router.get("/rent/property/:id/user", async (req, res) => {
   }
 })
 
+router.post("/user/:user_id/property/:property_id/interest", async (req, res) => {
+  try {
+    const userId = parseInt(req.params.user_id)
+    const propertyId = parseInt(req.params.property_id)
+
+    // @ts-ignore
+    checkIfSameUser(userId, req.loggedUserId, res)
+
+    const interest = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+      select: {
+        interests: {
+          where: {
+            propertyId
+          }
+        }
+      }
+    })
+
+    if (interest.interests.length !== 0) res.status(400).json({ "error": "Interesse nesta propriedade já foi cadastrado" })
+
+    const result = await prisma.interest.create({
+      data: {
+        userId,
+        propertyId
+      }
+    })
+
+    res.status(201).json(result)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.patch("/user/:user_id/property/:property_id/interest", async (req, res) => {
   try {
     const userId = parseInt(req.params.user_id)
@@ -367,42 +405,30 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
   }
 })
 
-router.post("/user/:user_id/property/:property_id/interest", async (req, res) => {
-  try {
-    const userId = parseInt(req.params.user_id)
-    const propertyId = parseInt(req.params.property_id)
+router.patch("/:id/interest", async (req, res) => {
+  // @ts-ignore
+  const userId = req.loggedUserId;
+  const id = parseInt(req.params.id)
+  const { uConfirmation } = req.body
 
-    // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+  const query = await prisma.interest.findUnique({
+    where: {
+      id
+    }
+  })
 
-    const interest = await prisma.user.findUnique({
-      where: {
-        id: userId
-      },
-      select: {
-        interests: {
-          where: {
-            propertyId
-          }
-        }
-      }
-    })
+  checkIfSameUser(userId, query.userId, res)
 
-    if (interest.interests.length !== 0) res.status(400).json({ "error": "Interesse nesta propriedade já foi cadastrado" })
+  const result = await prisma.interest.update({
+    where: {
+      id
+    },
+    data: {
+      uConfirmation
+    }
+  })
 
-    const result = await prisma.interest.create({
-      data: {
-        userId,
-        propertyId
-      }
-    })
-
-    res.status(201).json(result)
-
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
-  }
+  res.json(result)
 })
 
 router.delete("/user/:user_id/property/:property_id/interest", async (req, res) => {
