@@ -107,7 +107,7 @@ router.delete("/:id/user", async (req, res) => {
 
     const deleteRent = prisma.rent.deleteMany({
       where: {
-        renterId: id
+        guestId: id
       }
     })
 
@@ -305,7 +305,7 @@ router.get("/rent/property/:id/user", async (req, res) => {
         ownerId: true,
         rent: {
           select: {
-            renter: true
+            guest: true
           }
         }
       }
@@ -451,7 +451,7 @@ router.post("/rent/evaluate", async (req, res) => {
 
     const checkEvaluate = await prisma.rent.findUnique({
       where: {
-        renterId: userId
+        guestId: userId
       }
     })
 
@@ -461,7 +461,7 @@ router.post("/rent/evaluate", async (req, res) => {
       data: {
         comment,
         value,
-        renter: {
+        guest: {
           connect: {
             id: userId
           }
@@ -489,7 +489,7 @@ router.patch("/rent/evaluate", async (req, res) => {
 
     const result = await prisma.rent.update({
       where: {
-        renterId: userId
+        guestId: userId
       },
       data: {
         comment,
