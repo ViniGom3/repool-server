@@ -434,7 +434,25 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
-    res.json(result)
+    let createRent
+    if (result.pConfirmation && result.uConfirmation) {
+      createRent = await prisma.rent.create({
+        data: {
+          guest: {
+            connect: {
+              id: result.userId
+            }
+          },
+          property: {
+            connect: {
+              id: result.propertyId
+            }
+          }
+        }
+      })
+    }
+
+    !!createRent ? res.json([result, createRent]) : res.json([result, null])
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
