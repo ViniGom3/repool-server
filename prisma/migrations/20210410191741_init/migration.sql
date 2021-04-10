@@ -30,8 +30,8 @@ CREATE TABLE "Interest" (
     "id" SERIAL NOT NULL,
     "uConfirmation" BOOLEAN NOT NULL DEFAULT false,
     "pConfirmation" BOOLEAN NOT NULL DEFAULT false,
-    "userId" INTEGER,
-    "propertyId" INTEGER,
+    "userId" INTEGER NOT NULL,
+    "propertyId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -52,7 +52,8 @@ CREATE TABLE "Property" (
     "city" VARCHAR(50) NOT NULL,
     "uf" VARCHAR(2) NOT NULL,
     "country" VARCHAR(2) NOT NULL,
-    "number" VARCHAR(4),
+    "number" VARCHAR(5),
+    "complement" VARCHAR(100),
     "hasPool" BOOLEAN NOT NULL DEFAULT false,
     "hasGarage" BOOLEAN NOT NULL DEFAULT false,
     "hasGourmet" BOOLEAN NOT NULL DEFAULT false,
@@ -73,7 +74,8 @@ CREATE TABLE "Rent" (
     "id" SERIAL NOT NULL,
     "value" INTEGER NOT NULL,
     "comment" TEXT NOT NULL,
-    "renterId" INTEGER NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "guestId" INTEGER NOT NULL,
     "propertyId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -91,7 +93,7 @@ CREATE TABLE "_favoriteProperties" (
 CREATE UNIQUE INDEX "User.email_unique" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Rent.renterId_unique" ON "Rent"("renterId");
+CREATE UNIQUE INDEX "Rent.guestId_unique" ON "Rent"("guestId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_favoriteProperties_AB_unique" ON "_favoriteProperties"("A", "B");
@@ -100,16 +102,16 @@ CREATE UNIQUE INDEX "_favoriteProperties_AB_unique" ON "_favoriteProperties"("A"
 CREATE INDEX "_favoriteProperties_B_index" ON "_favoriteProperties"("B");
 
 -- AddForeignKey
-ALTER TABLE "Interest" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Interest" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Interest" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Interest" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Property" ADD FOREIGN KEY ("ownerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Rent" ADD FOREIGN KEY ("renterId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Rent" ADD FOREIGN KEY ("guestId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Rent" ADD FOREIGN KEY ("propertyId") REFERENCES "Property"("id") ON DELETE CASCADE ON UPDATE CASCADE;
