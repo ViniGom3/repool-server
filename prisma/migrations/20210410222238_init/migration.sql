@@ -72,8 +72,8 @@ CREATE TABLE "Property" (
 -- CreateTable
 CREATE TABLE "Rent" (
     "id" SERIAL NOT NULL,
-    "value" INTEGER NOT NULL,
-    "comment" TEXT NOT NULL,
+    "value" INTEGER,
+    "comment" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "guestId" INTEGER NOT NULL,
     "propertyId" INTEGER NOT NULL,

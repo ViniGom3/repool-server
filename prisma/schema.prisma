@@ -75,8 +75,8 @@ model Property {
 
 model Rent {
   id         Int      @id @default(autoincrement())
-  value      Int
-  comment    String
+  value      Int?
+  comment    String?
   isActive   Boolean  @default(true)
   guestId    Int      @unique
   guest      User     @relation(fields: [guestId], references: [id])
