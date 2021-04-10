@@ -45,7 +45,7 @@
 
 ✔ create property
 
-🔴 confirm rent
+✔ confirm interest
 
 🟡 remove interest
 
