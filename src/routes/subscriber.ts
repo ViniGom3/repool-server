@@ -654,4 +654,23 @@ router.post("/property", async (req, res) => {
   }
 })
 
+router.delete("/:id/rent", async (req, res) => {
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id)
+
+    const result = await prisma.rent.delete({
+      where: {
+        id
+      }
+    })
+
+    res.status(204).json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 export default router

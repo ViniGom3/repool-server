@@ -49,9 +49,7 @@
 
 ✔ remove interest
 
-🟡 remove rent
-
-🟡 update vacancy
+✔ remove rent
 
 ✔ create evaluate
 
