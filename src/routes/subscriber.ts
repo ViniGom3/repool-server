@@ -406,29 +406,34 @@ router.patch("/user/:user_id/property/:property_id/interest", async (req, res) =
 })
 
 router.patch("/:id/interest", async (req, res) => {
-  // @ts-ignore
-  const userId = req.loggedUserId;
-  const id = parseInt(req.params.id)
-  const { uConfirmation } = req.body
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id)
+    const { uConfirmation } = req.body
 
-  const query = await prisma.interest.findUnique({
-    where: {
-      id
-    }
-  })
+    const query = await prisma.interest.findUnique({
+      where: {
+        id
+      }
+    })
 
-  checkIfSameUser(userId, query.userId, res)
+    checkIfSameUser(userId, query.userId, res)
 
-  const result = await prisma.interest.update({
-    where: {
-      id
-    },
-    data: {
-      uConfirmation
-    }
-  })
+    const result = await prisma.interest.update({
+      where: {
+        id
+      },
+      data: {
+        uConfirmation
+      }
+    })
 
-  res.json(result)
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
 })
 
 router.delete("/user/:user_id/property/:property_id/interest", async (req, res) => {
