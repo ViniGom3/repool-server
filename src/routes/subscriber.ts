@@ -674,16 +674,37 @@ router.post("/property", async (req, res) => {
 router.delete("/:id/rent", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId;
+    const userId = parseInt(req.loggedUserId);
     const id = parseInt(req.params.id)
 
-    const result = await prisma.rent.delete({
+    const query = await prisma.user.findUnique({
       where: {
-        id
+        id: userId
+      },
+      select: {
+        rent: {
+          where: {
+            id
+          }
+        }
       }
     })
 
-    res.status(204).json(result)
+    if (!query.rent[0].guestId) res.status(404).json({ "error": "Rent não cadastrado" })
+    checkIfSameUser(query.rent[0].guestId, userId, res)
+
+    const userResult = await prisma.rent.update({
+      where: {
+        id
+      },
+      data: {
+        isActive: false
+      }
+    })
+
+    res
+      .status(204)
+      .json(query)
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
