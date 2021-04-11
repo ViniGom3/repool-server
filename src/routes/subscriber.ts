@@ -52,13 +52,12 @@ router.get("/full-user", async (req, res) => {
   }
 })
 
-router.patch("/:id/user", async (req, res) => {
+router.patch("/user", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    // @ts-ignore
+    const id = req.loggedUserId
     const { name, avatar, tel, cel } = req.body
     const { sex } = req.body
-    // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
 
     const result = await prisma.user.update({
       where: {
@@ -82,11 +81,10 @@ router.patch("/:id/user", async (req, res) => {
   }
 })
 
-router.delete("/:id/user", async (req, res) => {
+router.delete("/user", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const id = req.loggedUserId
 
     const user = await prisma.user.findUnique({
       where: {
@@ -129,11 +127,10 @@ router.delete("/:id/user", async (req, res) => {
   }
 })
 
-router.get("/:id/favorites", async (req, res) => {
+router.get("/favorites", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const id = req.loggedUserId
 
     const user = await prisma.user.findUnique({
       where: {
@@ -150,12 +147,11 @@ router.get("/:id/favorites", async (req, res) => {
   }
 })
 
-router.patch("/user/:user_id/property/:property_id/favorites", async (req, res) => {
+router.patch("/property/:property_id/favorites", async (req, res) => {
   try {
-    const userId = parseInt(req.params.user_id)
-    const id = parseInt(req.params.property_id)
     // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+    const userId = req.loggedUserId
+    const id = parseInt(req.params.property_id)
 
     const favorites = await prisma.user.findUnique({
       where: {
@@ -214,11 +210,10 @@ router.patch("/user/:user_id/property/:property_id/favorites", async (req, res) 
   }
 })
 
-router.get("/user/:id/evaluate", async (req, res) => {
+router.get("/evaluate", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const id = req.loggedUserId
 
     const evaluate = await prisma.user.findUnique({
       where: {
@@ -245,7 +240,6 @@ router.get("/property/:id/rent", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
-
     const result = await prisma.property.findUnique({
       where: {
         id
@@ -266,12 +260,10 @@ router.get("/property/:id/rent", async (req, res) => {
   }
 })
 
-router.get("/user/:id/rent", async (req, res) => {
+router.get("/rent", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
-
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const id = req.loggedUserId
 
     const result = await prisma.user.findUnique({
       where: {
@@ -323,17 +315,17 @@ router.get("/rent/property/:id/user", async (req, res) => {
   }
 })
 
-router.post("/user/:user_id/property/:property_id/interest", async (req, res) => {
+router.post("/property/:property_id/interest", async (req, res) => {
   try {
-    const userId = parseInt(req.params.user_id)
+    // @ts-ignore
+    const id = req.loggedUserId
     const propertyId = parseInt(req.params.property_id)
 
-    // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+
 
     const interest = await prisma.user.findUnique({
       where: {
-        id: userId
+        id
       },
       select: {
         interests: {
@@ -348,7 +340,7 @@ router.post("/user/:user_id/property/:property_id/interest", async (req, res) =>
 
     const result = await prisma.interest.create({
       data: {
-        userId,
+        userId: id,
         propertyId
       }
     })
@@ -361,13 +353,11 @@ router.post("/user/:user_id/property/:property_id/interest", async (req, res) =>
   }
 })
 
-router.patch("/user/:user_id/property/:property_id/interest", async (req, res) => {
+router.patch("/property/:property_id/interest", async (req, res) => {
   try {
-    const userId = parseInt(req.params.user_id)
-    const propertyId = parseInt(req.params.property_id)
-
     // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+    const userId = req.loggedUserId
+    const propertyId = parseInt(req.params.property_id)
 
     const interest = await prisma.user.findUnique({
       where: {
@@ -458,13 +448,11 @@ router.patch("/:id/interest", async (req, res) => {
   }
 })
 
-router.delete("/user/:user_id/property/:property_id/interest", async (req, res) => {
+router.delete("/property/:property_id/interest", async (req, res) => {
   try {
-    const userId = parseInt(req.params.user_id)
-    const propertyId = parseInt(req.params.property_id)
-
     // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+    const userId = req.loggedUserId
+    const propertyId = parseInt(req.params.property_id)
 
     const interest = await prisma.user.findUnique({
       where: {
@@ -499,7 +487,6 @@ router.delete("/user/:user_id/property/:property_id/interest", async (req, res) 
 router.delete("/:id/interest", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    const propertyId = parseInt(req.params.property_id)
 
     const interest = await prisma.interest.findUnique({
       where: {
@@ -528,9 +515,9 @@ router.delete("/:id/interest", async (req, res) => {
 
 router.post("/rent/evaluate", async (req, res) => {
   try {
-    const { comment, value, userId, propertyId } = req.body
+    const { comment, value, propertyId } = req.body
     // @ts-ignore
-    checkIfSameUser(userId, req.loggedUserId, res)
+    const userId = req.loggedUserId
 
     const checkEvaluate = await prisma.rent.findUnique({
       where: {
@@ -693,7 +680,7 @@ router.delete("/:id/rent", async (req, res) => {
     if (!query.rent[0].guestId) res.status(404).json({ "error": "Rent não cadastrado" })
     checkIfSameUser(query.rent[0].guestId, userId, res)
 
-    const userResult = await prisma.rent.update({
+    const rentUpdate = await prisma.rent.update({
       where: {
         id
       },
@@ -702,9 +689,7 @@ router.delete("/:id/rent", async (req, res) => {
       }
     })
 
-    res
-      .status(204)
-      .json(query)
+    res.status(204).json(rentUpdate)
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
