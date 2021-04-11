@@ -33,7 +33,7 @@ export function verifyJWT(req, res, next) {
       console.log(err)
       return res.status(500).json({ error: 'Falha na autenticação' });
     } else {
-      req.loggedUserId = decoded.id
+      req.loggedUserId = parseInt(decoded.id)
     }
   })
   next()

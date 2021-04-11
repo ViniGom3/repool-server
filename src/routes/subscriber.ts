@@ -31,7 +31,7 @@ router.get("/full-user", async (req, res) => {
   try {
 
     // @ts-ignore
-    const id = parseInt(req.loggedUserId)
+    const id = req.loggedUserId
 
     const result = await prisma.user.findUnique({
       where: {
@@ -674,7 +674,7 @@ router.post("/property", async (req, res) => {
 router.delete("/:id/rent", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = parseInt(req.loggedUserId);
+    const userId = req.loggedUserId;
     const id = parseInt(req.params.id)
 
     const query = await prisma.user.findUnique({
