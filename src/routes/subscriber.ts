@@ -27,12 +27,11 @@ router.get("/:id/user", async (req, res) => {
   }
 })
 
-router.get("/:id/full-user", async (req, res) => {
+router.get("/full-user", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
 
     // @ts-ignore
-    checkIfSameUser(id, req.loggedUserId, res)
+    const id = parseInt(req.loggedUserId)
 
     const result = await prisma.user.findUnique({
       where: {
