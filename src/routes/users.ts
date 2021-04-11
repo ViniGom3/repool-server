@@ -56,7 +56,7 @@ router.post("/signup", async (req, res) => {
       })
 
       const { password: pass, ...user } = createdUser
-      const jwt = await createJWT(createdUser.id)
+      const jwt = await createJWT(user.id, user.role)
       const userAndJwt = [user, jwt]
       res.json(userAndJwt)
     }
@@ -88,14 +88,14 @@ router.post("/signin", async (req, res) => {
       res.status(404).json({ error: "Usuário não encontrado" })
 
     } else {
-      const { password: hash, id } = user
+      const { password: hash, id, role } = user
 
       const isValid = await argon2.verify(hash, password)
 
       if (!isValid) {
         res.status(401).json({ error: "Senha incorreta" })
       } else {
-        const jwt = await createJWT(id)
+        const jwt = await createJWT(id, role)
         res.json(jwt)
       }
     }

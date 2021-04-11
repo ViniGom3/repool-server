@@ -34,13 +34,14 @@ export function verifyJWT(req, res, next) {
       return res.status(500).json({ error: 'Falha na autenticação' });
     } else {
       req.loggedUserId = parseInt(decoded.id)
+      req.loggedUSerRole = decoded.role
     }
   })
   next()
 }
 
-export const createJWT = async (id) => {
-  return jsonwebtoken.sign({ id }, process.env.TOKEN_JWT, { expiresIn: "7d" })
+export const createJWT = async (id, role) => {
+  return jsonwebtoken.sign({ id, role }, process.env.TOKEN_JWT, { expiresIn: "7d" })
 }
 
 export const parseBoolean = function (value) {

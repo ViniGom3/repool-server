@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient, propertyCategory } from '@prisma/client'
 import { checkIfSameUser } from '../helpers/subscribers'
-import { nextTick } from 'node:process'
 
 const prisma = new PrismaClient()
 const router = Router()
