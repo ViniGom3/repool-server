@@ -169,4 +169,3 @@ router.get("/ad", async (req, res) => {
 })
 
 export default router
-

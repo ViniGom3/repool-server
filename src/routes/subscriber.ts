@@ -236,6 +236,22 @@ router.get("/evaluate", async (req, res) => {
   }
 })
 
+router.get("/evaluates", async (req, res) => {
+  try {
+    const evaluates = await prisma.rent.findMany({
+      select: {
+        value: true,
+        comment: true
+      }
+    })
+
+    res.json(evaluates)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.get("/property/:id/rent", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
