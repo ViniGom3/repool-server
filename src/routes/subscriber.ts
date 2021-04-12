@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient, propertyCategory } from '@prisma/client'
-import { checkIfSameUser } from '../helpers/subscribers'
+import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -438,25 +438,14 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
-    let createRent
-    if (result.pConfirmation && result.uConfirmation) {
-      createRent = await prisma.rent.create({
-        data: {
-          guest: {
-            connect: {
-              id: result.userId
-            }
-          },
-          property: {
-            connect: {
-              id: result.propertyId
-            }
-          }
-        }
-      })
-    }
+    if (!result) res.status(404).json({ "error": "interest não encontrado" })
 
-    !!createRent ? res.json([result, createRent]) : res.json([result, null])
+    const resultConfirmation = bothConfirmation(result)
+
+    if (resultConfirmation)
+      res.json(resultConfirmation)
+    res.json(result)
+
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
