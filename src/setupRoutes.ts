@@ -1,7 +1,5 @@
 import { Express, Router } from 'express'
-import Users from './routes/users'
-import Subscribers from './routes/subscriber'
-import Owners from './routes/owner'
+import { Users, Subscribers, Owners } from './routes'
 import { verifyJWT } from './helpers/user'
 import { verifyRole } from './helpers/owner'
 
