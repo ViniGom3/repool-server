@@ -6,20 +6,25 @@ const prisma = new PrismaClient()
 const router = Router()
 
 router.get("/interests", async (req, res) => {
-  // @ts-ignore
-  const propertyId = req.loggedUserId;
+  try {
+    // @ts-ignore
+    const propertyId = req.loggedUserId;
 
-  const result = await prisma.interest.findMany({
-    where: {
-      propertyId
-    },
-    include: {
-      Property: true,
-      User: true
-    }
-  })
+    const result = await prisma.interest.findMany({
+      where: {
+        propertyId
+      },
+      include: {
+        Property: true,
+        User: true
+      }
+    })
 
-  res.json(result)
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
 })
 
 router.post("/property", async (req, res) => {
@@ -100,61 +105,12 @@ router.post("/property", async (req, res) => {
 })
 
 router.patch("/:id/property", async (req, res) => {
-  // @ts-ignore
-  const userId = req.loggedUserId;
-  const id = parseInt(req.params.id)
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id)
 
-  const { name,
-    description,
-    category,
-    vacancyPrice,
-    cep,
-    street,
-    neighborhood,
-    city,
-    uf,
-    country,
-    number,
-    hasPool,
-    hasGarage,
-    hasGourmet,
-    hasInternet,
-    isPetFriendly,
-    isAdversiment
-  } = req.body as unknown as {
-    name: string,
-    description: string,
-    category: propertyCategory,
-    vacancyPrice: number,
-    cep: string,
-    street: string,
-    neighborhood: string,
-    city: string,
-    uf: string,
-    country: string,
-    number: string,
-    hasPool: boolean,
-    hasGarage: boolean,
-    hasGourmet: boolean,
-    hasInternet: boolean,
-    isPetFriendly: boolean,
-    isAdversiment: boolean
-  }
-
-  const propertyResult = await prisma.property.findFirst({
-    where: {
-      ownerId: userId
-    }
-  })
-
-  checkIfSameUser(propertyResult.ownerId, userId, res)
-
-  const result = await prisma.property.update({
-    where: {
-      id
-    },
-    data: {
-      name,
+    const { name,
       description,
       category,
       vacancyPrice,
@@ -171,12 +127,105 @@ router.patch("/:id/property", async (req, res) => {
       hasInternet,
       isPetFriendly,
       isAdversiment
+    } = req.body as unknown as {
+      name: string,
+      description: string,
+      category: propertyCategory,
+      vacancyPrice: number,
+      cep: string,
+      street: string,
+      neighborhood: string,
+      city: string,
+      uf: string,
+      country: string,
+      number: string,
+      hasPool: boolean,
+      hasGarage: boolean,
+      hasGourmet: boolean,
+      hasInternet: boolean,
+      isPetFriendly: boolean,
+      isAdversiment: boolean
     }
-  })
 
-  res.json(result)
+    const propertyResult = await prisma.property.findFirst({
+      where: {
+        ownerId: userId
+      }
+    })
+
+    checkIfSameUser(propertyResult.ownerId, userId, res)
+
+    const result = await prisma.property.update({
+      where: {
+        id
+      },
+      data: {
+        name,
+        description,
+        category,
+        vacancyPrice,
+        cep,
+        street,
+        neighborhood,
+        city,
+        uf,
+        country,
+        number,
+        hasPool,
+        hasGarage,
+        hasGourmet,
+        hasInternet,
+        isPetFriendly,
+        isAdversiment
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
 })
 
+router.delete("/:id/property", async (req, res) => {
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id)
 
+    const propertyResult = await prisma.property.findFirst({
+      where: {
+        ownerId: userId
+      }
+    })
+
+    checkIfSameUser(propertyResult.ownerId, userId, res)
+
+    const deleteProperty = prisma.property.delete({
+      where: {
+        id
+      }
+    })
+
+    const deleteRent = prisma.rent.deleteMany({
+      where: {
+        propertyId: id
+      }
+    })
+
+    const deleteInterest = prisma.interest.deleteMany({
+      where: {
+        propertyId: id
+      }
+    })
+
+    const transactional = await prisma.$transaction([deleteProperty, deleteRent, deleteInterest])
+    res.status(204).json(transactional)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
 
 export default router
