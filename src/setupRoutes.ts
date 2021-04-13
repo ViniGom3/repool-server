@@ -12,7 +12,5 @@ export default (app: Express): void => {
   app.use('/subscriber', Subscribers)
 
   app.use(verifyRole)
-
   app.use('/owner', Owners)
-
 }

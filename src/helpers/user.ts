@@ -34,7 +34,7 @@ export function verifyJWT(req, res, next) {
       return res.status(401).json({ error: 'Falha na autenticação' });
     } else {
       req.loggedUserId = parseInt(decoded.id)
-      req.loggedUSerRole = decoded.role
+      req.loggedUserRole = decoded.role
     }
   })
   next()
