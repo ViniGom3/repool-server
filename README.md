@@ -60,7 +60,7 @@
 
 ✔ create property
 
-🔴 create ad
+✔ create ad
 
 🔴 confirm vacancy
 
@@ -68,7 +68,7 @@
 
 🟡 get property
 
-🟡 update property
+✔ update property
 
 🟡 remove rent
 
