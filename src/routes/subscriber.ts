@@ -596,24 +596,27 @@ router.post("/property", async (req, res) => {
       hasGarage,
       hasGourmet,
       hasInternet,
-      isPetFriendly } = req.body as unknown as {
-        name: string,
-        description: string,
-        category: propertyCategory,
-        vacancyPrice: number,
-        cep: string,
-        street: string,
-        neighborhood: string,
-        city: string,
-        uf: string,
-        country: string,
-        number: string,
-        hasPool: boolean,
-        hasGarage: boolean,
-        hasGourmet: boolean,
-        hasInternet: boolean,
-        isPetFriendly: boolean
-      }
+      isPetFriendly,
+      isAdversiment
+    } = req.body as unknown as {
+      name: string,
+      description: string,
+      category: propertyCategory,
+      vacancyPrice: number,
+      cep: string,
+      street: string,
+      neighborhood: string,
+      city: string,
+      uf: string,
+      country: string,
+      number: string,
+      hasPool: boolean,
+      hasGarage: boolean,
+      hasGourmet: boolean,
+      hasInternet: boolean,
+      isPetFriendly: boolean,
+      isAdversiment: boolean
+    }
 
     const propertyResult = prisma.property.create({
       data: {
@@ -633,6 +636,7 @@ router.post("/property", async (req, res) => {
         hasGourmet,
         hasInternet,
         isPetFriendly,
+        isAdversiment,
         owner: {
           connect: {
             id
