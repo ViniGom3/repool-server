@@ -74,7 +74,7 @@
 
 🟡 remove vacancy
 
-🟢 delete property
+✔ delete property
 
 🟢 get users with activ vacancy
 
