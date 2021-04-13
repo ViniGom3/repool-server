@@ -31,7 +31,7 @@ export function verifyJWT(req, res, next) {
   jsonwebtoken.verify(token, process.env.TOKEN_JWT, (err, decoded) => {
     if (err) {
       console.log(err)
-      return res.status(500).json({ error: 'Falha na autenticação' });
+      return res.status(401).json({ error: 'Falha na autenticação' });
     } else {
       req.loggedUserId = parseInt(decoded.id)
       req.loggedUSerRole = decoded.role

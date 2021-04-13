@@ -438,8 +438,6 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
-    if (!result) res.status(404).json({ "error": "interest não encontrado" })
-
     const resultConfirmation = bothConfirmation(result)
 
     if (resultConfirmation)
