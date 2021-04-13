@@ -22,6 +22,82 @@ router.get("/interests", async (req, res) => {
   res.json(result)
 })
 
+router.post("/property", async (req, res) => {
+  try {
+    // @ts-ignore
+    const id = req.loggedUserId;
+
+    const { name,
+      description,
+      category,
+      vacancyPrice,
+      cep,
+      street,
+      neighborhood,
+      city,
+      uf,
+      country,
+      number,
+      hasPool,
+      hasGarage,
+      hasGourmet,
+      hasInternet,
+      isPetFriendly,
+      isAdversiment
+    } = req.body as unknown as {
+      name: string,
+      description: string,
+      category: propertyCategory,
+      vacancyPrice: number,
+      cep: string,
+      street: string,
+      neighborhood: string,
+      city: string,
+      uf: string,
+      country: string,
+      number: string,
+      hasPool: boolean,
+      hasGarage: boolean,
+      hasGourmet: boolean,
+      hasInternet: boolean,
+      isPetFriendly: boolean,
+      isAdversiment: boolean
+    }
+
+    const result = await prisma.property.create({
+      data: {
+        name,
+        description,
+        category,
+        vacancyPrice,
+        cep,
+        street,
+        neighborhood,
+        city,
+        uf,
+        country,
+        number,
+        hasPool,
+        hasGarage,
+        hasGourmet,
+        hasInternet,
+        isPetFriendly,
+        isAdversiment,
+        owner: {
+          connect: {
+            id
+          }
+        }
+      }
+    })
+
+    res.json(result)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
 
 
 export default router
