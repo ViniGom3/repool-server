@@ -27,7 +27,7 @@ router.get("/interests", async (req, res) => {
   }
 })
 
-router.get("/property", async (req, res) => {
+router.get("/:id/property", async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
