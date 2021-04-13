@@ -58,6 +58,8 @@
 ## Owner endpoints
 ✔ get interesteds
 
+✔ create property
+
 🔴 create ad
 
 🔴 confirm vacancy
