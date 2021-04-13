@@ -27,6 +27,33 @@ router.get("/interests", async (req, res) => {
   }
 })
 
+router.get("/property", async (req, res) => {
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id)
+
+    const result = await prisma.property.findUnique({
+      where: {
+        id
+      },
+      include: {
+        owner: true,
+        rent: true,
+        interests: true,
+        favorited: true
+      }
+    })
+
+    checkIfSameUser(result.ownerId, userId, res)
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.post("/property", async (req, res) => {
   try {
     // @ts-ignore
@@ -147,9 +174,9 @@ router.patch("/:id/property", async (req, res) => {
       isAdversiment: boolean
     }
 
-    const propertyResult = await prisma.property.findFirst({
+    const propertyResult = await prisma.property.findUnique({
       where: {
-        ownerId: userId
+        id
       }
     })
 
@@ -193,9 +220,9 @@ router.delete("/:id/property", async (req, res) => {
     const userId = req.loggedUserId;
     const id = parseInt(req.params.id)
 
-    const propertyResult = await prisma.property.findFirst({
+    const propertyResult = await prisma.property.findUnique({
       where: {
-        ownerId: userId
+        id
       }
     })
 
@@ -227,5 +254,7 @@ router.delete("/:id/property", async (req, res) => {
     res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
+
+
 
 export default router
