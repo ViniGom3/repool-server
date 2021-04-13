@@ -62,23 +62,25 @@
 
 ✔ create ad
 
+✔ get property
+
+✔ get all properties
+
+✔ update property
+
+✔ delete property
+
+✔ delete ad
+
 🔴 confirm vacancy
 
 🔴 create report
-
-🟡 get property
-
-✔ update property
 
 🟡 remove rent
 
 🟡 remove vacancy
 
-✔ delete property
-
 🟢 get users with activ vacancy
-
-🟢 delete ad
 
 🟢 get user with partial vacancy
 
