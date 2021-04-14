@@ -78,7 +78,7 @@
 
 🟡 remove rent
 
-🟡 remove vacancy
+✔ remove vacancy
 
 ✔ get users with activ vacancy
 

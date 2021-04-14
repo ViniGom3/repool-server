@@ -254,10 +254,19 @@ router.patch("/:id/property", async (req, res) => {
     const propertyResult = await prisma.property.findUnique({
       where: {
         id
+      },
+      include: {
+        _count: {
+          select: {
+            rent: true
+          }
+        }
       }
     })
 
     checkIfSameUser(propertyResult.ownerId, userId, res)
+
+    if (propertyResult._count.rent > vacancyNumber) res.status(404).json({ "error": "is not possible a vacancyNumber less than rents actives" })
 
     const result = await prisma.property.update({
       where: {
@@ -332,5 +341,7 @@ router.delete("/:id/property", async (req, res) => {
     res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
+
+
 
 export default router
