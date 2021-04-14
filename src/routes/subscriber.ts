@@ -597,7 +597,8 @@ router.post("/property", async (req, res) => {
       hasGourmet,
       hasInternet,
       isPetFriendly,
-      isAdversiment
+      isAdversiment,
+      vacancyNumber,
     } = req.body as unknown as {
       name: string,
       description: string,
@@ -615,7 +616,8 @@ router.post("/property", async (req, res) => {
       hasGourmet: boolean,
       hasInternet: boolean,
       isPetFriendly: boolean,
-      isAdversiment: boolean
+      isAdversiment: boolean,
+      vacancyNumber: number
     }
 
     const propertyResult = prisma.property.create({
@@ -637,6 +639,7 @@ router.post("/property", async (req, res) => {
         hasInternet,
         isPetFriendly,
         isAdversiment,
+        vacancyNumber,
         owner: {
           connect: {
             id
