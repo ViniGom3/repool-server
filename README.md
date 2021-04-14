@@ -82,7 +82,7 @@
 
 🟢 get users with activ vacancy
 
-🟢 get user with partial vacancy
+✔ get user with partial rent
 
 ## Admin endpoints
 🔴 create report
