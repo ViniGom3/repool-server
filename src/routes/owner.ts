@@ -369,6 +369,41 @@ router.delete("/:id/property", async (req, res) => {
   }
 })
 
+router.patch("/:id/interest", async (req, res) => {
+  try {
+    // @ts-ignore
+    const propertyId = req.loggedUserId;
+    const id = parseInt(req.params.id)
+    const { pConfirmation } = req.body
 
+    const query = await prisma.interest.findUnique({
+      where: {
+        id
+      }
+    })
+
+    if (!query) res.status(404).json({ "error": "interest não encontrado" })
+    checkIfSameUser(propertyId, query.propertyId, res)
+
+    const result = await prisma.interest.update({
+      where: {
+        id
+      },
+      data: {
+        pConfirmation
+      }
+    })
+
+    const resultConfirmation = bothConfirmation(result)
+
+    if (resultConfirmation)
+      res.json(resultConfirmation)
+    res.json(result)
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
 
 export default router

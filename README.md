@@ -72,7 +72,7 @@
 
 ✔ delete ad
 
-🔴 confirm vacancy
+✔ confirm vacancy
 
 🔴 create report
 
