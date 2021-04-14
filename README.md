@@ -18,7 +18,7 @@
 
 ✔ get ad filtred
 
-🟢 get ad filtred by maximum price and minimum price
+✔ get ad filtred by maximum price and minimum price
 
 ## Subscriber endpoints
 ✔ get user infos

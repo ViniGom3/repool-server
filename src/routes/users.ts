@@ -104,16 +104,27 @@ router.post("/signin", async (req, res) => {
   }
 })
 
+const floter = function (coisa) {
+  if (coisa)
+    return parseFloat(coisa)
+  return undefined
+}
+
 router.get("/ad", async (req, res) => {
   try {
     const { search } = req.query as unknown as { search: string }
-    const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly } = req.query as unknown as { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string }
+    const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly, maximumPrice, minimumPrice } = req.query as unknown as
+      { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string, maximumPrice: string, minimumPrice: string }
 
     const pool = parseBoolean(hasPool)
     const garage = parseBoolean(hasGarage)
     const gourmet = parseBoolean(hasGourmet)
     const internet = parseBoolean(hasInternet)
     const petFriendly = parseBoolean(isPetFriendly)
+    const maxPrice = floter(maximumPrice)
+    const minPrice = floter(minimumPrice)
+
+    if (minPrice > maxPrice) res.status(400).json({ "error": "minimum price cannot be greater than maximum price" })
 
     let result
     if (!!search) {
@@ -125,25 +136,43 @@ router.get("/ad", async (req, res) => {
           hasGourmet: gourmet,
           hasInternet: internet,
           isPetFriendly: petFriendly,
-          OR: [
+          AND: [
             {
-              name: {
-                contains: search,
-                mode: "insensitive"
-              }
-            }, {
-              neighborhood: {
-                contains: search,
-              }
-            }, {
-              city: {
-                contains: search,
-              }
-            }, {
-              description: {
-                contains: search,
-                mode: "insensitive"
-              }
+              OR: [
+                {
+                  vacancyPrice: {
+                    lte: maxPrice
+                  }
+                },
+                {
+                  vacancyPrice: {
+                    gte: minPrice
+                  }
+                }
+              ]
+            },
+            {
+              OR: [
+                {
+                  name: {
+                    contains: search,
+                    mode: "insensitive"
+                  }
+                }, {
+                  neighborhood: {
+                    contains: search,
+                  }
+                }, {
+                  city: {
+                    contains: search,
+                  }
+                }, {
+                  description: {
+                    contains: search,
+                    mode: "insensitive"
+                  }
+                }
+              ]
             }
           ]
         }
