@@ -44,10 +44,10 @@ export const createJWT = async (id, role) => {
   return jsonwebtoken.sign({ id, role }, process.env.TOKEN_JWT, { expiresIn: "7d" })
 }
 
-export const parseBoolean = function (value) {
-  if (!!value) {
-    return Boolean(JSON.parse(value))
-  } else {
-    return undefined
-  }
+export const parseBoolean = function (value: string) {
+  return value ? Boolean(JSON.parse(value)) : undefined
+}
+
+export const handlePrice = function (value: string) {
+  return value ? parseFloat(value) : undefined
 }

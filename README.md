@@ -74,8 +74,6 @@
 
 ✔ confirm vacancy
 
-🔴 create report
-
 ✔ remove rent
 
 ✔ remove vacancy
@@ -84,5 +82,6 @@
 
 ✔ get user with partial rent
 
+🔴 create report
 ## Admin endpoints
 🔴 create report

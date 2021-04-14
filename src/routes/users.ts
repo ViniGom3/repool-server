@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
 import argon2 from 'argon2'
-import { findEmail, findByEmail, createJWT, parseBoolean } from '../helpers/user'
+import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice } from '../helpers/user'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -104,12 +104,6 @@ router.post("/signin", async (req, res) => {
   }
 })
 
-const floter = function (coisa) {
-  if (coisa)
-    return parseFloat(coisa)
-  return undefined
-}
-
 router.get("/ad", async (req, res) => {
   try {
     const { search } = req.query as unknown as { search: string }
@@ -121,8 +115,8 @@ router.get("/ad", async (req, res) => {
     const gourmet = parseBoolean(hasGourmet)
     const internet = parseBoolean(hasInternet)
     const petFriendly = parseBoolean(isPetFriendly)
-    const maxPrice = floter(maximumPrice)
-    const minPrice = floter(minimumPrice)
+    const maxPrice = handlePrice(maximumPrice)
+    const minPrice = handlePrice(minimumPrice)
 
     if (minPrice > maxPrice) res.status(400).json({ "error": "minimum price cannot be greater than maximum price" })
 
@@ -136,43 +130,29 @@ router.get("/ad", async (req, res) => {
           hasGourmet: gourmet,
           hasInternet: internet,
           isPetFriendly: petFriendly,
-          AND: [
+          vacancyPrice: {
+            lte: maxPrice,
+            gte: minPrice
+          },
+          OR: [
             {
-              OR: [
-                {
-                  vacancyPrice: {
-                    lte: maxPrice
-                  }
-                },
-                {
-                  vacancyPrice: {
-                    gte: minPrice
-                  }
-                }
-              ]
-            },
-            {
-              OR: [
-                {
-                  name: {
-                    contains: search,
-                    mode: "insensitive"
-                  }
-                }, {
-                  neighborhood: {
-                    contains: search,
-                  }
-                }, {
-                  city: {
-                    contains: search,
-                  }
-                }, {
-                  description: {
-                    contains: search,
-                    mode: "insensitive"
-                  }
-                }
-              ]
+              name: {
+                contains: search,
+                mode: "insensitive"
+              }
+            }, {
+              neighborhood: {
+                contains: search,
+              }
+            }, {
+              city: {
+                contains: search,
+              }
+            }, {
+              description: {
+                contains: search,
+                mode: "insensitive"
+              }
             }
           ]
         }
