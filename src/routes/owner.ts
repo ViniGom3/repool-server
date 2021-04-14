@@ -14,7 +14,7 @@ router.get("/interests", async (req, res) => {
       where: {
         ownerId
       },
-      include: {
+      select: {
         interests: true
       }
     })

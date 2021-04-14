@@ -95,7 +95,7 @@ router.post("/signin", async (req, res) => {
         res.status(401).json({ error: "Senha incorreta" })
       } else {
         const jwt = await createJWT(id, role)
-        res.json(jwt)
+        res.json([user, jwt])
       }
     }
   } catch (err) {
