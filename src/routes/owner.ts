@@ -26,14 +26,41 @@ router.get("/interests", async (req, res) => {
   }
 })
 
+router.get("/interest", async (req, res) => {
+  try {
+    // @ts-ignore
+    const ownerId = req.loggedUserId;
+
+    const result = await prisma.interest.findMany({
+      where: {
+        OR: [
+          {
+            uConfirmation: true
+          }, {
+            pConfirmation: true
+          }
+        ],
+        Property: {
+          ownerId
+        }
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.get("/property", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId;
+    const ownerId = req.loggedUserId;
 
     const result = await prisma.property.findMany({
       where: {
-        ownerId: userId
+        ownerId
       },
       include: {
         owner: true,
@@ -98,7 +125,8 @@ router.post("/property", async (req, res) => {
       hasGourmet,
       hasInternet,
       isPetFriendly,
-      isAdversiment
+      isAdversiment,
+      vacancyNumber
     } = req.body as unknown as {
       name: string,
       description: string,
@@ -116,7 +144,8 @@ router.post("/property", async (req, res) => {
       hasGourmet: boolean,
       hasInternet: boolean,
       isPetFriendly: boolean,
-      isAdversiment: boolean
+      isAdversiment: boolean,
+      vacancyNumber: number
     }
 
     const result = await prisma.property.create({
@@ -138,6 +167,7 @@ router.post("/property", async (req, res) => {
         hasInternet,
         isPetFriendly,
         isAdversiment,
+        vacancyNumber,
         owner: {
           connect: {
             id
@@ -176,7 +206,8 @@ router.patch("/:id/property", async (req, res) => {
       hasGourmet,
       hasInternet,
       isPetFriendly,
-      isAdversiment
+      isAdversiment,
+      vacancyNumber
     } = req.body as unknown as {
       name: string,
       description: string,
@@ -194,7 +225,8 @@ router.patch("/:id/property", async (req, res) => {
       hasGourmet: boolean,
       hasInternet: boolean,
       isPetFriendly: boolean,
-      isAdversiment: boolean
+      isAdversiment: boolean,
+      vacancyNumber: number
     }
 
     const propertyResult = await prisma.property.findUnique({
@@ -226,7 +258,8 @@ router.patch("/:id/property", async (req, res) => {
         hasGourmet,
         hasInternet,
         isPetFriendly,
-        isAdversiment
+        isAdversiment,
+        vacancyNumber
       }
     })
 
@@ -277,7 +310,5 @@ router.delete("/:id/property", async (req, res) => {
     res.status(500).json({ "error": "Houve um erro com o servidor" })
   }
 })
-
-
 
 export default router
