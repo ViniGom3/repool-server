@@ -76,7 +76,7 @@
 
 🔴 create report
 
-🟡 remove rent
+✔ remove rent
 
 ✔ remove vacancy
 

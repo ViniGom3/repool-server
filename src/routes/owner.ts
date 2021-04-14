@@ -75,6 +75,33 @@ router.get("/rent", async (req, res) => {
   }
 })
 
+router.delete("/:id/rent", async (req, res) => {
+  try {
+    // @ts-ignore
+    const propertyId = req.loggedUserId;
+    const id = parseInt(req.params.id)
+
+    const query = await prisma.rent.findUnique({
+      where: {
+        id
+      }
+    })
+
+    checkIfSameUser(query.propertyId, propertyId, res)
+
+    const result = await prisma.rent.delete({
+      where: {
+        id
+      }
+    })
+
+    res.status(204).json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.get("/property", async (req, res) => {
   try {
     // @ts-ignore
