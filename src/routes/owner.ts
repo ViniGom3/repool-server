@@ -53,6 +53,28 @@ router.get("/interest", async (req, res) => {
   }
 })
 
+router.get("/rent", async (req, res) => {
+  try {
+    // @ts-ignore
+    const propertyId = req.loggedUserId;
+
+    const result = await prisma.rent.findMany({
+      where: {
+        propertyId
+      },
+      include: {
+        guest: true,
+        property: true
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.get("/property", async (req, res) => {
   try {
     // @ts-ignore

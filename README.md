@@ -80,7 +80,7 @@
 
 🟡 remove vacancy
 
-🟢 get users with activ vacancy
+✔ get users with activ vacancy
 
 ✔ get user with partial rent
 
