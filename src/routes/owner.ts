@@ -8,15 +8,14 @@ const router = Router()
 router.get("/interests", async (req, res) => {
   try {
     // @ts-ignore
-    const propertyId = req.loggedUserId;
+    const ownerId = req.loggedUserId;
 
-    const result = await prisma.interest.findMany({
+    const result = await prisma.property.findMany({
       where: {
-        propertyId
+        ownerId
       },
       include: {
-        Property: true,
-        User: true
+        interests: true
       }
     })
 
