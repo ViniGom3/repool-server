@@ -11,12 +11,17 @@ export const bothConfirmation = async function (result: Interest) {
     const resultProperty = await prisma.property.findFirst({
       where: {
         id: result.propertyId
+      },
+      include: {
+        _count: {
+          select: {
+            rent: true
+          }
+        }
       }
     })
 
-    //TEM QUE FAZER UM COUNT NO NUMERO DE RENTS E CHECAR
-
-    if (resultProperty.vacancyNumber > 0) {
+    if (resultProperty.vacancyNumber > resultProperty._count.rent) {
       const createRent = prisma.rent.create({
         data: {
           guest: {
@@ -40,6 +45,5 @@ export const bothConfirmation = async function (result: Interest) {
       const transactional = await prisma.$transaction([createRent, deleteInterest])
       return transactional
     }
-
   }
 }
