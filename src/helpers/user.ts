@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
 import jsonwebtoken from 'jsonwebtoken';
 import argon2 from 'argon2'
+import { prisma } from '../database'
 
 export const findEmail = async (email) => {
   const user = await prisma.user.findUnique({

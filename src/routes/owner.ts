@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { PrismaClient, propertyCategory } from '@prisma/client'
+import { propertyCategory } from '@prisma/client'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
+import { prisma } from '../database'
 
-const prisma = new PrismaClient()
 const router = Router()
 
 router.get("/interests", async (req, res) => {

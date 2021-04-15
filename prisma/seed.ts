@@ -1,8 +1,7 @@
 import * as faker from 'faker'
-import { PrismaClient, propertyCategory, userRole, userSex } from '@prisma/client'
+import { propertyCategory, userRole, userSex } from '@prisma/client'
+import { prisma } from '../src/database'
 import { hashing } from '../src/helpers'
-
-const prisma = new PrismaClient()
 
 const user: userRole = "USER"
 const owner: userRole = "OWNER"
@@ -10,8 +9,6 @@ const apart: propertyCategory = "APARTMENT"
 const house: propertyCategory = "HOUSE"
 const male: userSex = "MALE"
 const female: userSex = "FEMALE"
-
-
 
 const users = Array.from({ length: 50 }).map((v, i) => ({
   name: faker.name.firstName(),

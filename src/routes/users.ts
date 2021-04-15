@@ -1,8 +1,7 @@
 import { Router } from 'express'
-import { PrismaClient } from '@prisma/client'
 import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice, hashing, verify } from '../helpers'
+import { prisma } from '../database'
 
-const prisma = new PrismaClient()
 const router = Router()
 
 router.get("/users", async (req, res) => {

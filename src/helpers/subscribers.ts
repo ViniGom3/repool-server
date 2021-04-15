@@ -1,6 +1,5 @@
-import { Interest, PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { Interest } from '@prisma/client'
+import { prisma } from '../database'
 
 export const checkIfSameUser = function (id, idLoggedUser, res) {
   if (id !== idLoggedUser) res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })

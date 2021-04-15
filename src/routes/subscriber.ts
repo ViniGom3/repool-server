@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { PrismaClient, propertyCategory } from '@prisma/client'
+import { propertyCategory } from '@prisma/client'
+import { prisma } from '../database'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { createJWT } from '../helpers/user'
 
-const prisma = new PrismaClient()
 const router = Router()
 
 router.get("/:id/user", async (req, res) => {
