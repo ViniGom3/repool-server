@@ -13,9 +13,9 @@ generator client {
 
 model User {
   id        Int        @id @default(autoincrement())
-  email     String     @unique @db.VarChar(255)
-  name      String     @db.VarChar(100)
-  password  String     @db.VarChar(255)
+  email     String     @unique
+  name      String
+  password  String
   avatar    String?
   bio       String?
   role      userRole   @default(USER)
@@ -44,7 +44,7 @@ model Interest {
 
 model Property {
   id              Int              @id @default(autoincrement())
-  name            String           @db.VarChar(100)
+  name            String
   description     String?
   img             String[]
   category        propertyCategory @default(HOUSE)
