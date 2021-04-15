@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { PrismaClient, propertyCategory } from '@prisma/client'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
+import { createJWT } from '../helpers/user'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -659,7 +660,9 @@ router.post("/property", async (req, res) => {
 
     const transactional = await prisma.$transaction([propertyResult, ownerResult])
 
-    res.json(transactional)
+    const jwt = await createJWT(transactional[1].id, transactional[1].role)
+
+    res.json([transactional, jwt])
 
   } catch (err) {
     console.log(err)
