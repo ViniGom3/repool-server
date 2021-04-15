@@ -20,6 +20,10 @@
 
 ✔ get ad filtred by maximum price and minimum price
 
+🟢 pagination on get ad
+
+🟢 upload image on create user
+
 ## Subscriber endpoints
 ✔ get user infos
 
@@ -55,6 +59,8 @@
 
 ✔ create rent by double confirmation
 
+🟢 upload image on create property
+
 ## Owner endpoints
 ✔ get interesteds
 
@@ -81,6 +87,8 @@
 ✔ get users with activ vacancy
 
 ✔ get user with partial rent
+
+🟢 upload image on create property
 
 🔴 create report
 ## Admin endpoints
