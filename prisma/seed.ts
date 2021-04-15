@@ -17,7 +17,7 @@ const hashing = async function (value: string) {
 
 
 
-const users = Array.from({ length: 25 }).map((v, i) => ({
+const users = Array.from({ length: 50 }).map((v, i) => ({
   name: faker.name.firstName(),
   email: faker.internet.email(),
   password: faker.internet.password(),
@@ -29,7 +29,7 @@ const users = Array.from({ length: 25 }).map((v, i) => ({
   cel: faker.phone.phoneNumberFormat()
 }))
 
-const properties = Array.from({ length: 25 }).map((v, i) => ({
+const properties = Array.from({ length: 50 }).map((v, i) => ({
   ownerId: i + 1,
   name: faker.name.firstName(),
   description: faker.lorem.paragraph(),
@@ -53,7 +53,7 @@ const properties = Array.from({ length: 25 }).map((v, i) => ({
   viewed: Math.floor(Math.random() * (i - 0) + 0),
 }))
 
-const rents = Array.from({ length: 25 }).map((v, i) => ({
+const rents = Array.from({ length: 50 }).map((v, i) => ({
   value: Math.floor(Math.random() * (5 - 1) + 1),
   comment: faker.lorem.paragraph(),
   isActive: i < 25 ? false : true,
@@ -61,7 +61,7 @@ const rents = Array.from({ length: 25 }).map((v, i) => ({
   propertyId: i + 1
 }))
 
-const interests = Array.from({ length: 25 }).map((v, i) => ({
+const interests = Array.from({ length: 50 }).map((v, i) => ({
   uConfirmation: i < 25 ? false : true,
   pConfirmation: i < 25 ? false : true,
   userId: 25 - i,
