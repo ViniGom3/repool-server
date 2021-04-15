@@ -43,35 +43,35 @@ model Interest {
 }
 
 model Property {
-  id            Int              @id @default(autoincrement())
-  name          String           @db.VarChar(100)
-  description   String?
-  img           String[]
-  category      propertyCategory @default(HOUSE)
-  vacancyPrice  Float
-  cep           String           @db.VarChar(8)
-  street        String           @db.VarChar(100)
-  neighborhood  String           @db.VarChar(50)
-  city          String           @db.VarChar(50)
-  uf            String           @db.VarChar(2)
-  country       String           @db.VarChar(2)
-  number        String?          @db.VarChar(5)
-  complement    String?          @db.VarChar(100)
-  hasPool       Boolean          @default(false)
-  hasGarage     Boolean          @default(false)
-  hasGourmet    Boolean          @default(false)
-  hasInternet   Boolean          @default(false)
-  isPetFriendly Boolean          @default(false)
-  vacancyNumber Int              @default(1)
-  isAdversiment Boolean          @default(false)
-  viewed        Int              @default(0)
-  ownerId       Int
-  rent          Rent[]           @relation(name: "propertyRent")
-  owner         User             @relation(name: "ownProperty", fields: [ownerId], references: [id])
-  interests     Interest[]       @relation(name: "interestProperties")
-  favorited     User[]           @relation(name: "favoriteProperties")
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  id              Int              @id @default(autoincrement())
+  name            String           @db.VarChar(100)
+  description     String?
+  img             String[]
+  category        propertyCategory @default(HOUSE)
+  vacancyPrice    Float
+  cep             String           @db.VarChar(8)
+  street          String           @db.VarChar(100)
+  neighborhood    String           @db.VarChar(50)
+  city            String           @db.VarChar(50)
+  uf              String           @db.VarChar(2)
+  country         String           @db.VarChar(2)
+  number          String?          @db.VarChar(5)
+  complement      String?          @db.VarChar(100)
+  hasPool         Boolean          @default(false)
+  hasGarage       Boolean          @default(false)
+  hasGourmet      Boolean          @default(false)
+  hasInternet     Boolean          @default(false)
+  isPetFriendly   Boolean          @default(false)
+  vacancyNumber   Int              @default(1)
+  isAdvertisement Boolean          @default(false)
+  viewed          Int              @default(0)
+  ownerId         Int
+  rent            Rent[]           @relation(name: "propertyRent")
+  owner           User             @relation(name: "ownProperty", fields: [ownerId], references: [id])
+  interests       Interest[]       @relation(name: "interestProperties")
+  favorited       User[]           @relation(name: "favoriteProperties")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Rent {

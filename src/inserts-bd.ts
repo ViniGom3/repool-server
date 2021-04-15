@@ -29,7 +29,7 @@ async function main() {
           hasGourmet: true,
           hasInternet: true,
           isPetFriendly: true,
-          isAdversiment: true,
+          isAdvertisement: true,
         }
       },
       bio: "oi",

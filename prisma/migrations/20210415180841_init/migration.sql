@@ -60,7 +60,7 @@ CREATE TABLE "Property" (
     "hasInternet" BOOLEAN NOT NULL DEFAULT false,
     "isPetFriendly" BOOLEAN NOT NULL DEFAULT false,
     "vacancyNumber" INTEGER NOT NULL DEFAULT 1,
-    "isAdversiment" BOOLEAN NOT NULL DEFAULT false,
+    "isAdvertisement" BOOLEAN NOT NULL DEFAULT false,
     "viewed" INTEGER NOT NULL DEFAULT 0,
     "ownerId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

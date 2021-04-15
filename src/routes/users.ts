@@ -124,7 +124,7 @@ router.get("/ad", async (req, res) => {
     if (!!search) {
       result = await prisma.property.findMany({
         where: {
-          isAdversiment: true,
+          isAdvertisement: true,
           hasGarage: garage,
           hasPool: pool,
           hasGourmet: gourmet,
@@ -160,7 +160,7 @@ router.get("/ad", async (req, res) => {
     } else {
       result = await prisma.property.findMany({
         where: {
-          isAdversiment: true,
+          isAdvertisement: true,
           hasGarage: garage,
           hasPool: pool,
           hasGourmet: gourmet,

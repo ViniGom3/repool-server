@@ -599,7 +599,7 @@ router.post("/property", async (req, res) => {
       hasGourmet,
       hasInternet,
       isPetFriendly,
-      isAdversiment,
+      isAdvertisement,
       vacancyNumber,
     } = req.body as unknown as {
       name: string,
@@ -619,7 +619,7 @@ router.post("/property", async (req, res) => {
       hasGourmet: boolean,
       hasInternet: boolean,
       isPetFriendly: boolean,
-      isAdversiment: boolean,
+      isAdvertisement: boolean,
       vacancyNumber: number
     }
 
@@ -642,7 +642,7 @@ router.post("/property", async (req, res) => {
         hasGourmet,
         hasInternet,
         isPetFriendly,
-        isAdversiment,
+        isAdvertisement,
         vacancyNumber,
         owner: {
           connect: {
