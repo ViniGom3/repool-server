@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { PrismaClient } from '@prisma/client'
-import argon2 from 'argon2'
-import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice } from '../helpers/user'
+import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice, hashing, verify } from '../helpers'
 
 const prisma = new PrismaClient()
 const router = Router()
@@ -39,7 +38,7 @@ router.post("/signup", async (req, res) => {
       res.status(400).json({ error: "email já existe" })
     } else {
 
-      const hash = await argon2.hash(password);
+      const hash = await hashing(password);
 
       const createdUser = await prisma.user.create({
         data: {
@@ -89,7 +88,7 @@ router.post("/signin", async (req, res) => {
     } else {
       const { password: hash, id, role } = user
 
-      const isValid = await argon2.verify(hash, password)
+      const isValid = await verify(hash, password)
 
       if (!isValid) {
         res.status(401).json({ error: "Senha incorreta" })

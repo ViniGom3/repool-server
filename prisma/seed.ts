@@ -1,6 +1,6 @@
 import * as faker from 'faker'
 import { PrismaClient, propertyCategory, userRole, userSex } from '@prisma/client'
-import argon2 from 'argon2'
+import { hashing } from '../src/helpers'
 
 const prisma = new PrismaClient()
 
@@ -11,9 +11,7 @@ const house: propertyCategory = "HOUSE"
 const male: userSex = "MALE"
 const female: userSex = "FEMALE"
 
-const hashing = async function (value: string) {
-  return await argon2.hash(value)
-}
+
 
 const users = Array.from({ length: 50 }).map((v, i) => ({
   name: faker.name.firstName(),

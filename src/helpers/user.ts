@@ -56,3 +56,7 @@ export const handlePrice = function (value: string) {
 export const hashing = async function (value: string): Promise<string> {
   return await argon2.hash(value)
 }
+
+export const verify = async function (hash: string, plaintext: string): Promise<Boolean> {
+  return await argon2.verify(hash, plaintext)
+}
