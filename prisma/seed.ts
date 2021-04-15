@@ -15,8 +15,6 @@ const hashing = async function (value: string) {
   return await argon2.hash(value)
 }
 
-
-
 const users = Array.from({ length: 50 }).map((v, i) => ({
   name: faker.name.firstName(),
   email: faker.internet.email(),
@@ -68,7 +66,6 @@ const interests = Array.from({ length: 50 }).map((v, i) => ({
   propertyId: i + 1
 }))
 
-
 async function main() {
   const hash = await hashing(process.env.ADMIN_PASSWORD)
 
@@ -79,9 +76,31 @@ async function main() {
       password: hash,
       role: 'ADMIN',
       avatar: faker.image.avatar(),
-      bio: "Olá, sou o Administrador do sistema Repool. Aqui você pode escolher uma república, um lugar que deseja viver durante sua fase como estudante universitário, bom um preço baixo e na qualidade que desejar",
+      bio: "Olá, sou o Administrador do sistema Repool. Aqui você pode escolher uma república, um lugar que deseja viver durante sua fase como estudante universitário, por um preço baixo e na qualidade que desejar",
       tel: "xxxx-xxxx",
-      cel: "yyyy-yyyy"
+      cel: "yyyy-yyyy",
+      property: {
+        create: {
+          name: 'Casa verde',
+          description: 'Uma casa muito verde',
+          img: 'https://i.pinimg.com/564x/0b/a0/a7/0ba0a7778e66f8605d41d3ba50846f3d.jpg',
+          category: 'HOUSE',
+          cep: '22222222',
+          street: 'rua das ruas',
+          neighborhood: 'bairro',
+          city: 'cidade',
+          uf: 'rj',
+          country: 'br',
+          number: '10',
+          complement: 'Próximo a UFRRJ',
+          vacancyPrice: 555.0,
+          hasGarage: true,
+          hasGourmet: true,
+          hasInternet: true,
+          isPetFriendly: true,
+          isAdvertisement: true,
+        }
+      }
     }
   })
 
@@ -109,24 +128,3 @@ main().catch((e) => {
   prisma.$disconnect()
 })
 
-// property: {
-//   create: {
-//     name: 'Casa verde',
-//     description: 'Uma casa muito verde',
-//     img: 'https://i.pinimg.com/564x/0b/a0/a7/0ba0a7778e66f8605d41d3ba50846f3d.jpg',
-//     category: 'HOUSE',
-//     cep: '22222222',
-//     street: 'rua das ruas',
-//     neighborhood: 'bairro',
-//     city: 'cidade',
-//     uf: 'rj',
-//     country: 'br',
-//     number:
-//     complement: 
-//     vacancyPrice: 555.0,
-//     hasGarage: true,
-//     hasGourmet: true,
-//     hasInternet: true,
-//     isPetFriendly: true,
-//     isAdvertisement: true,
-//   }
