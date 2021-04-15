@@ -146,6 +146,17 @@ router.get("/:id/property", async (req, res) => {
 
     checkIfSameUser(result.ownerId, userId, res)
 
+    await prisma.property.update({
+      where: {
+        id
+      },
+      data: {
+        viewed: {
+          increment: 1,
+        }
+      }
+    })
+
     res.json(result)
   } catch (err) {
     console.log(err)

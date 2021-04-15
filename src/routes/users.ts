@@ -177,4 +177,26 @@ router.get("/ad", async (req, res) => {
   }
 })
 
+router.get("/:id/property", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+    const result = await prisma.property.update({
+      where: {
+        id
+      },
+      data: {
+        viewed: {
+          increment: 1,
+        }
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 export default router
