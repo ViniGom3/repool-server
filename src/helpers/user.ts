@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 import jsonwebtoken from 'jsonwebtoken';
+import argon2 from 'argon2'
 
 export const findEmail = async (email) => {
   const user = await prisma.user.findUnique({
@@ -50,4 +51,8 @@ export const parseBoolean = function (value: string) {
 
 export const handlePrice = function (value: string) {
   return value ? parseFloat(value) : undefined
+}
+
+export const hashing = async function (value: string): Promise<string> {
+  return await argon2.hash(value)
 }
