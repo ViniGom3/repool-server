@@ -31,16 +31,17 @@
     "eslint-plugin-promise": "^4.3.1",
     "git-commit-msg-linter": "^3.1.0",
     "nodemon": "^2.0.7",
-    "prisma": "^2.21.1",
+    "prisma": "^2.21.2",
     "sucrase": "^3.18.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@prisma/client": "^2.21.1",
+    "@prisma/client": "^2.21.2",
     "argon2": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "faker": "^5.5.3",
     "jsonwebtoken": "^8.5.1"
   }
 }
