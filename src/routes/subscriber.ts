@@ -593,6 +593,7 @@ router.post("/property", async (req, res) => {
       uf,
       country,
       number,
+      complement,
       hasPool,
       hasGarage,
       hasGourmet,
@@ -612,6 +613,7 @@ router.post("/property", async (req, res) => {
       uf: string,
       country: string,
       number: string,
+      complement: string
       hasPool: boolean,
       hasGarage: boolean,
       hasGourmet: boolean,
@@ -634,6 +636,7 @@ router.post("/property", async (req, res) => {
         uf,
         country,
         number,
+        complement,
         hasPool,
         hasGarage,
         hasGourmet,
