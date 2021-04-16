@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { propertyCategory } from '@prisma/client'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { prisma } from '../database'
+import { upload } from '../middlewares/multer'
 
 const router = Router()
 
@@ -164,10 +165,12 @@ router.get("/:id/property", async (req, res) => {
   }
 })
 
-router.post("/property", async (req, res) => {
+router.post("/property", upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
+    // @ts-ignore
+    const img: string[] = req.files.map(value => (value.linkUrl))
 
     const { name,
       description,
@@ -231,6 +234,7 @@ router.post("/property", async (req, res) => {
         isPetFriendly,
         isAdvertisement,
         vacancyNumber,
+        img,
         owner: {
           connect: {
             id
@@ -247,11 +251,14 @@ router.post("/property", async (req, res) => {
   }
 })
 
-router.patch("/:id/property", async (req, res) => {
+router.patch("/:id/property", upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
     const id = parseInt(req.params.id)
+
+    // @ts-ignore
+    const img: string[] = req.files.map(value => (value.linkUrl))
 
     const { name,
       description,
@@ -334,7 +341,8 @@ router.patch("/:id/property", async (req, res) => {
         hasInternet,
         isPetFriendly,
         isAdvertisement,
-        vacancyNumber
+        vacancyNumber,
+        img
       }
     })
 

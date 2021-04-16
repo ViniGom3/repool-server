@@ -32,7 +32,7 @@ router.get("/users", async (req, res) => {
 router.post("/signup", upload.single('avatar'), async (req, res) => {
   try {
     // @ts-ignore
-    console.log(req.file)
+    const avatar = req.file.linkUrl
     const { name, email, password, role, tel, cel, sex, bio } = req.body;
     const user = await findEmail(email)
 
@@ -51,7 +51,8 @@ router.post("/signup", upload.single('avatar'), async (req, res) => {
           sex,
           bio,
           tel,
-          cel
+          cel,
+          avatar
         }
       })
 

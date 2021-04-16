@@ -3,6 +3,7 @@ import { propertyCategory } from '@prisma/client'
 import { prisma } from '../database'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { createJWT } from '../helpers/user'
+import { upload } from '../middlewares/multer'
 
 const router = Router()
 
@@ -52,11 +53,14 @@ router.get("/full-user", async (req, res) => {
   }
 })
 
-router.patch("/user", async (req, res) => {
+router.patch("/user", upload.single('avatar'), async (req, res) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId
-    const { name, avatar, tel, cel } = req.body
+    // @ts-ignore
+    const avatar = req.file.linkUrl
+
+    const { name, tel, cel, bio } = req.body
     const { sex } = req.body
 
     const result = await prisma.user.update({
@@ -68,7 +72,8 @@ router.patch("/user", async (req, res) => {
         sex,
         avatar,
         tel,
-        cel
+        cel,
+        bio
       }
     }
     )
@@ -577,10 +582,12 @@ router.patch("/rent/evaluate", async (req, res) => {
   }
 })
 
-router.post("/property", async (req, res) => {
+router.post("/property", upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
+    // @ts-ignore
+    const img: string[] = req.files.map(value => (value.linkUrl))
 
     const { name,
       description,
@@ -644,6 +651,7 @@ router.post("/property", async (req, res) => {
         isPetFriendly,
         isAdvertisement,
         vacancyNumber,
+        img,
         owner: {
           connect: {
             id
