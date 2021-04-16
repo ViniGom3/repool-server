@@ -105,3 +105,6 @@ dist
 
 # Prisma Postgres data
 postgres-data
+
+# GCS credentials
+credentials.json
