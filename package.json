@@ -22,6 +22,7 @@
   "homepage": "https://github.com/ViniGom3/repool-server#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/multer": "^1.4.5",
     "@types/node": "^14.14.39",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "eslint": "^7.24.0",
@@ -43,6 +44,7 @@
     "express": "^4.17.1",
     "faker": "^5.5.3",
     "jsonwebtoken": "^8.5.1",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "multer-cloud-storage": "^2.7.1"
   }
 }
