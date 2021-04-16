@@ -10,24 +10,27 @@ const house: propertyCategory = "HOUSE"
 const male: userSex = "MALE"
 const female: userSex = "FEMALE"
 
-const users = Array.from({ length: 50 }).map((v, i) => ({
+const length = 50
+const mean = Math.floor(length / 2)
+
+const users = Array.from({ length }).map((v, i) => ({
   name: faker.name.firstName(),
   email: faker.internet.email(),
   password: faker.internet.password(),
   avatar: faker.image.avatar(),
-  role: i < 25 ? user : owner,
+  role: i < mean ? user : owner,
   bio: faker.lorem.sentence(),
-  sex: i < 25 ? male : female,
+  sex: i < mean ? male : female,
   tel: faker.phone.phoneNumberFormat(),
   cel: faker.phone.phoneNumberFormat()
 }))
 
-const properties = Array.from({ length: 50 }).map((v, i) => ({
+const properties = Array.from({ length }).map((v, i) => ({
   ownerId: i + 1,
   name: faker.name.firstName(),
   description: faker.lorem.paragraph(),
   img: faker.image.imageUrl(),
-  category: i < 25 ? apart : house,
+  category: i < mean ? apart : house,
   cep: faker.address.zipCodeByState(),
   street: faker.address.streetName(),
   neighborhood: faker.address.county(),
@@ -46,18 +49,18 @@ const properties = Array.from({ length: 50 }).map((v, i) => ({
   viewed: Math.floor(Math.random() * (i - 0) + 0),
 }))
 
-const rents = Array.from({ length: 50 }).map((v, i) => ({
+const rents = Array.from({ length }).map((v, i) => ({
   value: Math.floor(Math.random() * (5 - 1) + 1),
   comment: faker.lorem.paragraph(),
-  isActive: i < 25 ? false : true,
-  guestId: 25 - i,
+  isActive: i < mean ? false : true,
+  guestId: length - i,
   propertyId: i + 1
 }))
 
-const interests = Array.from({ length: 50 }).map((v, i) => ({
-  uConfirmation: i < 25 ? false : true,
-  pConfirmation: i < 25 ? false : true,
-  userId: 25 - i,
+const interests = Array.from({ length }).map((v, i) => ({
+  uConfirmation: i < mean ? false : true,
+  pConfirmation: i < mean ? false : true,
+  userId: length - i,
   propertyId: i + 1
 }))
 
@@ -76,18 +79,21 @@ async function main() {
       cel: "yyyy-yyyy",
       property: {
         create: {
-          name: 'Casa verde',
-          description: 'Uma casa muito verde',
-          img: 'https://i.pinimg.com/564x/0b/a0/a7/0ba0a7778e66f8605d41d3ba50846f3d.jpg',
+          name: 'Casa Lilás',
+          description: 'Uma casa muito Lilás',
+          img: ['https://i.pinimg.com/originals/3a/03/a9/3a03a9db749385c3c8f2dedc5ea2e9c3.jpg',
+            'http://2.bp.blogspot.com/_STMEfocjkw4/TU6DryxaoJI/AAAAAAAACik/rOiLfB12cqc/s1600/WCT_13+de+janeiro+de+2011_0089.jpg',
+            'https://cf.bstatic.com/images/hotel/max1024x768/238/238665580.jpg'
+          ],
           category: 'HOUSE',
           cep: '22222222',
           street: 'rua das ruas',
           neighborhood: 'bairro',
-          city: 'cidade',
-          uf: 'rj',
-          country: 'br',
+          city: 'Seropédica',
+          uf: 'RJ',
+          country: 'BR',
           number: '10',
-          complement: 'Próximo a UFRRJ',
+          complement: 'Próximo à UFRRJ',
           vacancyPrice: 555.0,
           hasGarage: true,
           hasGourmet: true,
