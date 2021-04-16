@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice, hashing, verify } from '../helpers'
 import { prisma } from '../database'
+import { upload } from '../middlewares/multer'
 
 const router = Router()
 
@@ -28,8 +29,10 @@ router.get("/users", async (req, res) => {
   }
 })
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", upload.single('avatar'), async (req, res) => {
   try {
+    // @ts-ignore
+    console.log(req.file)
     const { name, email, password, role, tel, cel, sex, bio } = req.body;
     const user = await findEmail(email)
 
