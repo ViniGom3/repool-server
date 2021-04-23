@@ -52,6 +52,10 @@ export const handlePrice = function (value: string) {
   return value ? parseFloat(value) : undefined
 }
 
+export const handleValue = function (value: string) {
+  return value ? parseInt(value) : undefined
+}
+
 export const hashing = async function (value: string): Promise<string> {
   return await argon2.hash(value)
 }

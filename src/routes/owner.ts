@@ -4,6 +4,7 @@ import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { prisma } from '../database'
 import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
+import { handlePrice, handleValue, parseBoolean } from '../helpers'
 
 const router = Router()
 
@@ -109,7 +110,7 @@ router.get("/property", async (req, res) => {
     // @ts-ignore
     const ownerId = req.loggedUserId;
 
-    const result = await prisma.property.findMany({
+    const result: Property[] = await prisma.property.findMany({
       where: {
         ownerId
       },
@@ -176,7 +177,6 @@ router.post("/property", upload.array('img'), async (req, res) => {
     const { name,
       description,
       category,
-      vacancyPrice,
       cep,
       street,
       neighborhood,
@@ -184,7 +184,11 @@ router.post("/property", upload.array('img'), async (req, res) => {
       uf,
       country,
       number,
-      complement,
+      complement
+    } = req.body as unknown as Property
+
+    const {
+      vacancyPrice,
       hasPool,
       hasGarage,
       hasGourmet,
@@ -192,14 +196,32 @@ router.post("/property", upload.array('img'), async (req, res) => {
       isPetFriendly,
       isAdvertisement,
       vacancyNumber
-    } = req.body as unknown as Property
+    } = req.body as {
+      vacancyPrice: string,
+      hasPool: string,
+      hasGarage: string,
+      hasGourmet: string,
+      hasInternet: string,
+      isPetFriendly: string,
+      isAdvertisement: string,
+      vacancyNumber: string
+    }
+
+    const pool = parseBoolean(hasPool)
+    const garage = parseBoolean(hasGarage)
+    const gourmet = parseBoolean(hasGourmet)
+    const internet = parseBoolean(hasInternet)
+    const petFriendly = parseBoolean(isPetFriendly)
+    const advertisement = parseBoolean(isAdvertisement)
+    const price = handlePrice(vacancyPrice)
+    const vacancyNum = handleValue(vacancyNumber)
 
     const result = await prisma.property.create({
       data: {
         name,
         description,
         category,
-        vacancyPrice,
+        vacancyPrice: price,
         cep,
         street,
         neighborhood,
@@ -208,13 +230,13 @@ router.post("/property", upload.array('img'), async (req, res) => {
         country,
         number,
         complement,
-        hasPool,
-        hasGarage,
-        hasGourmet,
-        hasInternet,
-        isPetFriendly,
-        isAdvertisement,
-        vacancyNumber,
+        hasPool: pool,
+        hasGarage: garage,
+        hasGourmet: gourmet,
+        hasInternet: internet,
+        isPetFriendly: petFriendly,
+        isAdvertisement: advertisement,
+        vacancyNumber: vacancyNum,
         img,
         owner: {
           connect: {

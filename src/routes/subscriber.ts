@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { propertyCategory } from '@prisma/client'
+import { PrismaPromise, propertyCategory } from '@prisma/client'
 import { prisma } from '../database'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
-import { createJWT } from '../helpers/user'
+import { createJWT, handlePrice, handleValue, parseBoolean } from '../helpers/user'
 import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
 
@@ -593,7 +593,6 @@ router.post("/property", upload.array('img'), async (req, res) => {
     const { name,
       description,
       category,
-      vacancyPrice,
       cep,
       street,
       neighborhood,
@@ -601,22 +600,44 @@ router.post("/property", upload.array('img'), async (req, res) => {
       uf,
       country,
       number,
-      complement,
+      complement
+    } = req.body as unknown as Property
+
+    const {
+      vacancyPrice,
       hasPool,
       hasGarage,
       hasGourmet,
       hasInternet,
       isPetFriendly,
       isAdvertisement,
-      vacancyNumber,
-    } = req.body as unknown as Property
+      vacancyNumber
+    } = req.body as {
+      vacancyPrice: string,
+      hasPool: string,
+      hasGarage: string,
+      hasGourmet: string,
+      hasInternet: string,
+      isPetFriendly: string,
+      isAdvertisement: string,
+      vacancyNumber: string
+    }
 
-    const propertyResult = prisma.property.create({
+    const pool = parseBoolean(hasPool)
+    const garage = parseBoolean(hasGarage)
+    const gourmet = parseBoolean(hasGourmet)
+    const internet = parseBoolean(hasInternet)
+    const petFriendly = parseBoolean(isPetFriendly)
+    const advertisement = parseBoolean(isAdvertisement)
+    const price = handlePrice(vacancyPrice)
+    const vacancyNum = handleValue(vacancyNumber)
+
+    const propertyResult: PrismaPromise<Property> = prisma.property.create({
       data: {
         name,
         description,
         category,
-        vacancyPrice,
+        vacancyPrice: price,
         cep,
         street,
         neighborhood,
@@ -625,13 +646,13 @@ router.post("/property", upload.array('img'), async (req, res) => {
         country,
         number,
         complement,
-        hasPool,
-        hasGarage,
-        hasGourmet,
-        hasInternet,
-        isPetFriendly,
-        isAdvertisement,
-        vacancyNumber,
+        hasPool: pool,
+        hasGarage: garage,
+        hasGourmet: gourmet,
+        hasInternet: internet,
+        isPetFriendly: petFriendly,
+        isAdvertisement: advertisement,
+        vacancyNumber: vacancyNum,
         img,
         owner: {
           connect: {
