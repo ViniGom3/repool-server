@@ -4,6 +4,7 @@ import { prisma } from '../database'
 import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { createJWT } from '../helpers/user'
 import { upload } from '../middlewares/multer'
+import { Property } from '../classes'
 
 const router = Router()
 
@@ -608,27 +609,7 @@ router.post("/property", upload.array('img'), async (req, res) => {
       isPetFriendly,
       isAdvertisement,
       vacancyNumber,
-    } = req.body as unknown as {
-      name: string,
-      description: string,
-      category: propertyCategory,
-      vacancyPrice: number,
-      cep: string,
-      street: string,
-      neighborhood: string,
-      city: string,
-      uf: string,
-      country: string,
-      number: string,
-      complement: string
-      hasPool: boolean,
-      hasGarage: boolean,
-      hasGourmet: boolean,
-      hasInternet: boolean,
-      isPetFriendly: boolean,
-      isAdvertisement: boolean,
-      vacancyNumber: number
-    }
+    } = req.body as unknown as Property
 
     const propertyResult = prisma.property.create({
       data: {
@@ -671,7 +652,8 @@ router.post("/property", upload.array('img'), async (req, res) => {
 
     const transactional = await prisma.$transaction([propertyResult, ownerResult])
 
-    const jwt = await createJWT(transactional[1].id, transactional[1].role)
+    const OWNER_POSITION = 1
+    const jwt = await createJWT(transactional[OWNER_POSITION].id, transactional[OWNER_POSITION].role)
 
     res.json([transactional, jwt])
 
