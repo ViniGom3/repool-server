@@ -1,5 +1,5 @@
-import * as faker from 'faker'
 import { propertyCategory, userRole, userSex } from '@prisma/client'
+import faker from 'faker'
 import { prisma } from '../src/database'
 import { hashing } from '../src/helpers'
 
@@ -31,10 +31,10 @@ const properties = Array.from({ length }).map((v, i) => ({
   description: faker.lorem.paragraph(),
   img: faker.image.imageUrl(),
   category: i < mean ? apart : house,
-  cep: faker.address.zipCodeByState(),
+  cep: faker.address.zipCode(),
   street: faker.address.streetName(),
   neighborhood: faker.address.county(),
-  city: faker.address.cityName(),
+  city: faker.address.city(),
   uf: faker.address.stateAbbr(),
   country: faker.address.countryCode(),
   number: `${Math.floor(Math.random() * 100)}`,
