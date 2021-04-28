@@ -18,7 +18,20 @@ router.get("/interests", async (req, res) => {
         ownerId
       },
       select: {
-        interests: true
+        interests: {
+          select: {
+            User: {
+              select: {
+                name: true,
+                avatar: true,
+                sex: true,
+                bio: true,
+                tel: true,
+                cel: true,
+              }
+            }
+          }
+        }
       }
     })
 

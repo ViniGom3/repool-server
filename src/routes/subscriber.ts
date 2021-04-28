@@ -20,6 +20,8 @@ router.get("/:id/user", async (req, res) => {
         avatar: true,
         sex: true,
         bio: true,
+        tel: true,
+        cel: true,
         property: true
       }
     })
