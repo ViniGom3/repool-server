@@ -17,6 +17,7 @@ router.get("/:id/user", async (req, res) => {
       },
       select: {
         name: true,
+        email: true,
         avatar: true,
         sex: true,
         bio: true,

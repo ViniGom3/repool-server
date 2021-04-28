@@ -23,6 +23,7 @@ router.get("/interests", async (req, res) => {
             User: {
               select: {
                 name: true,
+                email: true,
                 avatar: true,
                 sex: true,
                 bio: true,
