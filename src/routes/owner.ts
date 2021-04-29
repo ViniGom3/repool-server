@@ -69,7 +69,7 @@ router.get('/interest', async (req, res) => {
   }
 })
 
-router.get('/rent', async (req, res) => {
+router.get('/rents', async (req, res) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId
@@ -120,7 +120,7 @@ router.delete('/:id/rent', async (req, res) => {
   }
 })
 
-router.get('/property', async (req, res) => {
+router.get('/properties', async (req, res) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId
