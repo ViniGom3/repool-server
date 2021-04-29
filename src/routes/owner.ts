@@ -198,8 +198,6 @@ router.get('/:id/property', async (req, res) => {
       }
     })
 
-    checkIfSameUser(result.ownerId, userId, res)
-
     await prisma.property.update({
       where: {
         id
