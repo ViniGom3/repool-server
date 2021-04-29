@@ -20,6 +20,7 @@ router.get("/interests", async (req, res) => {
       select: {
         interests: {
           select: {
+            Property: true,
             User: {
               select: {
                 name: true,
