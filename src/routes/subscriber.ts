@@ -1,8 +1,7 @@
 import { Router } from 'express'
-import { PrismaPromise, propertyCategory } from '@prisma/client'
+import { PrismaPromise } from '@prisma/client'
 import { prisma } from '../database'
-import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
-import { createJWT, handlePrice, handleValue, parseBoolean } from '../helpers/user'
+import { bothConfirmation, checkIfSameUser, createJWT, handlePrice, handleValue, parseBoolean } from '../helpers'
 import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
 

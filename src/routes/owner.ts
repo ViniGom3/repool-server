@@ -1,10 +1,9 @@
 import { Router } from 'express'
 import { propertyCategory } from '@prisma/client'
-import { bothConfirmation, checkIfSameUser } from '../helpers/subscribers'
 import { prisma } from '../database'
 import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
-import { handlePrice, handleValue, parseBoolean } from '../helpers'
+import { bothConfirmation, checkIfSameUser, handlePrice, handleValue, parseBoolean } from '../helpers'
 
 const router = Router()
 
