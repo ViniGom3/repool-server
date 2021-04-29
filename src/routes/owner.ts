@@ -143,7 +143,7 @@ router.get('/property', async (req, res) => {
   }
 })
 
-router.get('/property/:id/interests', async (req, res) => {
+router.get('/property/:id/interest', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
