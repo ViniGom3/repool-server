@@ -7,10 +7,10 @@ import { bothConfirmation, checkIfSameUser, handlePrice, handleValue, parseBoole
 
 const router = Router()
 
-router.get("/interests", async (req, res) => {
+router.get('/interests', async (req, res) => {
   try {
-    // @ts-ignore
-    const ownerId = req.loggedUserId;
+    // @ts-expect-error
+    const ownerId = req.loggedUserId
 
     const result = await prisma.property.findMany({
       where: {
@@ -28,7 +28,7 @@ router.get("/interests", async (req, res) => {
                 sex: true,
                 bio: true,
                 tel: true,
-                cel: true,
+                cel: true
               }
             }
           }
@@ -39,14 +39,14 @@ router.get("/interests", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.get("/interest", async (req, res) => {
+router.get('/interest', async (req, res) => {
   try {
-    // @ts-ignore
-    const ownerId = req.loggedUserId;
+    // @ts-expect-error
+    const ownerId = req.loggedUserId
 
     const result = await prisma.interest.findMany({
       where: {
@@ -66,14 +66,14 @@ router.get("/interest", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.get("/rent", async (req, res) => {
+router.get('/rent', async (req, res) => {
   try {
-    // @ts-ignore
-    const propertyId = req.loggedUserId;
+    // @ts-expect-error
+    const propertyId = req.loggedUserId
 
     const result = await prisma.rent.findMany({
       where: {
@@ -88,14 +88,14 @@ router.get("/rent", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.delete("/:id/rent", async (req, res) => {
+router.delete('/:id/rent', async (req, res) => {
   try {
-    // @ts-ignore
-    const propertyId = req.loggedUserId;
+    // @ts-expect-error
+    const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
 
     const query = await prisma.rent.findUnique({
@@ -115,14 +115,14 @@ router.delete("/:id/rent", async (req, res) => {
     res.status(204).json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.get("/property", async (req, res) => {
+router.get('/property', async (req, res) => {
   try {
-    // @ts-ignore
-    const ownerId = req.loggedUserId;
+    // @ts-expect-error
+    const ownerId = req.loggedUserId
 
     const result: Property[] = await prisma.property.findMany({
       where: {
@@ -139,14 +139,48 @@ router.get("/property", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.get("/:id/property", async (req, res) => {
+router.get('/property/:id/interests', async (req, res) => {
   try {
-    // @ts-ignore
-    const userId = req.loggedUserId;
+    const propertyId = parseInt(req.params.id)
+    const result = await prisma.property.findUnique({
+      where: {
+        id: propertyId
+      },
+      select: {
+        interests: {
+          select: {
+            User: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+                sex: true,
+                bio: true,
+                tel: true,
+                cel: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
+  }
+})
+
+router.get('/:id/property', async (req, res) => {
+  try {
+    // @ts-expect-error
+    const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
     const result = await prisma.property.findUnique({
@@ -169,7 +203,7 @@ router.get("/:id/property", async (req, res) => {
       },
       data: {
         viewed: {
-          increment: 1,
+          increment: 1
         }
       }
     })
@@ -177,18 +211,19 @@ router.get("/:id/property", async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.post("/property", upload.array('img'), async (req, res) => {
+router.post('/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-ignore
-    const id = req.loggedUserId;
-    // @ts-ignore
+    // @ts-expect-error
+    const id = req.loggedUserId
+    // @ts-expect-error
     const img: string[] = req.files.map(value => (value.linkUrl))
 
-    const { name,
+    const {
+      name,
       description,
       category,
       cep,
@@ -211,13 +246,13 @@ router.post("/property", upload.array('img'), async (req, res) => {
       isAdvertisement,
       vacancyNumber
     } = req.body as {
-      vacancyPrice: string,
-      hasPool: string,
-      hasGarage: string,
-      hasGourmet: string,
-      hasInternet: string,
-      isPetFriendly: string,
-      isAdvertisement: string,
+      vacancyPrice: string
+      hasPool: string
+      hasGarage: string
+      hasGourmet: string
+      hasInternet: string
+      isPetFriendly: string
+      isAdvertisement: string
       vacancyNumber: string
     }
 
@@ -261,23 +296,23 @@ router.post("/property", upload.array('img'), async (req, res) => {
     })
 
     res.json(result)
-
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.patch("/:id/property", upload.array('img'), async (req, res) => {
+router.patch('/:id/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-ignore
-    const userId = req.loggedUserId;
+    // @ts-expect-error
+    const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
-    // @ts-ignore
+    // @ts-expect-error
     const img: string[] = req.files.map(value => (value.linkUrl))
 
-    const { name,
+    const {
+      name,
       description,
       category,
       vacancyPrice,
@@ -297,24 +332,24 @@ router.patch("/:id/property", upload.array('img'), async (req, res) => {
       isAdvertisement,
       vacancyNumber
     } = req.body as unknown as {
-      name: string,
-      description: string,
-      category: propertyCategory,
-      vacancyPrice: number,
-      cep: string,
-      street: string,
-      neighborhood: string,
-      city: string,
-      uf: string,
-      country: string,
-      number: string,
-      complement: string,
-      hasPool: boolean,
-      hasGarage: boolean,
-      hasGourmet: boolean,
-      hasInternet: boolean,
-      isPetFriendly: boolean,
-      isAdvertisement: boolean,
+      name: string
+      description: string
+      category: propertyCategory
+      vacancyPrice: number
+      cep: string
+      street: string
+      neighborhood: string
+      city: string
+      uf: string
+      country: string
+      number: string
+      complement: string
+      hasPool: boolean
+      hasGarage: boolean
+      hasGourmet: boolean
+      hasInternet: boolean
+      isPetFriendly: boolean
+      isAdvertisement: boolean
       vacancyNumber: number
     }
 
@@ -333,7 +368,7 @@ router.patch("/:id/property", upload.array('img'), async (req, res) => {
 
     checkIfSameUser(propertyResult.ownerId, userId, res)
 
-    if (propertyResult._count.rent > vacancyNumber) res.status(404).json({ "error": "is not possible a vacancyNumber less than rents actives" })
+    if (propertyResult._count.rent > vacancyNumber) res.status(404).json({ error: 'is not possible a vacancyNumber less than rents actives' })
 
     const result = await prisma.property.update({
       where: {
@@ -366,14 +401,14 @@ router.patch("/:id/property", upload.array('img'), async (req, res) => {
     res.json(result)
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.delete("/:id/property", async (req, res) => {
+router.delete('/:id/property', async (req, res) => {
   try {
-    // @ts-ignore
-    const userId = req.loggedUserId;
+    // @ts-expect-error
+    const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
     const propertyResult = await prisma.property.findUnique({
@@ -404,17 +439,16 @@ router.delete("/:id/property", async (req, res) => {
 
     const transactional = await prisma.$transaction([deleteProperty, deleteRent, deleteInterest])
     res.status(204).json(transactional)
-
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
-router.patch("/:id/interest", async (req, res) => {
+router.patch('/:id/interest', async (req, res) => {
   try {
-    // @ts-ignore
-    const propertyId = req.loggedUserId;
+    // @ts-expect-error
+    const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
     const { pConfirmation } = req.body
 
@@ -424,7 +458,7 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
-    if (!query) res.status(404).json({ "error": "interest não encontrado" })
+    if (!query) res.status(404).json({ error: 'interest não encontrado' })
     checkIfSameUser(propertyId, query.propertyId, res)
 
     const result = await prisma.interest.update({
@@ -438,13 +472,11 @@ router.patch("/:id/interest", async (req, res) => {
 
     const resultConfirmation = bothConfirmation(result)
 
-    if (resultConfirmation)
-      res.json(resultConfirmation)
+    if (resultConfirmation) { res.json(resultConfirmation) }
     res.json(result)
-
   } catch (err) {
     console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
   }
 })
 
