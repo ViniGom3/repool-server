@@ -478,4 +478,28 @@ router.patch('/:id/interest', async (req, res) => {
   }
 })
 
+router.get('/properties/mean', async (req, res) => {
+  try {
+    // @ts-ignore
+    const ownerId = req.loggedUserId
+
+    const mean = await prisma.rent.aggregate({
+      where: {
+        property: {
+          ownerId
+        }
+      },
+      avg: {
+        value: true
+      }
+    })
+
+    res.json({ mean })
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
+  }
+})
+
 export default router
