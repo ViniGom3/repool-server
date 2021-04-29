@@ -194,7 +194,17 @@ router.get("/:id/property", async (req, res) => {
       }
     })
 
-    res.json(result)
+    const agreggate = await prisma.rent.aggregate({
+      where: {
+        propertyId: id
+      },
+      avg: {
+        value: true
+      }
+    })
+
+    const propertyWithAggregate = Object.assign(result, agreggate)
+    res.json(propertyWithAggregate)
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })

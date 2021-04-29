@@ -182,8 +182,6 @@ router.get('/property/:id/interest', async (req, res) => {
 
 router.get('/:id/property', async (req, res) => {
   try {
-    // @ts-ignore
-    const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
     const result = await prisma.property.findUnique({
@@ -198,6 +196,15 @@ router.get('/:id/property', async (req, res) => {
       }
     })
 
+    const agreggate = await prisma.rent.aggregate({
+      where: {
+        propertyId: id
+      },
+      avg: {
+        value: true
+      }
+    })
+
     await prisma.property.update({
       where: {
         id
@@ -209,7 +216,8 @@ router.get('/:id/property', async (req, res) => {
       }
     })
 
-    res.json(result)
+    const propertyWithAggregate = Object.assign(result, agreggate)
+    res.json(propertyWithAggregate)
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: 'Houve um erro com o servidor' })
