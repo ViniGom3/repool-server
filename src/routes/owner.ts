@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { propertyCategory } from '@prisma/client'
 import { prisma } from '../database'
 import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
@@ -335,27 +334,7 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
       isPetFriendly,
       isAdvertisement,
       vacancyNumber
-    } = req.body as unknown as {
-      name: string
-      description: string
-      category: propertyCategory
-      vacancyPrice: number
-      cep: string
-      street: string
-      neighborhood: string
-      city: string
-      uf: string
-      country: string
-      number: string
-      complement: string
-      hasPool: boolean
-      hasGarage: boolean
-      hasGourmet: boolean
-      hasInternet: boolean
-      isPetFriendly: boolean
-      isAdvertisement: boolean
-      vacancyNumber: number
-    }
+    } = req.body as unknown as Property
 
     const propertyResult = await prisma.property.findUnique({
       where: {
