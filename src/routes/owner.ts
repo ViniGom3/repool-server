@@ -9,7 +9,7 @@ const router = Router()
 
 router.get('/interests', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result = await prisma.property.findMany({
@@ -45,7 +45,7 @@ router.get('/interests', async (req, res) => {
 
 router.get('/interest', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result = await prisma.interest.findMany({
@@ -72,7 +72,7 @@ router.get('/interest', async (req, res) => {
 
 router.get('/rent', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const propertyId = req.loggedUserId
 
     const result = await prisma.rent.findMany({
@@ -94,7 +94,7 @@ router.get('/rent', async (req, res) => {
 
 router.delete('/:id/rent', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -121,7 +121,7 @@ router.delete('/:id/rent', async (req, res) => {
 
 router.get('/property', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result: Property[] = await prisma.property.findMany({
@@ -145,10 +145,11 @@ router.get('/property', async (req, res) => {
 
 router.get('/property/:id/interests', async (req, res) => {
   try {
-    const propertyId = parseInt(req.params.id)
+    const id = parseInt(req.params.id)
+
     const result = await prisma.property.findUnique({
       where: {
-        id: propertyId
+        id
       },
       select: {
         interests: {
@@ -179,7 +180,7 @@ router.get('/property/:id/interests', async (req, res) => {
 
 router.get('/:id/property', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -217,9 +218,9 @@ router.get('/:id/property', async (req, res) => {
 
 router.post('/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const id = req.loggedUserId
-    // @ts-expect-error
+    // @ts-ignore
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -304,11 +305,11 @@ router.post('/property', upload.array('img'), async (req, res) => {
 
 router.patch('/:id/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
-    // @ts-expect-error
+    // @ts-ignore
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -407,7 +408,7 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
 
 router.delete('/:id/property', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -447,7 +448,7 @@ router.delete('/:id/property', async (req, res) => {
 
 router.patch('/:id/interest', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
     const { pConfirmation } = req.body
