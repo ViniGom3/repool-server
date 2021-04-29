@@ -154,6 +154,9 @@ router.get('/property/:id/interest', async (req, res) => {
       select: {
         interests: {
           select: {
+            id: true,
+            uConfirmation: true,
+            pConfirmation: true,
             User: {
               select: {
                 id: true,
