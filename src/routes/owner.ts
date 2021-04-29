@@ -72,11 +72,13 @@ router.get('/interest', async (req, res) => {
 router.get('/rent', async (req, res) => {
   try {
     // @ts-ignore
-    const propertyId = req.loggedUserId
+    const ownerId = req.loggedUserId
 
     const result = await prisma.rent.findMany({
       where: {
-        propertyId
+        property: {
+          ownerId
+        }
       },
       include: {
         guest: true,
