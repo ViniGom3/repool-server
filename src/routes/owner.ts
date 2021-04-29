@@ -452,7 +452,7 @@ router.delete('/:id/property', async (req, res) => {
 router.patch('/:id/interest', async (req, res) => {
   try {
     // @ts-ignore
-    const propertyId = req.loggedUserId
+    const ownerId = req.loggedUserId
     const id = parseInt(req.params.id)
     const { pConfirmation } = req.body
 
@@ -470,7 +470,7 @@ router.patch('/:id/interest', async (req, res) => {
     })
 
     if (!query) res.status(404).json({ error: 'interest não encontrado' })
-    checkIfSameUser(propertyId, query.propertyId, res)
+    checkIfSameUser(ownerId, query.Property.ownerId, res)
 
     const result = await prisma.interest.update({
       where: {
