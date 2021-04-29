@@ -459,6 +459,13 @@ router.patch('/:id/interest', async (req, res) => {
     const query = await prisma.interest.findUnique({
       where: {
         id
+      },
+      select: {
+        Property: {
+          select: {
+            ownerId: true
+          }
+        }
       }
     })
 
