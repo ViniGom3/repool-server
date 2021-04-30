@@ -1,6 +1,6 @@
 # repool-server
 
- 🔴🟡🟢✔
+ 🟢✔
 ## Users endpoints
 ✔ get all users
 
@@ -22,7 +22,7 @@
 
 🟢 pagination on get ad
 
-🟢 upload image on create user
+✔ upload image on create user
 
 ## Subscriber endpoints
 ✔ get user infos
@@ -59,7 +59,7 @@
 
 ✔ create rent by double confirmation
 
-🟢 upload image on create property
+✔ upload image on create property
 
 ## Owner endpoints
 ✔ get interesteds
@@ -88,8 +88,8 @@
 
 ✔ get user with partial rent
 
-🟢 upload image on create property
+✔ upload image on create property
 
-🔴 create report
+✔ create report
 ## Admin endpoints
-🔴 create report
+✔ create report
