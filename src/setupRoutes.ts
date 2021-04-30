@@ -1,7 +1,6 @@
 import { Express, Router } from 'express'
-import { Users, Subscribers, Owners } from './routes'
-import { verifyJWT } from './helpers/user'
-import { verifyRole } from './helpers/owner'
+import { Users, Subscribers, Owners, Admin } from './routes'
+import { verifyJWT, verifyRole, verifyAdmin } from './helpers'
 
 export default (app: Express): void => {
   const router = Router()
@@ -13,4 +12,7 @@ export default (app: Express): void => {
 
   app.use(verifyRole)
   app.use('/owner', Owners)
+
+  app.use(verifyAdmin)
+  app.use('/admin', Admin)
 }
