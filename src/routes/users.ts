@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { findEmail, findByEmail, createJWT, parseBoolean, handlePrice, hashing, verify } from '../helpers'
 import { prisma } from '../database'
 import { upload } from '../middlewares/multer'
+import { Pagination } from '../classes'
 
 const router = Router()
 
@@ -112,6 +113,10 @@ router.get("/ad", async (req, res) => {
     const { hasPool, hasGarage, hasGourmet, hasInternet, isPetFriendly, maximumPrice, minimumPrice } = req.query as unknown as
       { hasPool: string, hasGarage: string, hasGourmet: string, hasInternet: string, isPetFriendly: string, maximumPrice: string, minimumPrice: string }
 
+    const { skip: skipper = '0', take: takker = '20' } = req.query as unknown as Pagination
+    const skip = parseInt(skipper)
+    const take = parseInt(takker)
+
     const pool = parseBoolean(hasPool)
     const garage = parseBoolean(hasGarage)
     const gourmet = parseBoolean(hasGourmet)
@@ -125,6 +130,8 @@ router.get("/ad", async (req, res) => {
     let result
     if (!!search) {
       result = await prisma.property.findMany({
+        skip,
+        take,
         where: {
           isAdvertisement: true,
           hasGarage: garage,
@@ -161,6 +168,8 @@ router.get("/ad", async (req, res) => {
       })
     } else {
       result = await prisma.property.findMany({
+        skip,
+        take,
         where: {
           isAdvertisement: true,
           hasGarage: garage,
