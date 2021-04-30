@@ -98,4 +98,21 @@ router.get('/sex-mounth', async (req, res) => {
   }
 })
 
+router.get('/properties', async (req, res) => {
+  try {
+    const all = await prisma.property.count()
+
+    const propertiesInRj = await prisma.property.count({ where: { uf: 'RJ' } })
+    const propertiesInMg = await prisma.property.count({ where: { uf: 'MG' } })
+    const propertiesInSp = await prisma.property.count({ where: { uf: 'SP' } })
+    const propertiesInEs = await prisma.property.count({ where: { uf: 'ES' } })
+
+    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    res.json(countProperty)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 export default router
