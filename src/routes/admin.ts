@@ -196,4 +196,59 @@ router.get('/ad', async (req, res) => {
   }
 })
 
+router.get('/ad-mounth', async (req, res) => {
+  try {
+    const today = new Date()
+    const thirtyDaysAgo = handleDateAgo(today)
+
+    const all = await prisma.property.count({
+      where: {
+        isAdvertisement: true,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      }
+    })
+
+    const propertiesInRj = await prisma.property.count({
+      where: {
+        uf: 'RJ', isAdvertisement: true,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      }
+    })
+    const propertiesInMg = await prisma.property.count({
+      where: {
+        uf: 'MG', isAdvertisement: true,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      }
+    })
+    const propertiesInSp = await prisma.property.count({
+      where: {
+        uf: 'SP', isAdvertisement: true,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      }
+    })
+    const propertiesInEs = await prisma.property.count({
+      where: {
+        uf: 'ES', isAdvertisement: true,
+        createdAt: {
+          gte: thirtyDaysAgo
+        }
+      }
+    })
+
+    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    res.json(countProperty)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 export default router
