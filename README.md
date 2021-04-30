@@ -1,6 +1,6 @@
 # repool-server
 
- 🟢✔
+ ✔
 ## Users endpoints
 ✔ get all users
 
@@ -20,7 +20,7 @@
 
 ✔ get ad filtred by maximum price and minimum price
 
-🟢 pagination on get ad
+✔ pagination on get ad
 
 ✔ upload image on create user
 
