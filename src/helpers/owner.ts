@@ -1,7 +1,6 @@
 export function verifyRole(req, res, next) {
   const rolePermited = ["OWNER", "ADMIN"]
 
-  console.log(checkRole(rolePermited, req.loggedUserRole))
   if (!checkRole(rolePermited, req.loggedUserRole))
     res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
   next()
