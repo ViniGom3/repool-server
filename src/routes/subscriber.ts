@@ -457,7 +457,7 @@ router.patch("/:id/interest", async (req, res) => {
       }
     })
 
-    const resultConfirmation = bothConfirmation(result)
+    const resultConfirmation = await bothConfirmation(result)
 
     if (resultConfirmation)
       res.json(resultConfirmation)
