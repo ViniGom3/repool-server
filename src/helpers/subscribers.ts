@@ -6,43 +6,49 @@ export const checkIfSameUser = function (id, idLoggedUser, res) {
 }
 
 export const bothConfirmation = async function (result: Interest) {
-  if (result.pConfirmation && result.uConfirmation) {
-    const resultProperty = await prisma.property.findFirst({
-      where: {
-        id: result.propertyId
-      },
-      include: {
-        _count: {
-          select: {
-            rent: true
-          }
-        }
-      }
-    })
-
-    if (resultProperty.vacancyNumber > resultProperty._count.rent) {
-      const createRent = prisma.rent.create({
-        data: {
-          guest: {
-            connect: {
-              id: result.userId
-            }
-          },
-          property: {
-            connect: {
-              id: result.propertyId
-            }
-          }
-        }
-      })
-
-      const deleteInterest = prisma.interest.deleteMany({
+  try {
+    if (result.pConfirmation && result.uConfirmation) {
+      const resultProperty = await prisma.property.findFirst({
         where: {
-          id: result.userId
+          id: result.propertyId
+        },
+        include: {
+          _count: {
+            select: {
+              rent: true
+            }
+          }
         }
       })
-      const transactional = await prisma.$transaction([createRent, deleteInterest])
-      return transactional
+
+      if (resultProperty.vacancyNumber > resultProperty._count.rent) {
+        const createRent = prisma.rent.create({
+          data: {
+            guest: {
+              connect: {
+                id: result.userId
+              }
+            },
+            property: {
+              connect: {
+                id: result.propertyId
+              }
+            }
+          }
+        })
+
+        const deleteInterest = prisma.interest.deleteMany({
+          where: {
+            userId: result.userId
+          }
+        })
+
+        const transactional = await prisma.$transaction([createRent, deleteInterest])
+        return transactional
+      }
+      throw new Error()
     }
+  } catch (error) {
+    throw new Error()
   }
 }
