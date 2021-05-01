@@ -79,7 +79,7 @@ model Rent {
   value      Int?
   comment    String?
   isActive   Boolean  @default(true)
-  guestId    Int      @unique
+  guestId    Int
   guest      User     @relation(fields: [guestId], references: [id])
   property   Property @relation("propertyRent", fields: [propertyId], references: [id])
   propertyId Int
