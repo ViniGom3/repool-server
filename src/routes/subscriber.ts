@@ -592,6 +592,29 @@ router.patch("/rent/evaluate", async (req, res) => {
   }
 })
 
+router.patch("/rent/:id/evaluate", async (req, res) => {
+  try {
+    // @ts-ignore
+    const id = parseInt(req.params.id)
+    const { value, comment } = req.body as unknown as { value: number, comment: string }
+
+    const result = await prisma.rent.update({
+      where: {
+        id
+      },
+      data: {
+        comment,
+        value
+      }
+    })
+
+    res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ "error": "Houve um erro com o servidor" })
+  }
+})
+
 router.post("/property", upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
