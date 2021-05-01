@@ -297,22 +297,19 @@ router.get("/property/:id/rent", async (req, res) => {
 router.get("/rent", async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const guestId = req.loggedUserId
 
-    const result = await prisma.user.findUnique({
+    const rent = await prisma.rent.findFirst({
       where: {
-        id
+        guestId,
+        isActive: true
       },
-      select: {
-        rent: {
-          include: {
-            property: true
-          }
-        }
+      include: {
+        property: true
       }
     })
 
-    res.json(result)
+    res.json(rent)
   } catch (err) {
     console.log(err)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
