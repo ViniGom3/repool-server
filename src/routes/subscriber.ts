@@ -535,9 +535,10 @@ router.post("/rent/evaluate", async (req, res) => {
     // @ts-ignore
     const userId = req.loggedUserId
 
-    const checkEvaluate = await prisma.rent.findUnique({
+    const checkEvaluate = await prisma.rent.findFirst({
       where: {
-        guestId: userId
+        guestId: userId,
+        isActive: true
       }
     })
 
@@ -573,9 +574,10 @@ router.patch("/rent/evaluate", async (req, res) => {
     const userId = req.loggedUserId;
     const { value, comment } = req.body as unknown as { value: number, comment: string }
 
-    const result = await prisma.rent.update({
+    const result = await prisma.rent.updateMany({
       where: {
-        guestId: userId
+        guestId: userId,
+        isActive: true
       },
       data: {
         comment,
