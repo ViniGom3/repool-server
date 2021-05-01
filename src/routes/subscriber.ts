@@ -264,17 +264,15 @@ router.get("/property/:id/rent", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
-    const result = await prisma.property.findUnique({
+    const query = await prisma.rent.findMany({
       where: {
-        id
+        propertyId: id,
+        isActive: true
       },
-      select: {
-        rent: {
-          include: {
-            guest: true
-          }
-        }
-      },
+      include: {
+        guest: true,
+        property: true
+      }
     })
 
     const agreggate = await prisma.rent.aggregate({
@@ -286,7 +284,7 @@ router.get("/property/:id/rent", async (req, res) => {
       }
     })
 
-    const propertyWithAggregate = Object.assign(result, agreggate)
+    const propertyWithAggregate = Object.assign(query, agreggate)
     res.json(propertyWithAggregate)
   } catch (err) {
     console.log(err)
@@ -299,7 +297,7 @@ router.get("/rent", async (req, res) => {
     // @ts-ignore
     const guestId = req.loggedUserId
 
-    const rent = await prisma.rent.findFirst({
+    const rent = await prisma.rent.findMany({
       where: {
         guestId,
         isActive: true
