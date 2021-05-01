@@ -529,44 +529,44 @@ router.delete("/:id/interest", async (req, res) => {
   }
 })
 
-router.post("/rent/evaluate", async (req, res) => {
-  try {
-    const { comment, value, propertyId } = req.body
-    // @ts-ignore
-    const userId = req.loggedUserId
+// router.post("/rent/evaluate", async (req, res) => {
+//   try {
+//     const { comment, value, propertyId } = req.body
+//     // @ts-ignore
+//     const userId = req.loggedUserId
 
-    const checkEvaluate = await prisma.rent.findFirst({
-      where: {
-        guestId: userId,
-        isActive: true
-      }
-    })
+//     const checkEvaluate = await prisma.rent.findFirst({
+//       where: {
+//         guestId: userId,
+//         isActive: true
+//       }
+//     })
 
-    if (checkEvaluate.value) res.status(400).json({ "error": "Usuário já avaliou" })
+//     if (checkEvaluate.value) res.status(400).json({ "error": "Usuário já avaliou" })
 
-    const result = await prisma.rent.create({
-      data: {
-        comment,
-        value,
-        guest: {
-          connect: {
-            id: userId
-          }
-        },
-        property: {
-          connect: {
-            id: propertyId
-          }
-        }
-      }
-    })
+//     const result = await prisma.rent.create({
+//       data: {
+//         comment,
+//         value,
+//         guest: {
+//           connect: {
+//             id: userId
+//           }
+//         },
+//         property: {
+//           connect: {
+//             id: propertyId
+//           }
+//         }
+//       }
+//     })
 
-    res.json(result)
-  } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
-  }
-})
+//     res.json(result)
+//   } catch (err) {
+//     console.log(err)
+//     res.status(500).json({ "error": "Houve um erro com o servidor" })
+//   }
+// })
 
 router.patch("/rent/evaluate", async (req, res) => {
   try {
