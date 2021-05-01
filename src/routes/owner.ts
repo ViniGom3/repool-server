@@ -8,7 +8,7 @@ const router = Router()
 
 router.get('/interests', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
 
     const result = await prisma.property.findMany({
@@ -44,7 +44,7 @@ router.get('/interests', async (req, res) => {
 
 router.get('/interest', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
 
     const result = await prisma.interest.findMany({
@@ -71,7 +71,7 @@ router.get('/interest', async (req, res) => {
 
 router.get('/rents', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
 
     const result = await prisma.rent.findMany({
@@ -95,7 +95,7 @@ router.get('/rents', async (req, res) => {
 
 router.delete('/:id/rent', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -122,7 +122,7 @@ router.delete('/:id/rent', async (req, res) => {
 
 router.get('/properties', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
 
     const result: Property[] = await prisma.property.findMany({
@@ -144,7 +144,7 @@ router.get('/properties', async (req, res) => {
   }
 })
 
-router.get('/property/:id/interest', async (req, res) => {
+router.get('/property/:id/interests', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 
@@ -176,6 +176,46 @@ router.get('/property/:id/interest', async (req, res) => {
     })
 
     res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
+  }
+})
+
+router.get('/property/:id/rents/active', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+
+    const result = await prisma.property.findUnique({
+      where: {
+        id
+      },
+      select: {
+        rent: {
+          select: {
+            id: true,
+            comment: true,
+            isActive: true,
+            guest: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                avatar: true,
+                sex: true,
+                bio: true,
+                tel: true,
+                cel: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    const activeRents = result.rent.filter(element => element.isActive)
+
+    res.json(activeRents)
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: 'Houve um erro com o servidor' })
@@ -228,9 +268,9 @@ router.get('/:id/property', async (req, res) => {
 
 router.post('/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const id = req.loggedUserId
-    // @ts-ignore
+    // @ts-expect-error
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -315,11 +355,11 @@ router.post('/property', upload.array('img'), async (req, res) => {
 
 router.patch('/:id/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
-    // @ts-ignore
+    // @ts-expect-error
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -398,7 +438,7 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
 
 router.delete('/:id/property', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -438,7 +478,7 @@ router.delete('/:id/property', async (req, res) => {
 
 router.patch('/:id/interest', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
     const id = parseInt(req.params.id)
     const { pConfirmation } = req.body
@@ -480,7 +520,7 @@ router.patch('/:id/interest', async (req, res) => {
 
 router.get('/properties/mean', async (req, res) => {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     const ownerId = req.loggedUserId
 
     const mean = await prisma.rent.aggregate({
@@ -495,7 +535,6 @@ router.get('/properties/mean', async (req, res) => {
     })
 
     res.json({ mean })
-
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: 'Houve um erro com o servidor' })
