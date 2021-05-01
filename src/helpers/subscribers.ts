@@ -6,33 +6,39 @@ export const checkIfSameUser = function (id, idLoggedUser, res) {
   if (id !== idLoggedUser) res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
 }
 
-export const bothConfirmation = async function (result: Interest) {
+export function greaterThan(biggerValue: number, smallerValue: number): boolean {
+  return biggerValue > smallerValue
+}
+
+export const bothConfirmation = async function (interest: Interest) {
+  const { propertyId, userId, pConfirmation, uConfirmation } = interest
+
   try {
-    if (result.pConfirmation && result.uConfirmation) {
+    if (pConfirmation && uConfirmation) {
       const resultProperty: Property = await prisma.property.findUnique({
         where: {
-          id: result.propertyId
+          id: propertyId
         }
       })
 
       const countActiveRentsOnProperty: number = await prisma.rent.count({
         where: {
-          propertyId: result.propertyId,
+          propertyId,
           isActive: true
         }
       })
 
-      if (resultProperty.vacancyNumber > countActiveRentsOnProperty) {
+      if (greaterThan(resultProperty.vacancyNumber, countActiveRentsOnProperty)) {
         const createRent = prisma.rent.create({
           data: {
             guest: {
               connect: {
-                id: result.userId
+                id: userId
               }
             },
             property: {
               connect: {
-                id: result.propertyId
+                id: propertyId
               }
             }
           }
@@ -40,7 +46,7 @@ export const bothConfirmation = async function (result: Interest) {
 
         const deleteInterest = prisma.interest.deleteMany({
           where: {
-            userId: result.userId
+            userId
           }
         })
 
