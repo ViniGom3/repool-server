@@ -360,14 +360,11 @@ router.post('/property', upload.array('img'), async (req, res) => {
   }
 })
 
-router.patch('/:id/property', upload.array('img'), async (req, res) => {
+router.patch('/:id/property', async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
-
-    // @ts-ignore
-    const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
       name,
@@ -432,7 +429,6 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
         isPetFriendly,
         isAdvertisement,
         vacancyNumber,
-        img
       }
     })
 
