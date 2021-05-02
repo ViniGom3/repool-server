@@ -8,7 +8,7 @@ const router = Router()
 
 router.get('/interests', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result = await prisma.property.findMany({
@@ -44,7 +44,7 @@ router.get('/interests', async (req, res) => {
 
 router.get('/interest', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result = await prisma.interest.findMany({
@@ -71,7 +71,7 @@ router.get('/interest', async (req, res) => {
 
 router.get('/rents', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result = await prisma.rent.findMany({
@@ -95,7 +95,7 @@ router.get('/rents', async (req, res) => {
 
 router.delete('/:id/rent', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const propertyId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -122,7 +122,7 @@ router.delete('/:id/rent', async (req, res) => {
 
 router.get('/properties', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const result: Property[] = await prisma.property.findMany({
@@ -268,9 +268,9 @@ router.get('/:id/property', async (req, res) => {
 
 router.post('/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const id = req.loggedUserId
-    // @ts-expect-error
+    // @ts-ignore
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -355,11 +355,11 @@ router.post('/property', upload.array('img'), async (req, res) => {
 
 router.patch('/:id/property', upload.array('img'), async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
-    // @ts-expect-error
+    // @ts-ignore
     const img: string[] = req.files.map(value => (value.linkUrl))
 
     const {
@@ -438,7 +438,7 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
 
 router.delete('/:id/property', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const userId = req.loggedUserId
     const id = parseInt(req.params.id)
 
@@ -478,7 +478,7 @@ router.delete('/:id/property', async (req, res) => {
 
 router.patch('/:id/interest', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
     const id = parseInt(req.params.id)
     const { pConfirmation } = req.body
@@ -520,7 +520,7 @@ router.patch('/:id/interest', async (req, res) => {
 
 router.get('/properties/mean', async (req, res) => {
   try {
-    // @ts-expect-error
+    // @ts-ignore
     const ownerId = req.loggedUserId
 
     const mean = await prisma.rent.aggregate({

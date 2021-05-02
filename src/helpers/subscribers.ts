@@ -1,4 +1,4 @@
-import { Interest, Property } from '@prisma/client'
+import { Interest, Property } from '../classes'
 import { prisma } from '../database'
 
 export const checkIfSameUser = function (id, idLoggedUser, res) {
