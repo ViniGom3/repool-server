@@ -96,16 +96,23 @@ router.get('/rents', async (req, res) => {
 router.delete('/:id/rent', async (req, res) => {
   try {
     // @ts-ignore
-    const propertyId = req.loggedUserId
+    const ownerId = req.loggedUserId
     const id = parseInt(req.params.id)
 
     const query = await prisma.rent.findUnique({
       where: {
         id
+      },
+      select: {
+        property: {
+          select: {
+            ownerId
+          }
+        }
       }
     })
 
-    checkIfSameUser(query.propertyId, propertyId, res)
+    checkIfSameUser(query.property.ownerId, ownerId, res)
 
     const result = await prisma.rent.delete({
       where: {
