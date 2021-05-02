@@ -1,2 +1,2 @@
-export * from './property'
+export * from './prisma'
 export * from './pagination'
