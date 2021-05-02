@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { prisma } from '../database'
-import { upload } from '../middlewares/multer'
 import { Property } from '../classes'
-import { bothConfirmation, checkIfSameUser, handlePrice, handleValue, parseBoolean } from '../helpers'
+import { prisma } from '../database'
+import { bothConfirmation, checkIfSameUser, handleImage, handlePrice, handleValue, parseBoolean } from '../helpers'
+import { upload } from '../middlewares/multer'
 
 const router = Router()
 
@@ -437,6 +437,47 @@ router.patch('/:id/property', upload.array('img'), async (req, res) => {
     })
 
     res.json(result)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'Houve um erro com o servidor' })
+  }
+})
+
+router.patch('/:id/property/img', upload.array('img'), async (req, res) => {
+  try {
+    // @ts-ignore
+    const userId = req.loggedUserId
+    const id = parseInt(req.params.id)
+    const img: string[] = req.body.img
+    // @ts-ignore
+    const image: string[] = req.files.map(value => (value.linkUrl))
+    const imagesMixed = handleImage(img, image)
+
+    const propertyResult = await prisma.property.findUnique({
+      where: {
+        id
+      },
+      include: {
+        _count: {
+          select: {
+            rent: true
+          }
+        }
+      }
+    })
+
+    checkIfSameUser(propertyResult.ownerId, userId, res)
+
+    const propertyUpdated: Property = await prisma.property.update({
+      where: {
+        id
+      },
+      data: {
+        img: imagesMixed
+      }
+    })
+
+    res.json(propertyUpdated)
   } catch (err) {
     console.log(err)
     res.status(500).json({ error: 'Houve um erro com o servidor' })
