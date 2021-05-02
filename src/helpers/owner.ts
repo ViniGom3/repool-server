@@ -9,3 +9,8 @@ export function verifyRole(req, res, next) {
 function checkRole(rolePermited: string[], roleToCheck: string): boolean {
   return rolePermited.some(rolePermited => rolePermited === roleToCheck)
 }
+
+export function handleImage(oldImages: string[], newImages: string[]): string[] {
+  const arrayFilled = [...oldImages, ...newImages]
+  return arrayFilled.filter(x => x)
+}
