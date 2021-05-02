@@ -443,13 +443,13 @@ router.patch('/:id/property/img', upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId
-    const id = parseInt(req.params.id)
-    const img: string[] = req.body.img
     // @ts-ignore
     const image: string[] = req.files.map(value => (value.linkUrl))
+    const id = parseInt(req.params.id)
+    const img: string[] = req.body.img
     const imagesMixed = handleImage(img, image)
 
-    const propertyResult = await prisma.property.findUnique({
+    const propertyResult: Property = await prisma.property.findUnique({
       where: {
         id
       },
