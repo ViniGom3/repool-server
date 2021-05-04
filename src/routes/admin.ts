@@ -24,7 +24,7 @@ router.get('/sex', async (req, res) => {
   }
 })
 
-router.get('/sex-mounth', async (req, res) => {
+router.get('/sex-month', async (req, res) => {
   try {
     const today = new Date()
     const thirtyDaysAgo = handleDateAgo(today)
@@ -76,7 +76,7 @@ router.get('/properties', async (req, res) => {
   }
 })
 
-router.get('/properties-mounth', async (req, res) => {
+router.get('/properties-month', async (req, res) => {
   try {
     const today = new Date()
     const thirtyDaysAgo = handleDateAgo(today)
@@ -133,7 +133,7 @@ router.get('/ad', async (req, res) => {
   }
 })
 
-router.get('/ad-mounth', async (req, res) => {
+router.get('/ad-month', async (req, res) => {
   try {
     const today = new Date()
     const thirtyDaysAgo = handleDateAgo(today)
