@@ -109,30 +109,6 @@ router.get('/properties-month', async (req, res) => {
   }
 })
 
-router.get('/ad', async (req, res) => {
-  try {
-    const all = await prisma.property.count({
-      where: { isAdvertisement: true }
-    })
-
-    const propertiesInAd = await prisma.property.groupBy({
-      where: {
-        isAdvertisement: true
-      },
-      by: ["uf"],
-      count: {
-        uf: true
-      }
-    })
-
-    const countProperty = { all, propertiesInAd }
-    res.json(countProperty)
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
-  }
-})
-
 router.get('/ad-month', async (req, res) => {
   try {
     const today = new Date()
