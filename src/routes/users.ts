@@ -244,4 +244,22 @@ router.get('/ad/count', async (req, res) => {
   }
 })
 
+router.get("/:id/evaluate", async (req, res) => {
+  const id = parseInt(req.params.id)
+
+  try {
+    const favorites = await prisma.rent.aggregate({
+      where: {
+        propertyId: id
+      },
+      avg: {
+        value: true
+      }
+    })
+    res.json(favorites)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 export default router
