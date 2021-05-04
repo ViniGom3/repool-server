@@ -220,7 +220,7 @@ router.get("/:id/property", async (req, res) => {
   }
 })
 
-router.get('/ad', async (req, res) => {
+router.get('/ad/count', async (req, res) => {
   try {
     const all = await prisma.property.count({
       where: { isAdvertisement: true }
