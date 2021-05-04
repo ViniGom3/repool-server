@@ -9,32 +9,15 @@ router.get('/sex', async (req, res) => {
 
     const all = await prisma.user.count()
 
-    const men = await prisma.user.count({
-      where: {
-        sex: "MALE"
+    const usersBySex = await prisma.user.groupBy({
+      by: ["sex"],
+      count: {
+        sex: true
       }
     })
 
-    const women = await prisma.user.count({
-      where: {
-        sex: "FEMALE"
-      }
-    })
-
-    const unknow = await prisma.user.count({
-      where: {
-        sex: "NOTKNOW"
-      }
-    })
-
-    const notapplicable = await prisma.user.count({
-      where: {
-        sex: 'NOTAPPLICABLE'
-      }
-    })
-
-    const countSex = { all, men, women, unknow, notapplicable }
-    res.json(countSex)
+    const countBySex = { all, usersBySex }
+    res.json(countBySex)
   } catch (error) {
     console.log(error)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
@@ -54,43 +37,19 @@ router.get('/sex-mounth', async (req, res) => {
       }
     })
 
-    const men = await prisma.user.count({
+    const usersBySexCreatedThirtyDaysAgo = await prisma.user.groupBy({
       where: {
-        sex: "MALE",
         createdAt: {
           gte: thirtyDaysAgo
         }
+      },
+      by: ["sex"],
+      count: {
+        sex: true
       }
     })
 
-    const women = await prisma.user.count({
-      where: {
-        sex: "FEMALE",
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-
-    const unknow = await prisma.user.count({
-      where: {
-        sex: "NOTKNOW",
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-
-    const notapplicable = await prisma.user.count({
-      where: {
-        sex: "NOTAPPLICABLE",
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-
-    const countSex = { all, men, women, unknow, notapplicable }
+    const countSex = { all, usersBySexCreatedThirtyDaysAgo }
     res.json(countSex)
   } catch (error) {
     console.log(error)
@@ -102,12 +61,14 @@ router.get('/properties', async (req, res) => {
   try {
     const all = await prisma.property.count()
 
-    const propertiesInRj = await prisma.property.count({ where: { uf: 'RJ' } })
-    const propertiesInMg = await prisma.property.count({ where: { uf: 'MG' } })
-    const propertiesInSp = await prisma.property.count({ where: { uf: 'SP' } })
-    const propertiesInEs = await prisma.property.count({ where: { uf: 'ES' } })
+    const propertiesByUf = await prisma.property.groupBy({
+      by: ["uf"],
+      count: {
+        uf: true
+      }
+    })
 
-    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    const countProperty = { all, propertiesByUf }
     res.json(countProperty)
   } catch (error) {
     console.log(error)
@@ -128,40 +89,19 @@ router.get('/properties-mounth', async (req, res) => {
       }
     })
 
-    const propertiesInRj = await prisma.property.count({
+    const propertiesByUfCreatedThirtyDaysAgo = await prisma.property.groupBy({
       where: {
-        uf: 'RJ',
         createdAt: {
           gte: thirtyDaysAgo
         }
-      }
-    })
-    const propertiesInMg = await prisma.property.count({
-      where: {
-        uf: 'MG',
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-    const propertiesInSp = await prisma.property.count({
-      where: {
-        uf: 'SP',
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-    const propertiesInEs = await prisma.property.count({
-      where: {
-        uf: 'ES',
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
+      },
+      by: ["uf"],
+      count: {
+        uf: true
       }
     })
 
-    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    const countProperty = { all, propertiesByUfCreatedThirtyDaysAgo }
     res.json(countProperty)
   } catch (error) {
     console.log(error)
@@ -175,20 +115,17 @@ router.get('/ad', async (req, res) => {
       where: { isAdvertisement: true }
     })
 
-    const propertiesInRj = await prisma.property.count({
-      where: { uf: 'RJ', isAdvertisement: true }
-    })
-    const propertiesInMg = await prisma.property.count({
-      where: { uf: 'MG', isAdvertisement: true }
-    })
-    const propertiesInSp = await prisma.property.count({
-      where: { uf: 'SP', isAdvertisement: true }
-    })
-    const propertiesInEs = await prisma.property.count({
-      where: { uf: 'ES', isAdvertisement: true }
+    const propertiesInAd = await prisma.property.groupBy({
+      where: {
+        isAdvertisement: true
+      },
+      by: ["uf"],
+      count: {
+        uf: true
+      }
     })
 
-    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    const countProperty = { all, propertiesInAd }
     res.json(countProperty)
   } catch (error) {
     console.log(error)
@@ -210,40 +147,17 @@ router.get('/ad-mounth', async (req, res) => {
       }
     })
 
-    const propertiesInRj = await prisma.property.count({
+    const propertiesInAdCreatedThirtyDaysAgo = await prisma.property.groupBy({
       where: {
-        uf: 'RJ', isAdvertisement: true,
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-    const propertiesInMg = await prisma.property.count({
-      where: {
-        uf: 'MG', isAdvertisement: true,
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-    const propertiesInSp = await prisma.property.count({
-      where: {
-        uf: 'SP', isAdvertisement: true,
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
-      }
-    })
-    const propertiesInEs = await prisma.property.count({
-      where: {
-        uf: 'ES', isAdvertisement: true,
-        createdAt: {
-          gte: thirtyDaysAgo
-        }
+        isAdvertisement: true
+      },
+      by: ["uf"],
+      count: {
+        uf: true
       }
     })
 
-    const countProperty = { all, propertiesInRj, propertiesInMg, propertiesInSp, propertiesInEs }
+    const countProperty = { all, propertiesInAdCreatedThirtyDaysAgo }
     res.json(countProperty)
   } catch (error) {
     console.log(error)
