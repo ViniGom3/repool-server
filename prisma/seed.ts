@@ -1,5 +1,5 @@
 import { propertyCategory, userRole, userSex } from '@prisma/client'
-import faker from 'faker'
+import faker from 'faker-br'
 import { prisma } from '../src/database'
 import { hashing } from '../src/helpers'
 
@@ -67,43 +67,43 @@ const interests = Array.from({ length }).map((v, i) => ({
 async function main() {
   const hash = await hashing(process.env.ADMIN_PASSWORD)
 
-  await prisma.user.create({
-    data: {
-      name: 'Admin',
-      email: 'admin@repool.com.br',
-      password: hash,
-      role: 'ADMIN',
-      avatar: faker.image.avatar(),
-      bio: "Olá, sou o Administrador do sistema Repool. Aqui você pode escolher uma república, um lugar que deseja viver durante sua fase como estudante universitário, por um preço baixo e na qualidade que desejar",
-      tel: "xxxx-xxxx",
-      cel: "yyyy-yyyy",
-      property: {
-        create: {
-          name: 'Casa Lilás',
-          description: 'Uma casa muito Lilás',
-          img: ['https://i.pinimg.com/originals/3a/03/a9/3a03a9db749385c3c8f2dedc5ea2e9c3.jpg',
-            'http://2.bp.blogspot.com/_STMEfocjkw4/TU6DryxaoJI/AAAAAAAACik/rOiLfB12cqc/s1600/WCT_13+de+janeiro+de+2011_0089.jpg',
-            'https://cf.bstatic.com/images/hotel/max1024x768/238/238665580.jpg'
-          ],
-          category: 'HOUSE',
-          cep: '22222222',
-          street: 'rua das ruas',
-          neighborhood: 'bairro',
-          city: 'Seropédica',
-          uf: 'RJ',
-          country: 'BR',
-          number: '10',
-          complement: 'Próximo à UFRRJ',
-          vacancyPrice: 555.0,
-          hasGarage: true,
-          hasGourmet: true,
-          hasInternet: true,
-          isPetFriendly: true,
-          isAdvertisement: true,
-        }
-      }
-    }
-  })
+  //   await prisma.user.create({
+  //   data: {
+  //     name: 'Admin',
+  //       email: 'admin@repool.com.br',
+  //         password: hash,
+  //           role: 'ADMIN',
+  //             avatar: faker.image.avatar(),
+  //               bio: "Olá, sou o Administrador do sistema Repool. Aqui você pode escolher uma república, um lugar que deseja viver durante sua fase como estudante universitário, por um preço baixo e na qualidade que desejar",
+  //                 tel: "xxxx-xxxx",
+  //                   cel: "yyyy-yyyy",
+  //                     property: {
+  //       create: {
+  //         name: 'Casa Lilás',
+  //           description: 'Uma casa muito Lilás',
+  //             img: ['https://i.pinimg.com/originals/3a/03/a9/3a03a9db749385c3c8f2dedc5ea2e9c3.jpg',
+  //               'http://2.bp.blogspot.com/_STMEfocjkw4/TU6DryxaoJI/AAAAAAAACik/rOiLfB12cqc/s1600/WCT_13+de+janeiro+de+2011_0089.jpg',
+  //               'https://cf.bstatic.com/images/hotel/max1024x768/238/238665580.jpg'
+  //             ],
+  //               category: 'HOUSE',
+  //                 cep: '22222222',
+  //                   street: 'rua das ruas',
+  //                     neighborhood: 'bairro',
+  //                       city: 'Seropédica',
+  //                         uf: 'RJ',
+  //                           country: 'BR',
+  //                             number: '10',
+  //                               complement: 'Próximo à UFRRJ',
+  //                                 vacancyPrice: 555.0,
+  //                                   hasGarage: true,
+  //                                     hasGourmet: true,
+  //                                       hasInternet: true,
+  //                                         isPetFriendly: true,
+  //                                           isAdvertisement: true,
+  //         }
+  //     }
+  //   }
+  // })
 
   await prisma.user.createMany({
     data: users
