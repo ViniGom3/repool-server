@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "rimraf dist && tsc && node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc",
     "compile": "tsc -w",
-    "start": "npm run build && nodemon --watch ./dist --nolazy dist/server.js"
+    "dev": "npm run build && nodemon --watch ./dist --nolazy dist/server.js"
   },
   "repository": {
     "type": "git",
