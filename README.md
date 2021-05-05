@@ -31,6 +31,12 @@ docker-compose up
 E um container contendo uma instancia Postgres será baixado, e iniciado no Docker.
 
 Em seguida, tendo o NodeJS instalado e execute:
+
+```
+npm install
+```
+Isso irá baixar todas as dependênciais
+
 ```
 npm run start
 ```
