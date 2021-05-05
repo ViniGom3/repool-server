@@ -176,7 +176,11 @@ router.get("/ad", async (req, res) => {
           hasPool: pool,
           hasGourmet: gourmet,
           hasInternet: internet,
-          isPetFriendly: petFriendly
+          isPetFriendly: petFriendly,
+          vacancyPrice: {
+            lte: maxPrice,
+            gte: minPrice
+          }
         }
       })
     }
