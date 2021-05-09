@@ -64,7 +64,8 @@ Para preencher os dados com dados aleatórios, utilize o comando:
 ```
 npx prisma db seed --preview-feature
 ```
-
+## Test API's
+API tests podem ser feitos por meio da pasta client, na raiz do projeto. O arquivo user.http se refere a ações que podem ser executadas por qualquer usuário, subscriber.http se refere a ações que podem ser executados por qualquer usuário inscrito na plataforma e logado, owner.http são ações que podem ser executadas por usuário proprietários e admin.http, ações do administrador do sistema.
 ## Server tasks
 ### Users endpoints
 ✔ get all users
