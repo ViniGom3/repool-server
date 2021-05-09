@@ -56,6 +56,7 @@ router.get("/full-user", async (req, res) => {
   }
 })
 
+// TODO: split api in api to change data and api to change photo
 router.patch("/user", upload.single('avatar'), async (req, res) => {
   try {
     // @ts-ignore
@@ -155,6 +156,7 @@ router.get("/favorites", async (req, res) => {
   }
 })
 
+// TODO: change api path to "/:property_id/favorites"
 router.patch("/property/:property_id/favorites", async (req, res) => {
   try {
     // @ts-ignore
@@ -218,6 +220,7 @@ router.patch("/property/:property_id/favorites", async (req, res) => {
   }
 })
 
+// TODO: change api path to /evaluation
 router.get("/evaluate", async (req, res) => {
   try {
     // @ts-ignore
@@ -244,6 +247,7 @@ router.get("/evaluate", async (req, res) => {
   }
 })
 
+// TODO: remove
 router.get("/evaluates", async (req, res) => {
   try {
     const evaluates = await prisma.rent.findMany({
@@ -314,6 +318,7 @@ router.get("/rent", async (req, res) => {
   }
 })
 
+// TODO: remove
 router.get("/rent/property/:id/user", async (req, res) => {
   try {
     const id = parseInt(req.params.id)
@@ -349,8 +354,6 @@ router.post("/property/:property_id/interest", async (req, res) => {
     // @ts-ignore
     const id = req.loggedUserId
     const propertyId = parseInt(req.params.property_id)
-
-
 
     const interest = await prisma.user.findUnique({
       where: {
@@ -592,6 +595,7 @@ router.patch("/rent/evaluate", async (req, res) => {
   }
 })
 
+// TODO: fix to block evaluation if user not has been guest
 router.patch("/rent/:id/evaluate", async (req, res) => {
   try {
     // @ts-ignore
@@ -615,6 +619,7 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
   }
 })
 
+// TODO: refactor api to isolate upload img to property creation
 router.post("/property", upload.array('img'), async (req, res) => {
   try {
     // @ts-ignore
