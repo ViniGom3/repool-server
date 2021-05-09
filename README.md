@@ -1,4 +1,14 @@
 # repool-server
+Serviço de aluguel de repúblicas universitárias.
+
+O projeto visa o desenvolvimento de uma solução de software que sirva de auxílio para pessoas interessadas (provavelmente alunos universitários) encontrarem e alugarem moradias temporárias próximas às universidades.
+
+Quando um aluno é aprovado em um vestibular, um novo desafio começa que é o de se preparar para conseguir estudar. Com o SISU, pessoas de qualquer parte do país e até do exterior, que fizeram o Enem, podem se cadastrar para concorrer a uma vaga universitária. Uma vez que se é aprovado, faz-se necessário que o futuro discente faça planos para que consiga estudar. Para alguns, um transporte rodoviário entre bairros e municípios basta, para outros que moram a uma maior distância, é necessário buscar moradias temporárias (geralmente durante o curso da universidade) e que sejam próximas à universidade. A maioria com um orçamento limitado, busca repartir o espaço com outros interessados e com isso, reduzir as despesas com aluguel. 
+Além disso, buscar em uma cidade, por vezes, desconhecida, um lugar que seja relativamente seguro, barato e próximo da universidade pode ser para muitos um desafio.
+Temos ainda, por outra ótica, a oportunidade de moradores locais, com espaços ociosos, de lucrarem com o aluguem de suas propriedades.
+
+Desta forma, vemos que é necessário um meio de ligar o proprietário de um imóvel a um interessado, considerando demandas como a divisão de custo da moradia, proximidade com o ambiente de estudos, explicitação dos custos e quaisquer outras características que sejam de interesse dos potenciais futuros inquilinos.
+Este projeto visa suprir estas demandas. Oferecendo ao locador a capacidade de alugar sua propriedade.
 
 # Necessary files
 credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt).
