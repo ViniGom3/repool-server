@@ -30,6 +30,7 @@ router.get("/users", async (req, res) => {
   }
 })
 
+// TODO: CHANGE THIS API TO application/json and isolate image
 router.post("/signup", upload.single('avatar'), async (req, res) => {
   try {
     // @ts-ignore
@@ -68,6 +69,7 @@ router.post("/signup", upload.single('avatar'), async (req, res) => {
   }
 })
 
+//  TODO: REMOVE THIS API
 router.get("/email", async (req, res) => {
   try {
     const { email } = req.body
@@ -230,18 +232,7 @@ router.get('/ad/count', async (req, res) => {
       where: { isAdvertisement: true }
     })
 
-    const propertiesInAd = await prisma.property.groupBy({
-      where: {
-        isAdvertisement: true
-      },
-      by: ["uf"],
-      count: {
-        uf: true
-      }
-    })
-
-    const countProperty = { all, propertiesInAd }
-    res.json(countProperty)
+    res.json(all)
   } catch (error) {
     console.log(error)
     res.status(500).json({ "error": "Houve um erro com o servidor" })
