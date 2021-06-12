@@ -89,14 +89,16 @@ router.get("/email", async (req, res) => {
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await findByEmail(email);
+    const result = await findByEmail(email);
 
-    if (!user) {
+    if (!result) {
       res.status(404).json({ error: "Usuário não encontrado" });
     } else {
-      const { password: hash, id, role } = user;
+      const { password: hash, id, role } = result;
 
       const isValid = await verify(hash, password);
+
+      const { password: passToRemove, ...user } = result;
 
       if (!isValid) {
         res.status(401).json({ error: "Senha incorreta" });
