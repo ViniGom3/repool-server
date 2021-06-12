@@ -10,7 +10,6 @@ import {
   verify,
 } from "../helpers";
 import { prisma } from "../database";
-import { upload } from "../middlewares/multer";
 import { Pagination } from "../classes";
 
 const router = Router();
