@@ -1,18 +1,25 @@
-import { Router } from 'express'
-import { PrismaPromise } from '@prisma/client'
-import { prisma } from '../database'
-import { bothConfirmation, checkIfSameUser, createJWT, handlePrice, handleValue, parseBoolean } from '../helpers'
-import { upload } from '../middlewares/multer'
-import { Property } from '../classes'
+import { Router } from "express";
+import { PrismaPromise } from "@prisma/client";
+import { prisma } from "../database";
+import {
+  bothConfirmation,
+  checkIfSameUser,
+  createJWT,
+  handlePrice,
+  handleValue,
+  parseBoolean,
+} from "../helpers";
+import { upload } from "../middlewares/multer";
+import { Property } from "../classes";
 
-const router = Router()
+const router = Router();
 
 router.get("/:id/user", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
     const user = await prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         name: true,
@@ -22,54 +29,52 @@ router.get("/:id/user", async (req, res) => {
         bio: true,
         tel: true,
         cel: true,
-        property: true
-      }
-    })
-    res.json(user)
+        property: true,
+      },
+    });
+    res.json(user);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
 router.get("/full-user", async (req, res) => {
   try {
-
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
 
     const result = await prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         property: true,
         interests: true,
         favorited: true,
-        rent: true
-      }
-    })
-    const { password, ...user } = result
-    res.json(user)
-
+        rent: true,
+      },
+    });
+    const { password, ...user } = result;
+    res.json(user);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
 // TODO: split api in api to change data and api to change photo
-router.patch("/user", upload.single('avatar'), async (req, res) => {
+router.patch("/user", upload.single("avatar"), async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
     // @ts-ignore
-    const avatar = req.file.linkUrl
+    const avatar = req.file.linkUrl;
 
-    const { name, tel, cel, bio } = req.body
-    const { sex } = req.body
+    const { name, tel, cel, bio } = req.body;
+    const { sex } = req.body;
 
     const result = await prisma.user.update({
       where: {
-        id
+        id,
       },
       data: {
         name,
@@ -77,175 +82,178 @@ router.patch("/user", upload.single('avatar'), async (req, res) => {
         avatar,
         tel,
         cel,
-        bio
-      }
-    }
-    )
+        bio,
+      },
+    });
 
-    const { password, ...user } = result
-    res.json(user)
-
+    const { password, ...user } = result;
+    res.json(user);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
 router.delete("/user", async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
 
     const user = await prisma.user.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
     if (!user) {
-      res.status(404).json({ "error": "objeto não encontrado" })
+      res.status(404).json({ error: "objeto não encontrado" });
     }
 
     const deleteInterest = prisma.interest.deleteMany({
       where: {
-        userId: id
-      }
-    })
+        userId: id,
+      },
+    });
 
     const deleteRent = prisma.rent.deleteMany({
       where: {
-        guestId: id
-      }
-    })
+        guestId: id,
+      },
+    });
 
     const deleteProperty = prisma.property.deleteMany({
       where: {
-        ownerId: id
-      }
-    })
+        ownerId: id,
+      },
+    });
 
     const deleteUser = prisma.user.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
-    const transactional = await prisma.$transaction([deleteInterest, deleteRent, deleteProperty, deleteUser])
-    res.status(204).json(transactional)
+    const transactional = await prisma.$transaction([
+      deleteInterest,
+      deleteRent,
+      deleteProperty,
+      deleteUser,
+    ]);
+    res.status(204).json(transactional);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
 router.get("/favorites", async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
 
     const user = await prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       select: {
-        favorited: true
-      }
-    })
+        favorited: true,
+      },
+    });
 
-    res.json(user)
+    res.json(user);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-})
+});
 
 // TODO: change api path to "/:property_id/favorites"
 router.patch("/property/:property_id/favorites", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
-    const id = parseInt(req.params.property_id)
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.property_id);
 
     const favorites = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
         favorited: {
           where: {
-            id
-          }
-        }
-      }
-    })
+            id,
+          },
+        },
+      },
+    });
 
-    let result
+    let result;
 
     if (favorites.favorited.length === 0) {
       result = await prisma.user.update({
         where: {
-          id: userId
+          id: userId,
         },
         data: {
           favorited: {
             connect: {
-              id
-            }
-          }
+              id,
+            },
+          },
         },
         include: {
-          favorited: true
-        }
-      })
+          favorited: true,
+        },
+      });
     } else {
       result = await prisma.user.update({
         where: {
-          id: userId
+          id: userId,
         },
         data: {
           favorited: {
             disconnect: {
-              id
-            }
-          }
+              id,
+            },
+          },
         },
         include: {
-          favorited: true
-        }
-      })
+          favorited: true,
+        },
+      });
     }
 
-    const { password, ...user } = result
-    res.json(user)
+    const { password, ...user } = result;
+    res.json(user);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // TODO: change api path to /evaluation
 router.get("/evaluate", async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
 
     const evaluate = await prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         rent: {
           select: {
             value: true,
-            comment: true
-          }
-        }
-      }
-    })
+            comment: true,
+          },
+        },
+      },
+    });
 
-    res.json(evaluate)
+    res.json(evaluate);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // TODO: remove
 router.get("/evaluates", async (req, res) => {
@@ -253,284 +261,290 @@ router.get("/evaluates", async (req, res) => {
     const evaluates = await prisma.rent.findMany({
       select: {
         value: true,
-        comment: true
-      }
-    })
+        comment: true,
+      },
+    });
 
-    res.json(evaluates)
+    res.json(evaluates);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.get("/property/:id/rent", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const query = await prisma.rent.findMany({
       where: {
         propertyId: id,
-        isActive: true
+        isActive: true,
       },
       include: {
         guest: true,
-        property: true
-      }
-    })
+        property: true,
+      },
+    });
 
     const agreggate = await prisma.rent.aggregate({
       where: {
-        propertyId: id
+        propertyId: id,
       },
       avg: {
-        value: true
-      }
-    })
+        value: true,
+      },
+    });
 
-    const propertyWithAggregate = Object.assign(query, agreggate)
-    res.json(propertyWithAggregate)
+    const propertyWithAggregate = Object.assign(query, agreggate);
+    res.json(propertyWithAggregate);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.get("/rent", async (req, res) => {
   try {
     // @ts-ignore
-    const guestId = req.loggedUserId
+    const guestId = req.loggedUserId;
 
     const rent = await prisma.rent.findMany({
       where: {
         guestId,
-        isActive: true
+        isActive: true,
       },
       include: {
-        property: true
-      }
-    })
+        property: true,
+      },
+    });
 
-    res.json(rent)
+    res.json(rent);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // TODO: remove
 router.get("/rent/property/:id/user", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     // @ts-ignore
-    const userId = req.loggedUserId
+    const userId = req.loggedUserId;
 
     const result = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         ownerId: true,
         rent: {
           select: {
-            guest: true
-          }
-        }
-      }
-    })
+            guest: true,
+          },
+        },
+      },
+    });
 
-    checkIfSameUser(userId, result.ownerId, res)
+    checkIfSameUser(userId, result.ownerId, res);
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.post("/property/:property_id/interest", async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
-    const propertyId = parseInt(req.params.property_id)
+    const id = req.loggedUserId;
+    const propertyId = parseInt(req.params.property_id);
 
     const interest = await prisma.user.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         interests: {
           where: {
-            propertyId
-          }
-        }
-      }
-    })
+            propertyId,
+          },
+        },
+      },
+    });
 
-    if (interest.interests.length !== 0) res.status(400).json({ "error": "Interesse nesta propriedade já foi cadastrado" })
+    if (interest.interests.length !== 0)
+      res
+        .status(400)
+        .json({ error: "Interesse nesta propriedade já foi cadastrado" });
 
     const result = await prisma.interest.create({
       data: {
         userId: id,
-        propertyId
-      }
-    })
+        propertyId,
+      },
+    });
 
-    res.status(201).json(result)
-
+    res.status(201).json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.patch("/property/:property_id/interest", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
-    const propertyId = parseInt(req.params.property_id)
+    const userId = req.loggedUserId;
+    const propertyId = parseInt(req.params.property_id);
 
     const interest = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
         interests: {
           where: {
-            propertyId
-          }
-        }
-      }
-    })
+            propertyId,
+          },
+        },
+      },
+    });
 
-    let result
+    let result;
     if (interest.interests.length === 0) {
       result = await prisma.interest.create({
         data: {
           userId,
-          propertyId
-        }
-      })
+          propertyId,
+        },
+      });
     } else {
       result = await prisma.interest.deleteMany({
         where: {
           userId,
-          propertyId
+          propertyId,
         },
-
-      })
+      });
     }
 
-    res.status(204).json(interest)
-
+    res.status(204).json(interest);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.patch("/:id/interest", async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
-    const id = parseInt(req.params.id)
-    const { uConfirmation } = req.body
+    const id = parseInt(req.params.id);
+    const { uConfirmation } = req.body;
 
     const query = await prisma.interest.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
-    if (!query) res.status(404).json({ "error": "interest não encontrado" })
-    checkIfSameUser(userId, query.userId, res)
+    if (!query) res.status(404).json({ error: "interest não encontrado" });
+    checkIfSameUser(userId, query.userId, res);
 
     const result = await prisma.interest.update({
       where: {
-        id
+        id,
       },
       data: {
-        uConfirmation
-      }
-    })
+        uConfirmation,
+      },
+    });
 
-    const resultConfirmation = await bothConfirmation(result)
+    const resultConfirmation = await bothConfirmation(result);
 
-    if (resultConfirmation)
-      res.json(resultConfirmation)
-    res.json(result)
-
+    if (resultConfirmation) res.json(resultConfirmation);
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.delete("/property/:property_id/interest", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
-    const propertyId = parseInt(req.params.property_id)
+    const userId = req.loggedUserId;
+    const propertyId = parseInt(req.params.property_id);
 
     const interest = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
         interests: {
           where: {
-            propertyId
-          }
-        }
-      }
-    })
+            propertyId,
+          },
+        },
+      },
+    });
 
-    if (interest.interests.length === 0) res.status(400).json({ "error": "Não interesse cadastrado para que possa ser deletado" })
+    if (interest.interests.length === 0)
+      res
+        .status(400)
+        .json({
+          error: "Não interesse cadastrado para que possa ser deletado",
+        });
 
     const result = await prisma.interest.deleteMany({
       where: {
         userId,
-        propertyId
-      }
-    })
+        propertyId,
+      },
+    });
 
-    res.status(204).json(result)
-
+    res.status(204).json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.delete("/:id/interest", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const interest = await prisma.interest.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
     // @ts-ignore
-    checkIfSameUser(interest.userId, req.loggedUserId, res)
+    checkIfSameUser(interest.userId, req.loggedUserId, res);
 
-    if (interest) res.status(400).json({ "error": "Não interesse cadastrado para que possa ser deletado" })
+    if (interest)
+      res
+        .status(400)
+        .json({
+          error: "Não interesse cadastrado para que possa ser deletado",
+        });
 
     const result = await prisma.interest.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
-    res.status(204).json(result)
-
+    res.status(204).json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // router.post("/rent/evaluate", async (req, res) => {
 //   try {
@@ -575,59 +589,66 @@ router.patch("/rent/evaluate", async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
-    const { value, comment } = req.body as unknown as { value: number, comment: string }
+    const { value, comment } = req.body as unknown as {
+      value: number;
+      comment: string;
+    };
 
     const result = await prisma.rent.updateMany({
       where: {
         guestId: userId,
-        isActive: true
+        isActive: true,
       },
       data: {
         comment,
-        value
-      }
-    })
+        value,
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // TODO: fix to block evaluation if user not has been guest
 router.patch("/rent/:id/evaluate", async (req, res) => {
   try {
     // @ts-ignore
-    const id = parseInt(req.params.id)
-    const { value, comment } = req.body as unknown as { value: number, comment: string }
+    const id = parseInt(req.params.id);
+    const { value, comment } = req.body as unknown as {
+      value: number;
+      comment: string;
+    };
 
     const result = await prisma.rent.update({
       where: {
-        id
+        id,
       },
       data: {
         comment,
-        value
-      }
-    })
+        value,
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 // TODO: refactor api to isolate upload img to property creation
-router.post("/property", upload.array('img'), async (req, res) => {
+router.post("/property", upload.array("img"), async (req, res) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
     // @ts-ignore
-    const img: string[] = req.files.map(value => (value.linkUrl))
+    const img: string[] = req.files.map((value) => value.linkUrl);
 
-    const { name,
+    const {
+      name,
       description,
       category,
       cep,
@@ -637,8 +658,8 @@ router.post("/property", upload.array('img'), async (req, res) => {
       uf,
       country,
       number,
-      complement
-    } = req.body as unknown as Property
+      complement,
+    } = req.body as unknown as Property;
 
     const {
       vacancyPrice,
@@ -648,26 +669,26 @@ router.post("/property", upload.array('img'), async (req, res) => {
       hasInternet,
       isPetFriendly,
       isAdvertisement,
-      vacancyNumber
+      vacancyNumber,
     } = req.body as {
-      vacancyPrice: string,
-      hasPool: string,
-      hasGarage: string,
-      hasGourmet: string,
-      hasInternet: string,
-      isPetFriendly: string,
-      isAdvertisement: string,
-      vacancyNumber: string
-    }
+      vacancyPrice: string;
+      hasPool: string;
+      hasGarage: string;
+      hasGourmet: string;
+      hasInternet: string;
+      isPetFriendly: string;
+      isAdvertisement: string;
+      vacancyNumber: string;
+    };
 
-    const pool = parseBoolean(hasPool)
-    const garage = parseBoolean(hasGarage)
-    const gourmet = parseBoolean(hasGourmet)
-    const internet = parseBoolean(hasInternet)
-    const petFriendly = parseBoolean(isPetFriendly)
-    const advertisement = parseBoolean(isAdvertisement)
-    const price = handlePrice(vacancyPrice)
-    const vacancyNum = handleValue(vacancyNumber)
+    const pool = parseBoolean(hasPool);
+    const garage = parseBoolean(hasGarage);
+    const gourmet = parseBoolean(hasGourmet);
+    const internet = parseBoolean(hasInternet);
+    const petFriendly = parseBoolean(isPetFriendly);
+    const advertisement = parseBoolean(isAdvertisement);
+    const price = handlePrice(vacancyPrice);
+    const vacancyNum = handleValue(vacancyNumber);
 
     const propertyResult: PrismaPromise<Property> = prisma.property.create({
       data: {
@@ -693,70 +714,76 @@ router.post("/property", upload.array('img'), async (req, res) => {
         img,
         owner: {
           connect: {
-            id
-          }
-        }
-      }
-    })
+            id,
+          },
+        },
+      },
+    });
 
     const ownerResult = prisma.user.update({
       where: {
-        id
+        id,
       },
       data: {
-        role: 'OWNER'
-      }
-    })
+        role: "OWNER",
+      },
+    });
 
-    const transactional = await prisma.$transaction([propertyResult, ownerResult])
+    const transactional = await prisma.$transaction([
+      propertyResult,
+      ownerResult,
+    ]);
 
-    const OWNER_POSITION = 1
-    const jwt = await createJWT(transactional[OWNER_POSITION].id, transactional[OWNER_POSITION].role)
+    const OWNER_POSITION = 1;
+    const jwt = await createJWT(
+      transactional[OWNER_POSITION].id,
+      transactional[OWNER_POSITION].role
+    );
 
-    res.json([transactional, jwt])
-
+    res.json([transactional, jwt]);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
 router.delete("/:id/rent", async (req, res) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const query = await prisma.user.findUnique({
       where: {
-        id: userId
+        id: userId,
       },
       select: {
         rent: {
           where: {
-            id
-          }
-        }
-      }
-    })
+            id,
+          },
+        },
+      },
+    });
 
-    if (!query.rent[0].guestId) res.status(404).json({ "error": "Rent não cadastrado" })
-    checkIfSameUser(query.rent[0].guestId, userId, res)
+    if (!query.rent[0].guestId)
+      res.status(404).json({ error: "Rent não cadastrado" });
+    checkIfSameUser(query.rent[0].guestId, userId, res);
 
     const rentUpdate = await prisma.rent.update({
       where: {
-        id
+        id,
       },
       data: {
-        isActive: false
-      }
-    })
+        isActive: false,
+      },
+    });
 
-    res.status(204).json(rentUpdate)
+    res.status(204).json(rentUpdate);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ "error": "Houve um erro com o servidor" })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-export default router
+export default router;

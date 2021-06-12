@@ -1,19 +1,26 @@
-import { Router } from 'express'
-import { Property } from '../classes'
-import { prisma } from '../database'
-import { bothConfirmation, checkIfSameUser, handleImage, handlePrice, handleValue, parseBoolean } from '../helpers'
-import { upload } from '../middlewares/multer'
+import { Router } from "express";
+import { Property } from "../classes";
+import { prisma } from "../database";
+import {
+  bothConfirmation,
+  checkIfSameUser,
+  handleImage,
+  handlePrice,
+  handleValue,
+  parseBoolean,
+} from "../helpers";
+import { upload } from "../middlewares/multer";
 
-const router = Router()
+const router = Router();
 
-router.get('/interests', async (req, res) => {
+router.get("/interests", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
+    const ownerId = req.loggedUserId;
 
     const result = await prisma.property.findMany({
       where: {
-        ownerId
+        ownerId,
       },
       select: {
         interests: {
@@ -27,137 +34,138 @@ router.get('/interests', async (req, res) => {
                 sex: true,
                 bio: true,
                 tel: true,
-                cel: true
-              }
-            }
-          }
-        }
-      }
-    })
+                cel: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/interest', async (req, res) => {
+router.get("/interest", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
+    const ownerId = req.loggedUserId;
 
     const result = await prisma.interest.findMany({
       where: {
         OR: [
           {
-            uConfirmation: true
-          }, {
-            pConfirmation: true
-          }
+            uConfirmation: true,
+          },
+          {
+            pConfirmation: true,
+          },
         ],
         Property: {
-          ownerId
-        }
-      }
-    })
+          ownerId,
+        },
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/rents', async (req, res) => {
+router.get("/rents", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
+    const ownerId = req.loggedUserId;
 
     const result = await prisma.rent.findMany({
       where: {
         property: {
-          ownerId
-        }
+          ownerId,
+        },
       },
       include: {
         guest: true,
-        property: true
-      }
-    })
+        property: true,
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.delete('/:id/rent', async (req, res) => {
+router.delete("/:id/rent", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
-    const id = parseInt(req.params.id)
+    const ownerId = req.loggedUserId;
+    const id = parseInt(req.params.id);
 
     const query = await prisma.rent.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         property: {
           select: {
-            ownerId
-          }
-        }
-      }
-    })
+            ownerId,
+          },
+        },
+      },
+    });
 
-    checkIfSameUser(query.property.ownerId, ownerId, res)
+    checkIfSameUser(query.property.ownerId, ownerId, res);
 
     const result = await prisma.rent.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
-    res.status(204).json(result)
+    res.status(204).json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/properties', async (req, res) => {
+router.get("/properties", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
+    const ownerId = req.loggedUserId;
 
     const result: Property[] = await prisma.property.findMany({
       where: {
-        ownerId
+        ownerId,
       },
       include: {
         owner: true,
         rent: true,
         interests: true,
-        favorited: true
-      }
-    })
+        favorited: true,
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/property/:id/interests', async (req, res) => {
+router.get("/property/:id/interests", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const result = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         interests: {
@@ -174,28 +182,28 @@ router.get('/property/:id/interests', async (req, res) => {
                 sex: true,
                 bio: true,
                 tel: true,
-                cel: true
-              }
-            }
-          }
-        }
-      }
-    })
+                cel: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/property/:id/rents/active', async (req, res) => {
+router.get("/property/:id/rents/active", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const result = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         rent: {
@@ -212,73 +220,73 @@ router.get('/property/:id/rents/active', async (req, res) => {
                 sex: true,
                 bio: true,
                 tel: true,
-                cel: true
-              }
-            }
-          }
-        }
-      }
-    })
+                cel: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    const activeRents = result.rent.filter(element => element.isActive)
+    const activeRents = result.rent.filter((element) => element.isActive);
 
-    res.json(activeRents)
+    res.json(activeRents);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/:id/property', async (req, res) => {
+router.get("/:id/property", async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const id = parseInt(req.params.id);
 
     const result = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         owner: true,
         rent: true,
         interests: true,
-        favorited: true
-      }
-    })
+        favorited: true,
+      },
+    });
 
     const agreggate = await prisma.rent.aggregate({
       where: {
-        propertyId: id
+        propertyId: id,
       },
       avg: {
-        value: true
-      }
-    })
+        value: true,
+      },
+    });
 
     await prisma.property.update({
       where: {
-        id
+        id,
       },
       data: {
         viewed: {
-          increment: 1
-        }
-      }
-    })
+          increment: 1,
+        },
+      },
+    });
 
-    const propertyWithAggregate = Object.assign(result, agreggate)
-    res.json(propertyWithAggregate)
+    const propertyWithAggregate = Object.assign(result, agreggate);
+    res.json(propertyWithAggregate);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.post('/property', upload.array('img'), async (req, res) => {
+router.post("/property", upload.array("img"), async (req, res) => {
   try {
     // @ts-ignore
-    const id = req.loggedUserId
+    const id = req.loggedUserId;
     // @ts-ignore
-    const img: string[] = req.files.map(value => (value.linkUrl))
+    const img: string[] = req.files.map((value) => value.linkUrl);
 
     const {
       name,
@@ -291,8 +299,8 @@ router.post('/property', upload.array('img'), async (req, res) => {
       uf,
       country,
       number,
-      complement
-    } = req.body as unknown as Property
+      complement,
+    } = req.body as unknown as Property;
 
     const {
       vacancyPrice,
@@ -302,26 +310,26 @@ router.post('/property', upload.array('img'), async (req, res) => {
       hasInternet,
       isPetFriendly,
       isAdvertisement,
-      vacancyNumber
+      vacancyNumber,
     } = req.body as {
-      vacancyPrice: string
-      hasPool: string
-      hasGarage: string
-      hasGourmet: string
-      hasInternet: string
-      isPetFriendly: string
-      isAdvertisement: string
-      vacancyNumber: string
-    }
+      vacancyPrice: string;
+      hasPool: string;
+      hasGarage: string;
+      hasGourmet: string;
+      hasInternet: string;
+      isPetFriendly: string;
+      isAdvertisement: string;
+      vacancyNumber: string;
+    };
 
-    const pool = parseBoolean(hasPool)
-    const garage = parseBoolean(hasGarage)
-    const gourmet = parseBoolean(hasGourmet)
-    const internet = parseBoolean(hasInternet)
-    const petFriendly = parseBoolean(isPetFriendly)
-    const advertisement = parseBoolean(isAdvertisement)
-    const price = handlePrice(vacancyPrice)
-    const vacancyNum = handleValue(vacancyNumber)
+    const pool = parseBoolean(hasPool);
+    const garage = parseBoolean(hasGarage);
+    const gourmet = parseBoolean(hasGourmet);
+    const internet = parseBoolean(hasInternet);
+    const petFriendly = parseBoolean(isPetFriendly);
+    const advertisement = parseBoolean(isAdvertisement);
+    const price = handlePrice(vacancyPrice);
+    const vacancyNum = handleValue(vacancyNumber);
 
     const result = await prisma.property.create({
       data: {
@@ -347,24 +355,24 @@ router.post('/property', upload.array('img'), async (req, res) => {
         img,
         owner: {
           connect: {
-            id
-          }
-        }
-      }
-    })
+            id,
+          },
+        },
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.patch('/:id/property', async (req, res) => {
+router.patch("/:id/property", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
-    const id = parseInt(req.params.id)
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id);
 
     const {
       name,
@@ -385,29 +393,32 @@ router.patch('/:id/property', async (req, res) => {
       hasInternet,
       isPetFriendly,
       isAdvertisement,
-      vacancyNumber
-    } = req.body as unknown as Property
+      vacancyNumber,
+    } = req.body as unknown as Property;
 
     const propertyResult = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         _count: {
           select: {
-            rent: true
-          }
-        }
-      }
-    })
+            rent: true,
+          },
+        },
+      },
+    });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res)
+    checkIfSameUser(propertyResult.ownerId, userId, res);
 
-    if (propertyResult._count.rent > vacancyNumber) res.status(404).json({ error: 'is not possible a vacancyNumber less than rents actives' })
+    if (propertyResult._count.rent > vacancyNumber)
+      res.status(404).json({
+        error: "is not possible a vacancyNumber less than rents actives",
+      });
 
     const result = await prisma.property.update({
       where: {
-        id
+        id,
       },
       data: {
         name,
@@ -429,160 +440,166 @@ router.patch('/:id/property', async (req, res) => {
         isPetFriendly,
         isAdvertisement,
         vacancyNumber,
-      }
-    })
+      },
+    });
 
-    res.json(result)
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.patch('/:id/property/img', upload.array('img'), async (req, res) => {
+router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
+    const userId = req.loggedUserId;
     // @ts-ignore
-    const image: string[] = req.files.map(value => (value.linkUrl))
-    const id = parseInt(req.params.id)
-    const img: string[] = req.body.img
-    const imagesMixed = handleImage(img, image)
+    const image: string[] = req.files.map((value) => value.linkUrl);
+    const id = parseInt(req.params.id);
+    const img: string[] = req.body.img;
+    const imagesMixed = handleImage(img, image);
 
     const propertyResult: Property = await prisma.property.findUnique({
       where: {
-        id
+        id,
       },
       include: {
         _count: {
           select: {
-            rent: true
-          }
-        }
-      }
-    })
+            rent: true,
+          },
+        },
+      },
+    });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res)
+    checkIfSameUser(propertyResult.ownerId, userId, res);
 
     const propertyUpdated: Property = await prisma.property.update({
       where: {
-        id
+        id,
       },
       data: {
-        img: imagesMixed
-      }
-    })
+        img: imagesMixed,
+      },
+    });
 
-    res.json(propertyUpdated)
+    res.json(propertyUpdated);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.delete('/:id/property', async (req, res) => {
+router.delete("/:id/property", async (req, res) => {
   try {
     // @ts-ignore
-    const userId = req.loggedUserId
-    const id = parseInt(req.params.id)
+    const userId = req.loggedUserId;
+    const id = parseInt(req.params.id);
 
     const propertyResult = await prisma.property.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res)
+    checkIfSameUser(propertyResult.ownerId, userId, res);
 
     const deleteProperty = prisma.property.delete({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
 
     const deleteRent = prisma.rent.deleteMany({
       where: {
-        propertyId: id
-      }
-    })
+        propertyId: id,
+      },
+    });
 
     const deleteInterest = prisma.interest.deleteMany({
       where: {
-        propertyId: id
-      }
-    })
+        propertyId: id,
+      },
+    });
 
-    const transactional = await prisma.$transaction([deleteProperty, deleteRent, deleteInterest])
-    res.status(204).json(transactional)
+    const transactional = await prisma.$transaction([
+      deleteProperty,
+      deleteRent,
+      deleteInterest,
+    ]);
+    res.status(204).json(transactional);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.patch('/:id/interest', async (req, res) => {
+router.patch("/:id/interest", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
-    const id = parseInt(req.params.id)
-    const { pConfirmation } = req.body
+    const ownerId = req.loggedUserId;
+    const id = parseInt(req.params.id);
+    const { pConfirmation } = req.body;
 
     const query = await prisma.interest.findUnique({
       where: {
-        id
+        id,
       },
       select: {
         Property: {
           select: {
-            ownerId: true
-          }
-        }
-      }
-    })
+            ownerId: true,
+          },
+        },
+      },
+    });
 
-    if (!query) res.status(404).json({ error: 'interest não encontrado' })
-    checkIfSameUser(ownerId, query.Property.ownerId, res)
+    if (!query) res.status(404).json({ error: "interest não encontrado" });
+    checkIfSameUser(ownerId, query.Property.ownerId, res);
 
     const result = await prisma.interest.update({
       where: {
-        id
+        id,
       },
       data: {
-        pConfirmation
-      }
-    })
+        pConfirmation,
+      },
+    });
 
-    const resultConfirmation = await bothConfirmation(result)
+    const resultConfirmation = await bothConfirmation(result);
 
-    if (resultConfirmation) { res.json(resultConfirmation) }
-    res.json(result)
+    if (resultConfirmation) {
+      res.json(resultConfirmation);
+    }
+    res.json(result);
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-router.get('/properties/mean', async (req, res) => {
+router.get("/properties/mean", async (req, res) => {
   try {
     // @ts-ignore
-    const ownerId = req.loggedUserId
+    const ownerId = req.loggedUserId;
 
     const mean = await prisma.rent.aggregate({
       where: {
         property: {
-          ownerId
-        }
+          ownerId,
+        },
       },
       avg: {
-        value: true
-      }
-    })
+        value: true,
+      },
+    });
 
-    res.json({ mean })
+    res.json({ mean });
   } catch (err) {
-    console.log(err)
-    res.status(500).json({ error: 'Houve um erro com o servidor' })
+    console.log(err);
+    res.status(500).json({ error: "Houve um erro com o servidor" });
   }
-})
+});
 
-export default router
+export default router;
