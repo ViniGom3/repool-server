@@ -1,6 +1,6 @@
 import multer from "multer";
 import path from "path";
-import crypto from "crypto";
+import { Multer } from "multer";
 import MulterGoogleCloudStorage from "multer-cloud-storage";
 
 const config = {
@@ -25,4 +25,4 @@ const config = {
   },
 };
 
-export const upload = multer(config);
+export const upload: Multer = multer(config);
