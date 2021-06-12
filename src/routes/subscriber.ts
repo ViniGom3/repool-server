@@ -61,13 +61,10 @@ router.get("/full-user", async (req, res) => {
   }
 });
 
-// TODO: split api in api to change data and api to change photo
-router.patch("/user", upload.single("avatar"), async (req, res) => {
+router.patch("/user", async (req, res) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
-    // @ts-ignore
-    const avatar = req.file.linkUrl;
 
     const { name, tel, cel, bio } = req.body;
     const { sex } = req.body;
@@ -79,7 +76,6 @@ router.patch("/user", upload.single("avatar"), async (req, res) => {
       data: {
         name,
         sex,
-        avatar,
         tel,
         cel,
         bio,
@@ -90,6 +86,29 @@ router.patch("/user", upload.single("avatar"), async (req, res) => {
     res.json(user);
   } catch (err) {
     console.log(err);
+  }
+});
+
+router.patch("/user/image", upload.single("avatar"), async (req, res) => {
+  try {
+    // @ts-ignore
+    const id = req.loggedUserId;
+    // @ts-ignore
+    const avatar = req.file.linkUrl;
+
+    const result = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        avatar,
+      },
+    });
+
+    const { password, ...user } = result;
+    res.json(user);
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -493,11 +512,9 @@ router.delete("/property/:property_id/interest", async (req, res) => {
     });
 
     if (interest.interests.length === 0)
-      res
-        .status(400)
-        .json({
-          error: "Não interesse cadastrado para que possa ser deletado",
-        });
+      res.status(400).json({
+        error: "Não interesse cadastrado para que possa ser deletado",
+      });
 
     const result = await prisma.interest.deleteMany({
       where: {
@@ -527,11 +544,9 @@ router.delete("/:id/interest", async (req, res) => {
     checkIfSameUser(interest.userId, req.loggedUserId, res);
 
     if (interest)
-      res
-        .status(400)
-        .json({
-          error: "Não interesse cadastrado para que possa ser deletado",
-        });
+      res.status(400).json({
+        error: "Não interesse cadastrado para que possa ser deletado",
+      });
 
     const result = await prisma.interest.delete({
       where: {
