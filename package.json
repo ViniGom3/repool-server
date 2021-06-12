@@ -17,6 +17,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "14.x"
+  },
   "bugs": {
     "url": "https://github.com/ViniGom3/repool-server/issues"
   },
