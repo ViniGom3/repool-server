@@ -26,7 +26,6 @@
   "homepage": "https://github.com/ViniGom3/repool-server#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
-    "@types/multer": "^1.4.5",
     "@types/node": "^15.0.2",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "eslint": "^7.25.0",
@@ -42,6 +41,7 @@
   },
   "dependencies": {
     "@prisma/client": "^2.22.0",
+    "@types/multer": "^1.4.5",
     "argon2": "^0.27.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
