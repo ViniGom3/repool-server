@@ -1,3 +1,5 @@
-import app from './app'
+import app from "./app";
 
-app.listen(5050, () => console.log('🚀 Server running at http://localhost:5050'))
+app.listen(process.env.PORT, () =>
+  console.log("🚀 Server running at http://localhost:" + process.env.PORT)
+);
