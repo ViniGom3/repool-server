@@ -3,10 +3,10 @@ import { PrismaPromise } from "@prisma/client";
 import { prisma } from "../database";
 import {
   bothConfirmation,
-  checkIfSameUser,
   createJWT,
   handlePrice,
   handleValue,
+  isSameUser,
   parseBoolean,
 } from "../helpers";
 import { upload } from "../middlewares/multer";
@@ -367,7 +367,11 @@ router.get("/rent/property/:id/user", async (req, res) => {
       },
     });
 
-    checkIfSameUser(userId, result.ownerId, res);
+    if (!isSameUser(userId, result.ownerId)) {
+      res
+        .status(403)
+        .json({ error: "Você não está autorizado a fazer essa operação" });
+    }
 
     res.json(result);
   } catch (err) {
@@ -470,8 +474,15 @@ router.patch("/:id/interest", async (req, res) => {
       },
     });
 
-    if (!query) res.status(404).json({ error: "interest não encontrado" });
-    checkIfSameUser(userId, query.userId, res);
+    if (!query) {
+      res.status(404).json({ error: "interest não encontrado" });
+    }
+
+    if (!isSameUser(userId, query.userId)) {
+      res
+        .status(403)
+        .json({ error: "Você não está autorizado a fazer essa operação" });
+    }
 
     const result = await prisma.interest.update({
       where: {
@@ -541,7 +552,11 @@ router.delete("/:id/interest", async (req, res) => {
     });
 
     // @ts-ignore
-    checkIfSameUser(interest.userId, req.loggedUserId, res);
+    if (!isSameUser(interest.userId, req.loggedUserId)) {
+      res
+        .status(403)
+        .json({ error: "Você não está autorizado a fazer essa operação" });
+    }
 
     if (interest)
       res.status(400).json({
@@ -781,9 +796,15 @@ router.delete("/:id/rent", async (req, res) => {
       },
     });
 
-    if (!query.rent[0].guestId)
+    if (!query.rent[0].guestId) {
       res.status(404).json({ error: "Rent não cadastrado" });
-    checkIfSameUser(query.rent[0].guestId, userId, res);
+    }
+
+    if (!isSameUser(query.rent[0].guestId, userId)) {
+      res
+        .status(403)
+        .json({ error: "Você não está autorizado a fazer essa operação" });
+    }
 
     const rentUpdate = await prisma.rent.update({
       where: {
