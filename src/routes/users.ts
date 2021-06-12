@@ -39,12 +39,8 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// TODO: CHANGE THIS API TO application/json and isolate image
-router.post("/signup", upload.single("avatar"), async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
-    // @ts-ignore
-    const avatar = req.file.linkUrl;
-
     const { name, email, password, role, tel, cel, sex, bio } = req.body;
     const user = await findEmail(email);
 
@@ -63,7 +59,6 @@ router.post("/signup", upload.single("avatar"), async (req, res) => {
           bio,
           tel,
           cel,
-          avatar,
         },
       });
 
