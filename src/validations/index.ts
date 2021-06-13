@@ -7,6 +7,6 @@ export default function schemaValidator(
   schema: Joi.ObjectSchema<any>,
   body: any
 ) {
-  const validateResult = schema.validate(body);
-  return validateResult.error;
+  const { error } = schema.validate(body);
+  return error;
 }
