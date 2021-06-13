@@ -12,7 +12,10 @@ import {
 import { prisma } from "../database";
 import { Pagination } from "../classes";
 import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers/responses";
-import { signInSchemaValidation, signUpSchemaValidation } from "../validations";
+import schemaValidator, {
+  signInSchemaValidation,
+  signUpSchemaValidation,
+} from "../validations";
 
 const router = Router();
 
@@ -46,8 +49,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, tel, cel, sex, bio } = req.body;
 
-    const validateResult = signUpSchemaValidation.validate(req.body);
-    const { error } = validateResult;
+    const error = schemaValidator(signUpSchemaValidation, req.body);
 
     if (!!error) {
       res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
@@ -107,9 +109,7 @@ router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    signInSchemaValidation;
-    const validateResult = signInSchemaValidation.validate(req.body);
-    const { error } = validateResult;
+    const error = schemaValidator(signInSchemaValidation, req.body);
 
     if (!!error) {
       res.status(FAILURE_CODE_ERROR.BADREQUEST).json({

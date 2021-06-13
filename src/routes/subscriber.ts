@@ -16,7 +16,7 @@ import {
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
 } from "../helpers/responses";
-import { propertySchemaValidation } from "../validations/property";
+import schemaValidator, { propertySchemaValidation } from "../validations";
 
 const router = Router();
 
@@ -701,8 +701,7 @@ router.post("/property", upload.array("img"), async (req, res) => {
       vacancyNumber: string;
     };
 
-    const validateResult = propertySchemaValidation.validate(req.body);
-    const { error } = validateResult;
+    const error = schemaValidator(propertySchemaValidation, req.body);
 
     if (!!error) {
       res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
