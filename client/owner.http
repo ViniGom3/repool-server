@@ -1,6 +1,7 @@
 @base-url = http://localhost:5050
 @owner-id = 1
 @rent-id = 1
+@property-id = 1
 @jwt-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjIzNTA0MjAwLCJleHAiOjE2MjQxMDkwMDB9.4FqzWoIivH-NNCaNjViG1lTvNvP544-trfpOB9QQqVU
 
 // OWNER
@@ -27,5 +28,20 @@ Authorization: {{jwt-token}}
 
 ### Get all own properties (and owner, rent, interests and favorited relations infos)
 GET {{base-url}}/owner/properties HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get infos by specific property
+GET {{base-url}}/owner/property/{{property-id}}/interests HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get actives rents by specific property
+GET {{base-url}}/owner/property/{{property-id}}/rents/active HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get specific property (and owner, rent, interests and favorited relations infos + average evaluation)
+GET {{base-url}}/owner/{{property-id}}/property HTTP/1.1
 Content-Type: application/json
 Authorization: {{jwt-token}}
