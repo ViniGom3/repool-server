@@ -1,5 +1,4 @@
 import { Router } from "express";
-import Joi from "joi";
 
 import {
   findEmail,
@@ -13,6 +12,7 @@ import {
 import { prisma } from "../database";
 import { Pagination } from "../classes";
 import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers/responses";
+import { signInSchemaValidation, signUpSchemaValidation } from "../validations";
 
 const router = Router();
 
@@ -46,21 +46,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, tel, cel, sex, bio } = req.body;
 
-    const signupSchema = Joi.object().keys({
-      name: Joi.string()
-        .pattern(/^[a-zà-ú ,']+$/i)
-        .min(3)
-        .max(50)
-        .required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-      tel: Joi.string().alphanum().min(8).max(13).required(),
-      cel: Joi.string().alphanum().min(9).max(14).required(),
-      sex: Joi.string().valid("NOTKNOW", "MALE", "FEMALE", "NOTAPPLICABLE"),
-      bio: Joi.string(),
-    });
-
-    const validateResult = signupSchema.validate(req.body);
+    const validateResult = signUpSchemaValidation.validate(req.body);
     const { error } = validateResult;
 
     if (!!error) {
@@ -121,12 +107,8 @@ router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const signInSchema = Joi.object().keys({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(6).required(),
-    });
-
-    const validateResult = signInSchema.validate(req.body);
+    signInSchemaValidation;
+    const validateResult = signInSchemaValidation.validate(req.body);
     const { error } = validateResult;
 
     if (!!error) {

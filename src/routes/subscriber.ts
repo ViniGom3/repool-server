@@ -16,7 +16,7 @@ import {
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
 } from "../helpers/responses";
-import { propertySchemaValidation } from "../validation/property";
+import { propertySchemaValidation } from "../validations/property";
 
 const router = Router();
 
