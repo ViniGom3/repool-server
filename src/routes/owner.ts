@@ -15,6 +15,7 @@ import {
   SUCCESS_CODE_ERROR,
 } from "../helpers/responses";
 import { upload } from "../middlewares/multer";
+import schemaValidator, { propertySchemaValidation } from "../validations";
 
 const router = Router();
 
@@ -346,6 +347,14 @@ router.post("/property", upload.array("img"), async (req, res) => {
       isAdvertisement: string;
       vacancyNumber: string;
     };
+
+    const error = schemaValidator(propertySchemaValidation, req.body);
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
 
     const pool = parseBoolean(hasPool);
     const garage = parseBoolean(hasGarage);
