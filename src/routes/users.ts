@@ -120,6 +120,21 @@ router.get("/email", async (req, res) => {
 router.post("/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    const signInSchema = Joi.object().keys({
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required(),
+    });
+
+    const validateResult = signInSchema.validate(req.body);
+    const { error } = validateResult;
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
+
     const result = await findByEmail(email);
 
     if (!result) {
