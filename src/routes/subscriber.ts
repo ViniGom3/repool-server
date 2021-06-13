@@ -817,7 +817,10 @@ router.post("/property", upload.array("img"), async (req, res) => {
       transactional[OWNER_POSITION].role
     );
 
-    res.json([transactional, jwt]);
+    const [property, owner] = transactional;
+    const { password, ...ownerWithoutPassword } = owner;
+
+    res.json([property, ownerWithoutPassword, jwt]);
   } catch (err) {
     console.log(err);
     res
