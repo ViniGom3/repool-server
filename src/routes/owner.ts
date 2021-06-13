@@ -15,7 +15,10 @@ import {
   SUCCESS_CODE_ERROR,
 } from "../helpers/responses";
 import { upload } from "../middlewares/multer";
-import schemaValidator, { propertySchemaValidation } from "../validations";
+import schemaValidator, {
+  propertySchemaValidation,
+  updatePropertySchemaValidation,
+} from "../validations";
 
 const router = Router();
 
@@ -431,6 +434,14 @@ router.patch("/:id/property", async (req, res) => {
       isAdvertisement,
       vacancyNumber,
     } = req.body as unknown as Property;
+
+    const error = schemaValidator(updatePropertySchemaValidation, req.body);
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
 
     const propertyResult = await prisma.property.findUnique({
       where: {
