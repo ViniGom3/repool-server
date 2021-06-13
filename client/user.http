@@ -3,10 +3,6 @@
 
 // USERS (everyone)
 
-### Test-api
-GET {{base-url}}/test HTTP/1.1
-Content-Type: application/json
-
 ### Get all users
 GET {{base-url}}/user/users HTTP/1.1
 Content-Type: application/json
