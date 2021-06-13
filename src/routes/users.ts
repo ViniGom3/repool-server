@@ -46,6 +46,29 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, tel, cel, sex, bio } = req.body;
 
+    const signupSchema = Joi.object().keys({
+      name: Joi.string()
+        .pattern(/^[a-zà-ú ,']+$/i)
+        .min(3)
+        .max(50)
+        .required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required(),
+      tel: Joi.string().alphanum().min(8).max(13).required(),
+      cel: Joi.string().alphanum().min(9).max(14).required(),
+      sex: Joi.string().valid("NOTKNOW", "MALE", "FEMALE", "NOTAPPLICABLE"),
+      bio: Joi.string(),
+    });
+
+    const validateResult = signupSchema.validate(req.body);
+    const { error } = validateResult;
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
+
     const user = await findEmail(email);
 
     if (user) {
