@@ -510,7 +510,7 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     // @ts-ignore
     const image: string[] = req.files.map((value) => value.linkUrl);
     const id = parseInt(req.params.id);
-    const img: string[] = req.body.img;
+    const { img } = req.body as unknown as { img: string[] };
     const imagesMixed = handleImage(img, image);
 
     const propertyResult: Property = await prisma.property.findUnique({
@@ -605,7 +605,7 @@ router.patch("/:id/interest", async (req, res) => {
     // @ts-ignore
     const ownerId = req.loggedUserId;
     const id = parseInt(req.params.id);
-    const { pConfirmation } = req.body;
+    const { pConfirmation } = req.body as unknown as { pConfirmation: boolean };
 
     const query = await prisma.interest.findUnique({
       where: {
