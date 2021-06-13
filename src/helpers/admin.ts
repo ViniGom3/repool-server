@@ -1,12 +1,17 @@
+import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "./responses";
+
 export function verifyAdmin(req, res, next) {
-  const rolePermited = "ADMIN"
+  const rolePermited = "ADMIN";
   if (req.loggedUserRole !== rolePermited)
-    res.status(403).json({ "error": "Você não está autorizado a fazer essa operação" })
-  next()
+    res
+      .status(FAILURE_CODE_ERROR.FORBIDDEN)
+      .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+
+  next();
 }
 
 export function handleDateAgo(today: Date, daysAgo: number = 30): Date {
-  const thirtyDaysAgoInSeconds = new Date().setDate(today.getDate() - daysAgo)
-  const thirtyDaysAgo = new Date(thirtyDaysAgoInSeconds)
-  return thirtyDaysAgo
+  const thirtyDaysAgoInSeconds = new Date().setDate(today.getDate() - daysAgo);
+  const thirtyDaysAgo = new Date(thirtyDaysAgoInSeconds);
+  return thirtyDaysAgo;
 }

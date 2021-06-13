@@ -11,6 +11,7 @@ import {
 } from "../helpers";
 import { prisma } from "../database";
 import { Pagination } from "../classes";
+import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers/responses";
 
 const router = Router();
 
@@ -34,7 +35,9 @@ router.get("/users", async (req, res) => {
     res.json(allUsers);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -68,7 +71,9 @@ router.post("/signup", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -82,7 +87,9 @@ router.get("/email", async (req, res) => {
     res.json(!!user);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -92,7 +99,9 @@ router.post("/signin", async (req, res) => {
     const result = await findByEmail(email);
 
     if (!result) {
-      res.status(404).json({ error: "Usuário não encontrado" });
+      res
+        .status(FAILURE_CODE_ERROR.NOTFOUND)
+        .json({ error: FAILURE_MESSAGE.NOTFOUND });
     } else {
       const { password: hash, id, role } = result;
 
@@ -109,7 +118,9 @@ router.post("/signin", async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -216,7 +227,9 @@ router.get("/ad", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -248,7 +261,9 @@ router.get("/:id/property", async (req, res) => {
     res.json(propertyWithAggregate);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -261,7 +276,9 @@ router.get("/ad/count", async (req, res) => {
     res.json(all);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 

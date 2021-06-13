@@ -1,11 +1,12 @@
 import { Interest, Property } from "../classes";
 import { prisma } from "../database";
+import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "./responses";
 
 export const checkIfSameUser = function (id, idLoggedUser, res) {
   if (id !== idLoggedUser)
     res
-      .status(403)
-      .json({ error: "Você não está autorizado a fazer essa operação" });
+      .status(FAILURE_CODE_ERROR.FORBIDDEN)
+      .json({ error: FAILURE_MESSAGE.FORBIDDEN });
 };
 
 export const isSameUser = function (id, idLoggedUser): boolean {

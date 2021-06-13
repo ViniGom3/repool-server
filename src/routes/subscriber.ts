@@ -11,6 +11,11 @@ import {
 } from "../helpers";
 import { upload } from "../middlewares/multer";
 import { Property } from "../classes";
+import {
+  FAILURE_CODE_ERROR,
+  FAILURE_MESSAGE,
+  SUCCESS_CODE_ERROR,
+} from "../helpers/responses";
 
 const router = Router();
 
@@ -157,7 +162,7 @@ router.delete("/user", async (req, res) => {
       deleteProperty,
       deleteUser,
     ]);
-    res.status(204).json(transactional);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (err) {
     console.log(err);
   }
@@ -243,7 +248,9 @@ router.patch("/property/:property_id/favorites", async (req, res) => {
     res.json(user);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -270,7 +277,9 @@ router.get("/evaluate", async (req, res) => {
     res.json(evaluate);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -287,7 +296,9 @@ router.get("/evaluates", async (req, res) => {
     res.json(evaluates);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -319,7 +330,9 @@ router.get("/property/:id/rent", async (req, res) => {
     res.json(propertyWithAggregate);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -341,7 +354,9 @@ router.get("/rent", async (req, res) => {
     res.json(rent);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -369,14 +384,16 @@ router.get("/rent/property/:id/user", async (req, res) => {
 
     if (!isSameUser(userId, result.ownerId)) {
       res
-        .status(403)
-        .json({ error: "Você não está autorizado a fazer essa operação" });
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
     }
 
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -411,10 +428,12 @@ router.post("/property/:property_id/interest", async (req, res) => {
       },
     });
 
-    res.status(201).json(result);
+    res.status(SUCCESS_CODE_ERROR.CREATED).json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -454,10 +473,12 @@ router.patch("/property/:property_id/interest", async (req, res) => {
       });
     }
 
-    res.status(204).json(interest);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(interest);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -480,8 +501,8 @@ router.patch("/:id/interest", async (req, res) => {
 
     if (!isSameUser(userId, query.userId)) {
       res
-        .status(403)
-        .json({ error: "Você não está autorizado a fazer essa operação" });
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
     }
 
     const result = await prisma.interest.update({
@@ -499,7 +520,9 @@ router.patch("/:id/interest", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -534,10 +557,12 @@ router.delete("/property/:property_id/interest", async (req, res) => {
       },
     });
 
-    res.status(204).json(result);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -554,8 +579,8 @@ router.delete("/:id/interest", async (req, res) => {
     // @ts-ignore
     if (!isSameUser(interest.userId, req.loggedUserId)) {
       res
-        .status(403)
-        .json({ error: "Você não está autorizado a fazer essa operação" });
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
     }
 
     if (interest)
@@ -569,10 +594,12 @@ router.delete("/:id/interest", async (req, res) => {
       },
     });
 
-    res.status(204).json(result);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -611,7 +638,7 @@ router.delete("/:id/interest", async (req, res) => {
 //     res.json(result)
 //   } catch (err) {
 //     console.log(err)
-//     res.status(500).json({ "error": "Houve um erro com o servidor" })
+//     res.status(FAILURE_CODE_ERROR.SERVERERROR).json({ "error": FAILURE_MESSAGE.SERVERERROR })
 //   }
 // })
 
@@ -638,7 +665,9 @@ router.patch("/rent/evaluate", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -665,7 +694,9 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -773,7 +804,9 @@ router.post("/property", upload.array("img"), async (req, res) => {
     res.json([transactional, jwt]);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -802,8 +835,8 @@ router.delete("/:id/rent", async (req, res) => {
 
     if (!isSameUser(query.rent[0].guestId, userId)) {
       res
-        .status(403)
-        .json({ error: "Você não está autorizado a fazer essa operação" });
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
     }
 
     const rentUpdate = await prisma.rent.update({
@@ -815,10 +848,12 @@ router.delete("/:id/rent", async (req, res) => {
       },
     });
 
-    res.status(204).json(rentUpdate);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(rentUpdate);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 

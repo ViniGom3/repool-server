@@ -3,12 +3,17 @@ import { Property } from "../classes";
 import { prisma } from "../database";
 import {
   bothConfirmation,
-  checkIfSameUser,
   handleImage,
   handlePrice,
   handleValue,
+  isSameUser,
   parseBoolean,
 } from "../helpers";
+import {
+  FAILURE_CODE_ERROR,
+  FAILURE_MESSAGE,
+  SUCCESS_CODE_ERROR,
+} from "../helpers/responses";
 import { upload } from "../middlewares/multer";
 
 const router = Router();
@@ -45,7 +50,9 @@ router.get("/interests", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -73,7 +80,9 @@ router.get("/interest", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -97,7 +106,9 @@ router.get("/rents", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -120,7 +131,11 @@ router.delete("/:id/rent", async (req, res) => {
       },
     });
 
-    checkIfSameUser(query.property.ownerId, ownerId, res);
+    if (!isSameUser(query.property.ownerId, ownerId)) {
+      res
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+    }
 
     const result = await prisma.rent.delete({
       where: {
@@ -128,10 +143,12 @@ router.delete("/:id/rent", async (req, res) => {
       },
     });
 
-    res.status(204).json(result);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -155,7 +172,9 @@ router.get("/properties", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -193,7 +212,9 @@ router.get("/property/:id/interests", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -233,7 +254,9 @@ router.get("/property/:id/rents/active", async (req, res) => {
     res.json(activeRents);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -277,7 +300,9 @@ router.get("/:id/property", async (req, res) => {
     res.json(propertyWithAggregate);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -364,7 +389,9 @@ router.post("/property", upload.array("img"), async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -409,7 +436,11 @@ router.patch("/:id/property", async (req, res) => {
       },
     });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res);
+    if (!isSameUser(propertyResult.ownerId, userId)) {
+      res
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+    }
 
     if (propertyResult._count.rent > vacancyNumber)
       res.status(404).json({
@@ -446,7 +477,9 @@ router.patch("/:id/property", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -473,7 +506,11 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
       },
     });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res);
+    if (!isSameUser(propertyResult.ownerId, userId)) {
+      res
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+    }
 
     const propertyUpdated: Property = await prisma.property.update({
       where: {
@@ -487,7 +524,9 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     res.json(propertyUpdated);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -503,7 +542,11 @@ router.delete("/:id/property", async (req, res) => {
       },
     });
 
-    checkIfSameUser(propertyResult.ownerId, userId, res);
+    if (!isSameUser(propertyResult.ownerId, userId)) {
+      res
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+    }
 
     const deleteProperty = prisma.property.delete({
       where: {
@@ -528,10 +571,12 @@ router.delete("/:id/property", async (req, res) => {
       deleteRent,
       deleteInterest,
     ]);
-    res.status(204).json(transactional);
+    res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -556,7 +601,12 @@ router.patch("/:id/interest", async (req, res) => {
     });
 
     if (!query) res.status(404).json({ error: "interest não encontrado" });
-    checkIfSameUser(ownerId, query.Property.ownerId, res);
+
+    if (!isSameUser(ownerId, query.Property.ownerId)) {
+      res
+        .status(FAILURE_CODE_ERROR.FORBIDDEN)
+        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+    }
 
     const result = await prisma.interest.update({
       where: {
@@ -575,7 +625,9 @@ router.patch("/:id/interest", async (req, res) => {
     res.json(result);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -598,7 +650,9 @@ router.get("/properties/mean", async (req, res) => {
     res.json({ mean });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Houve um erro com o servidor" });
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
