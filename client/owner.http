@@ -1,7 +1,7 @@
 @base-url = http://localhost:5050
-@owner-id = 1
 @rent-id = 1
 @property-id = 1
+@interest-id = 1
 @jwt-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjIzNTA0MjAwLCJleHAiOjE2MjQxMDkwMDB9.4FqzWoIivH-NNCaNjViG1lTvNvP544-trfpOB9QQqVU
 
 // OWNER
@@ -160,3 +160,26 @@ Content-Type: image/png
 
 < ./1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Delete specific property
+DELETE {{base-url}}/owner/{{property-id}}/property HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Update specific interest
+PATCH {{base-url}}/owner/{{interest-id}}/interest HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+{
+  "pConfirmation": true
+}
+
+### Get average evaluation from all own properties
+GET {{base-url}}/owner/properties/mean HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+{
+  "pConfirmation": true
+}
