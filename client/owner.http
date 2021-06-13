@@ -1,0 +1,31 @@
+@base-url = http://localhost:5050
+@owner-id = 1
+@rent-id = 1
+@jwt-token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNjIzNTA0MjAwLCJleHAiOjE2MjQxMDkwMDB9.4FqzWoIivH-NNCaNjViG1lTvNvP544-trfpOB9QQqVU
+
+// OWNER
+
+### Get all users interesteds in own property
+GET {{base-url}}/owner/interests HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get interests (and interesteds) in owm property when exist user or property confirmation to rent
+GET {{base-url}}/owner/interests HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get all rents (renter relation)
+GET {{base-url}}/owner/rents HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Delete specific renter 
+DELETE {{base-url}}/owner/{{rent-id}}/rent HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
+
+### Get all own properties (and owner, rent, interests and favorited relations infos)
+GET {{base-url}}/owner/properties HTTP/1.1
+Content-Type: application/json
+Authorization: {{jwt-token}}
