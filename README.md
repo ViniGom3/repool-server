@@ -15,7 +15,7 @@ Este projeto visa suprir estas demandas. Oferecendo ao locador a capacidade de a
 
 # Necessary files
 
-credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt).
+credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt), mas para isso é necessário criar um projeto no Google Console. Em seguida crie um bucket, onde os arquivos de midia, inseridos na aplicação, serão guardados, para criar um bucket [clique aqui](https://cloud.google.com/storage/docs/creating-buckets?hl=pt-br). Para mais informações acesses o [Guia de instruções](https://cloud.google.com/storage/docs/how-to?hl=pt-br).
 
 .env: arquivo de configurações de ambiente. Deve ter o seguinte formato:
 
