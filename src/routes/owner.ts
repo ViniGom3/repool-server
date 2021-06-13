@@ -508,19 +508,12 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     // @ts-ignore
     const image: string[] = req.files.map((value) => value.linkUrl);
     const id = parseInt(req.params.id);
-    const { img } = req.body as unknown as { img: string[] };
-    const imagesMixed = handleImage(img, image);
+    const { images } = req.body as unknown as { images: string[] };
+    const imagesMixed = handleImage(images, image);
 
     const propertyResult: Property = await prisma.property.findUnique({
       where: {
         id,
-      },
-      include: {
-        _count: {
-          select: {
-            rent: true,
-          },
-        },
       },
     });
 
