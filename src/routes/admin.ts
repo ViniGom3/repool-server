@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../database";
-import { handleDateAgo } from "../helpers";
-import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers/responses";
+import { handleDateAgo, FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers";
 
 const router = Router();
 

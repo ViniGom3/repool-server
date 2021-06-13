@@ -8,14 +8,12 @@ import {
   handleValue,
   isSameUser,
   parseBoolean,
-} from "../helpers";
-import { upload } from "../middlewares/multer";
-import { Property } from "../classes";
-import {
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
-} from "../helpers/responses";
+} from "../helpers";
+import { upload } from "../middlewares/multer";
+import { Property } from "../classes";
 import schemaValidator, {
   propertySchemaValidation,
   updateUserSchemaValidation,
