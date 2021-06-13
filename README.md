@@ -1,4 +1,6 @@
-# repool-server
+# Repool-API
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://repool-api.herokuapp.com/)
 
 Serviço de aluguel de repúblicas universitárias.
 
