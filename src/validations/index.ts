@@ -2,6 +2,7 @@ import Joi from "joi";
 
 export * from "./user";
 export * from "./property";
+export * from "./rent";
 
 export default function schemaValidator(
   schema: Joi.ObjectSchema<any>,

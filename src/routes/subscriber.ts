@@ -19,8 +19,8 @@ import {
 import schemaValidator, {
   propertySchemaValidation,
   updateUserSchemaValidation,
+  updateEvaluateSchemaValidation,
 } from "../validations";
-import { updateEvaluateSchemaValidation } from "../validations/rent";
 
 const router = Router();
 
