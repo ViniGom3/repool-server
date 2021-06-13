@@ -498,7 +498,7 @@ router.patch("/:id/interest", async (req, res) => {
     // @ts-ignore
     const userId = req.loggedUserId;
     const id = parseInt(req.params.id);
-    const { uConfirmation } = req.body;
+    const { uConfirmation } = req.body as unknown as { uConfirmation: boolean };
 
     const query = await prisma.interest.findUnique({
       where: {
