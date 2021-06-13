@@ -1,4 +1,5 @@
 import { Router } from "express";
+import Joi from "joi";
 
 import {
   findEmail,
@@ -43,7 +44,8 @@ router.get("/users", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, role, tel, cel, sex, bio } = req.body;
+    const { name, email, password, tel, cel, sex, bio } = req.body;
+
     const user = await findEmail(email);
 
     if (user) {
@@ -56,7 +58,6 @@ router.post("/signup", async (req, res) => {
           name,
           email,
           password: hash,
-          role,
           sex,
           bio,
           tel,
@@ -64,9 +65,9 @@ router.post("/signup", async (req, res) => {
         },
       });
 
-      const { password: pass, ...user } = createdUser;
-      const jwt = await createJWT(user.id, user.role);
-      const userAndJwt = [user, jwt];
+      const { password: pass, ...newUser } = createdUser;
+      const jwt = await createJWT(newUser.id, newUser.role);
+      const userAndJwt = [newUser, jwt];
       res.json(userAndJwt);
     }
   } catch (err) {
