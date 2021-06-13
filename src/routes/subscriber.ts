@@ -20,6 +20,7 @@ import schemaValidator, {
   propertySchemaValidation,
   updateUserSchemaValidation,
 } from "../validations";
+import { updateEvaluateSchemaValidation } from "../validations/rent";
 
 const router = Router();
 
@@ -623,6 +624,14 @@ router.patch("/rent/evaluate", async (req, res) => {
       comment: string;
     };
 
+    const error = schemaValidator(updateEvaluateSchemaValidation, req.body);
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
+
     const result = await prisma.rent.updateMany({
       where: {
         guestId: userId,
@@ -650,6 +659,14 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
       value: number;
       comment: string;
     };
+
+    const error = schemaValidator(updateEvaluateSchemaValidation, req.body);
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
 
     const result = await prisma.rent.update({
       where: {
