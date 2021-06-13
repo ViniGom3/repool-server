@@ -16,7 +16,10 @@ import {
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
 } from "../helpers/responses";
-import schemaValidator, { propertySchemaValidation } from "../validations";
+import schemaValidator, {
+  propertySchemaValidation,
+  updateUserSchemaValidation,
+} from "../validations";
 
 const router = Router();
 
@@ -72,8 +75,15 @@ router.patch("/user", async (req, res) => {
     // @ts-ignore
     const id = req.loggedUserId;
 
-    const { name, tel, cel, bio } = req.body;
-    const { sex } = req.body;
+    const { name, tel, cel, bio, sex } = req.body;
+
+    const error = schemaValidator(updateUserSchemaValidation, req.body);
+
+    if (!!error) {
+      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
+        error: error.message,
+      });
+    }
 
     const result = await prisma.user.update({
       where: {
