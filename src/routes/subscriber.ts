@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PrismaPromise } from "@prisma/client";
+import { PrismaPromise, User } from "@prisma/client";
 import { prisma } from "../database";
 import {
   bothConfirmation,
@@ -603,45 +603,6 @@ router.delete("/:id/interest", async (req, res) => {
   }
 });
 
-// router.post("/rent/evaluate", async (req, res) => {
-//   try {
-//     const { comment, value, propertyId } = req.body
-//     // @ts-ignore
-//     const userId = req.loggedUserId
-
-//     const checkEvaluate = await prisma.rent.findFirst({
-//       where: {
-//         guestId: userId,
-//         isActive: true
-//       }
-//     })
-
-//     if (checkEvaluate.value) res.status(400).json({ "error": "Usuário já avaliou" })
-
-//     const result = await prisma.rent.create({
-//       data: {
-//         comment,
-//         value,
-//         guest: {
-//           connect: {
-//             id: userId
-//           }
-//         },
-//         property: {
-//           connect: {
-//             id: propertyId
-//           }
-//         }
-//       }
-//     })
-
-//     res.json(result)
-//   } catch (err) {
-//     console.log(err)
-//     res.status(FAILURE_CODE_ERROR.SERVERERROR).json({ "error": FAILURE_MESSAGE.SERVERERROR })
-//   }
-// })
-
 router.patch("/rent/evaluate", async (req, res) => {
   try {
     // @ts-ignore
@@ -671,10 +632,8 @@ router.patch("/rent/evaluate", async (req, res) => {
   }
 });
 
-// TODO: fix to block evaluation if user not has been guest
 router.patch("/rent/:id/evaluate", async (req, res) => {
   try {
-    // @ts-ignore
     const id = parseInt(req.params.id);
     const { value, comment } = req.body as unknown as {
       value: number;
@@ -700,7 +659,6 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
   }
 });
 
-// TODO: refactor api to isolate upload img to property creation
 router.post("/property", upload.array("img"), async (req, res) => {
   try {
     // @ts-ignore
@@ -781,7 +739,7 @@ router.post("/property", upload.array("img"), async (req, res) => {
       },
     });
 
-    const ownerResult = prisma.user.update({
+    const ownerResult: PrismaPromise<User> = prisma.user.update({
       where: {
         id,
       },
