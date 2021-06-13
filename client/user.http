@@ -16,11 +16,11 @@ GET {{base-url}}/user/{{property-id}}/property HTTP/1.1
 Content-Type: application/json
 
 ### Get properties when their property is set isAdvertisement as true. Search can filtered by word-match (name and description), price (minimum and maximum), and amendities (has pool, is pet friendly, has gourmet area and if has internet.
-@search-expression = verde
+@search-expression = casa
 @hasGarage=true
-@hasGourmet=false
+@hasGourmet=true
 @hasInternet=true
-@hasPool=true
+@hasPool=false
 @minimumPrice=100
 @maximumPrice=1000
 GET {{base-url}}/user/ad
