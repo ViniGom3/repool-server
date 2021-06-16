@@ -36,7 +36,7 @@ GCS_KEYFILE=./credentials.json
 
 ```
 
-# 🚀 Getting Start
+# 🚀 Getting Start {#getting-start}
 
 Para rodar a aplicação backend, precisará de um SGBD PostgresSQL instalado, caso não tenha, e possua instalado, tanto o Docker quanto o docker-compose, pode utilizar o arquivo docker-compose presente na raiz do projeto, de nome **docker-compose.yml**:
 
@@ -76,9 +76,11 @@ Para preencher o banco de dados com dados aleatórios, utilize o comando:
 npx prisma db seed --preview-feature
 ```
 
-## Test API's
+## Test API's {#resource-test}
 
-API tests podem ser feitos por meio da pasta client, na raiz do projeto. O arquivo user.http se refere a ações que podem ser executadas por qualquer usuário, subscriber.http se refere a ações que podem ser executados por qualquer usuário inscrito na plataforma e logado, owner.http são ações que podem ser executadas por usuário proprietários e admin.http, ações do administrador do sistema.
+API testes (de recurso apenas) podem ser feitos por meio da pasta client, na raiz do projeto. O arquivo user.http se refere a ações que podem ser executadas por qualquer usuário, subscriber.http se refere a ações que podem ser executados por qualquer usuário inscrito na plataforma e logado, owner.http são ações que podem ser executadas por usuário proprietários e admin.http, ações do administrador do sistema.
+
+Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, instalado. Para tanto, acesso este [link](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 
 ## Server tasks
 
@@ -180,7 +182,16 @@ API tests podem ser feitos por meio da pasta client, na raiz do projeto. O arqui
 
 ✔ create report
 
-# Folder Structure
+# Hi
+
+Se você é um desenvolvedor e deseja programar neste código fonte, é necessário que entenda algumas coisas.
+Em primeiro lugar, sugiro que siga o [Getting Start](#getting-start), para criar o ambiente de desenvolvimento localmente.
+
+Aqui farei uma breve explanação de como tudo está organizado:
+Os arquivos de configuração, estes estão na raiz do projeto. Arquivos para o git, npm e para o typescript. Além desses arquivos, alguns recursos como o prisma, contendo as migrations, o arquivo de seed para preencher o banco e o schema que será usado no banco de dados.
+Temos também testes de recursos na pasta client, leia mais sobre isso em [Test API](#resource-test). A estrutura das pastas e arquivos está mostrada em [folder structure](#folder-structure).
+
+# Folder Structure {#folder-structure}
 
 ```
 .
