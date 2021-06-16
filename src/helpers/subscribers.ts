@@ -65,9 +65,9 @@ export const bothConfirmation = async function (interest: Interest) {
         ]);
         return transactional;
       }
-      throw new Error();
+      throw new Error("Não há vaga para que possa ser ocupada");
     }
   } catch (error) {
-    throw new Error();
+    throw error;
   }
 };
