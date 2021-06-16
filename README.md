@@ -13,9 +13,30 @@ Temos ainda, por outra ótica, a oportunidade de moradores locais, com espaços 
 Desta forma, vemos que é necessário um meio de ligar o proprietário de um imóvel a um interessado, considerando demandas como a divisão de custo da moradia, proximidade com o ambiente de estudos, explicitação dos custos e quaisquer outras características que sejam de interesse dos potenciais futuros inquilinos.
 Este projeto visa suprir estas demandas. Oferecendo ao locador a capacidade de alugar sua propriedade.
 
-# Necessary files
+# Hi 👋👋👋
 
-credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt), mas para isso é necessário criar um projeto no Google Console. Em seguida crie um bucket, onde os arquivos de midia, inseridos na aplicação, serão guardados, para criar um bucket [clique aqui](https://cloud.google.com/storage/docs/creating-buckets?hl=pt-br). Para mais informações acesses o [Guia de instruções](https://cloud.google.com/storage/docs/how-to?hl=pt-br).
+Se você é um desenvolvedor e deseja programar neste código fonte, é necessário que entenda algumas coisas.
+Em primeiro lugar, sugiro que siga o [Necessary Files](#necessary-files) e o [Getting Start](#getting-start), para criar o ambiente de desenvolvimento localmente.
+
+A estrutura das pastas e arquivos está mostrada em [folder structure](#folder-structure).
+
+Aqui farei uma breve explanação de como tudo está organizado:
+Os arquivos de configuração, estes estão na raiz do projeto. Arquivos para o git, npm e para o typescript. Além desses arquivos, alguns recursos como o prisma, contendo as migrations, o arquivo de seed para preencher o banco e o schema que será usado no banco de dados.
+Temos também testes de recursos na pasta client, leia mais sobre isso em [Test API](#resource-test).
+
+Entrando em src, agora na pasta helpers, estão funções helpers e algumas enumerations, são recursos que teriam seu uso de alguma forma replicadas no código.
+
+Na pasta middleware, estão o bodyparser, content-type, para configuração do express, e um arquivo de configuração do multer, para o upload para o servidor e envio de imagens para o Google Cloud Storage.
+
+Em routes, temos 4 arquivos onde estão as apis, além do index. Nesses 4 arquivos temos: **users**, que abriga apis de uso geral, funcionalidades que todos os que utilizam o sistema podem ter acesso, **subscriber**, apis que só deveriam ser passíveis de execução e uso por usuários plenamente cadastrados e logados, **owner**, rotas de usuários com role de owner ou de administrador, e **admin**, para acesso apenas de um usuário com role de administrador.
+
+Abaixo, temos a pasta validations, onde estão os schemas de validação, para garantir que os dados recebidos pelas requisições estão no schema correto.
+
+Abaixo disso temos o arquivo app, que monta com o auxilio de middlewares e setupRouter a aplicação express que é iniciada em server. O arquivo middleware aplica o middlewares que estão na pasta middlwares enquanto que o arquivo setupRoutes carrega as apis que estão escritas na pasta routes.
+
+# Necessary files {#necessary-files}
+
+credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt), mas para isso é necessário criar um projeto no Google Console. Em seguida crie um bucket no Google Cloud Storage, onde os arquivos de midia, inseridos na aplicação, serão guardados, para criar um bucket [clique aqui](https://cloud.google.com/storage/docs/creating-buckets?hl=pt-br). Para mais informações acesses o [Guia de instruções](https://cloud.google.com/storage/docs/how-to?hl=pt-br).
 
 .env: arquivo de configurações de ambiente. Deve ter o seguinte formato:
 
@@ -181,27 +202,6 @@ Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, 
 ## Admin endpoints
 
 ✔ create report
-
-# Hi
-
-Se você é um desenvolvedor e deseja programar neste código fonte, é necessário que entenda algumas coisas.
-Em primeiro lugar, sugiro que siga o [Getting Start](#getting-start), para criar o ambiente de desenvolvimento localmente.
-
-A estrutura das pastas e arquivos está mostrada em [folder structure](#folder-structure).
-
-Aqui farei uma breve explanação de como tudo está organizado:
-Os arquivos de configuração, estes estão na raiz do projeto. Arquivos para o git, npm e para o typescript. Além desses arquivos, alguns recursos como o prisma, contendo as migrations, o arquivo de seed para preencher o banco e o schema que será usado no banco de dados.
-Temos também testes de recursos na pasta client, leia mais sobre isso em [Test API](#resource-test).
-
-Entrando em src, agora na pasta helpers, estão funções helpers e algumas enumerations, são recursos que teriam seu uso de alguma forma replicadas no código.
-
-Na pasta middleware, estão o bodyparser, content-type, para configuração do express, e um arquivo de configuração do multer, para o upload para o servidor e envio de imagens para o Google Cloud Storage.
-
-Em routes, temos 4 arquivos onde estão as apis, além do index. Nesses 4 arquivos temos: **users**, que abriga apis de uso geral, funcionalidades que todos os que utilizam o sistema podem ter acesso, **subscriber**, apis que só deveriam ser passíveis de execução e uso por usuários plenamente cadastrados e logados, **owner**, rotas de usuários com role de owner ou de administrador, e **admin**, para acesso apenas de um usuário com role de administrador.
-
-Abaixo, temos a pasta validations, onde estão os schemas de validação, para garantir que os dados recebidos pelas requisições estão no schema correto.
-
-Abaixo disso temos o arquivo app, que monta com o auxilio de middlewares e setupRouter a aplicação express que é iniciada em server. O arquivo middleware aplica o middlewares que estão na pasta middlwares enquanto que o arquivo setupRoutes carrega as apis que estão escritas na pasta routes.
 
 # Folder Structure {#folder-structure}
 
