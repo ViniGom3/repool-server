@@ -187,110 +187,86 @@ Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, 
 Se você é um desenvolvedor e deseja programar neste código fonte, é necessário que entenda algumas coisas.
 Em primeiro lugar, sugiro que siga o [Getting Start](#getting-start), para criar o ambiente de desenvolvimento localmente.
 
+A estrutura das pastas e arquivos está mostrada em [folder structure](#folder-structure).
+
 Aqui farei uma breve explanação de como tudo está organizado:
 Os arquivos de configuração, estes estão na raiz do projeto. Arquivos para o git, npm e para o typescript. Além desses arquivos, alguns recursos como o prisma, contendo as migrations, o arquivo de seed para preencher o banco e o schema que será usado no banco de dados.
-Temos também testes de recursos na pasta client, leia mais sobre isso em [Test API](#resource-test). A estrutura das pastas e arquivos está mostrada em [folder structure](#folder-structure).
+Temos também testes de recursos na pasta client, leia mais sobre isso em [Test API](#resource-test).
+
+Entrando em src, agora na pasta helpers, estão funções helpers e algumas enumerations, são recursos que teriam seu uso de alguma forma replicadas no código.
+
+Na pasta middleware, estão o bodyparser, content-type, para configuração do express, e um arquivo de configuração do multer, para o upload para o servidor e envio de imagens para o Google Cloud Storage.
+
+Em routes, temos 4 arquivos onde estão as apis, além do index. Nesses 4 arquivos temos: **users**, que abriga apis de uso geral, funcionalidades que todos os que utilizam o sistema podem ter acesso, **subscriber**, apis que só deveriam ser passíveis de execução e uso por usuários plenamente cadastrados e logados, **owner**, rotas de usuários com role de owner ou de administrador, e **admin**, para acesso apenas de um usuário com role de administrador.
+
+Abaixo, temos a pasta validations, onde estão os schemas de validação, para garantir que os dados recebidos pelas requisições estão no schema correto.
+
+Abaixo disso temos o arquivo app, que monta com o auxilio de middlewares e setupRouter a aplicação express que é iniciada em server. O arquivo middleware aplica o middlewares que estão na pasta middlwares enquanto que o arquivo setupRoutes carrega as apis que estão escritas na pasta routes.
 
 # Folder Structure {#folder-structure}
 
 ```
 .
 ├── README.md
+├── client
+│   ├── 1.png
+│   ├── admin.http
+│   ├── owner.http
+│   ├── subscriber.http
+│   └── user.http
 ├── credentials.json
-├── dist
-│   ├── app.js
-│   ├── app.js.map
-│   ├── classes
-│   │   ├── index.js
-│   │   ├── index.js.map
-│   │   ├── pagination.js
-│   │   ├── pagination.js.map
-│   │   ├── prisma.js
-│   │   └── prisma.js.map
-│   ├── database
-│   │   ├── index.js
-│   │   ├── index.js.map
-│   │   ├── prisma.js
-│   │   └── prisma.js.map
-│   ├── helpers
-│   │   ├── admin.js
-│   │   ├── admin.js.map
-│   │   ├── index.js
-│   │   ├── index.js.map
-│   │   ├── owner.js
-│   │   ├── owner.js.map
-│   │   ├── subscribers.js
-│   │   ├── subscribers.js.map
-│   │   ├── user.js
-│   │   └── user.js.map
-│   ├── middleware.js
-│   ├── middleware.js.map
-│   ├── middlewares
-│   │   ├── bodyparser.js
-│   │   ├── bodyparser.js.map
-│   │   ├── content-type.js
-│   │   ├── content-type.js.map
-│   │   ├── index.js
-│   │   ├── index.js.map
-│   │   ├── multer.js
-│   │   └── multer.js.map
-│   ├── routes
-│   │   ├── admin.js
-│   │   ├── admin.js.map
-│   │   ├── index.js
-│   │   ├── index.js.map
-│   │   ├── owner.js
-│   │   ├── owner.js.map
-│   │   ├── subscriber.js
-│   │   ├── subscriber.js.map
-│   │   ├── users.js
-│   │   └── users.js.map
-│   ├── server.js
-│   ├── server.js.map
-│   ├── setupRoutes.js
-│   └── setupRoutes.js.map
 ├── docker-compose.yml
 ├── lintstagedrc.json
 ├── package-lock.json
 ├── package.json
+├── postgres-data
+│   └── prisma
 ├── prisma
-│   ├── migrations
-│   │   ├── 20210501131546_init
-│   │   │   └── migration.sql
-│   │   └── migration_lock.toml
-│   ├── schema.prisma
-│   └── seed.ts
+│   ├── migrations
+│   │   ├── 20210612131600_init
+│   │   │   └── migration.sql
+│   │   └── migration_lock.toml
+│   ├── schema.prisma
+│   └── seed.ts
 ├── src
-│   ├── api
-│   ├── app.ts
-│   ├── classes
-│   │   ├── index.ts
-│   │   ├── pagination.ts
-│   │   └── prisma.ts
-│   ├── database
-│   │   ├── index.ts
-│   │   └── prisma.ts
-│   ├── helpers
-│   │   ├── admin.ts
-│   │   ├── index.ts
-│   │   ├── owner.ts
-│   │   ├── subscribers.ts
-│   │   └── user.ts
-│   ├── middleware.ts
-│   ├── middlewares
-│   │   ├── bodyparser.ts
-│   │   ├── content-type.ts
-│   │   ├── index.ts
-│   │   └── multer.ts
-│   ├── routes
-│   │   ├── admin.ts
-│   │   ├── index.ts
-│   │   ├── owner.ts
-│   │   ├── subscriber.ts
-│   │   └── users.ts
-│   ├── server.ts
-│   └── setupRoutes.ts
+│   ├── app.ts
+│   ├── classes
+│   │   ├── index.ts
+│   │   ├── multer.ts
+│   │   ├── pagination.ts
+│   │   └── prisma.ts
+│   ├── database
+│   │   ├── index.ts
+│   │   └── prisma.ts
+│   ├── helpers
+│   │   ├── admin.ts
+│   │   ├── index.ts
+│   │   ├── owner.ts
+│   │   ├── responses.ts
+│   │   ├── subscribers.ts
+│   │   └── user.ts
+│   ├── middleware.ts
+│   ├── middlewares
+│   │   ├── bodyparser.ts
+│   │   ├── content-type.ts
+│   │   ├── index.ts
+│   │   └── multer.ts
+│   ├── routes
+│   │   ├── admin.ts
+│   │   ├── index.ts
+│   │   ├── owner.ts
+│   │   ├── subscriber.ts
+│   │   └── users.ts
+│   ├── server.ts
+│   ├── setupRoutes.ts
+│   └── validations
+│       ├── index.ts
+│       ├── property.ts
+│       ├── rent.ts
+│       └── user.ts
 ├── tmp
-│   └── uploads
+│   └── uploads
 └── tsconfig.json
+
+18 directories, 45 files
 ```
