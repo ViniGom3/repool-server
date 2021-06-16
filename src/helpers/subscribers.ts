@@ -13,10 +13,7 @@ export const isSameUser = function (id, idLoggedUser): boolean {
   return id === idLoggedUser;
 };
 
-export function greaterThan(
-  biggerValue: number,
-  smallerValue: number
-): boolean {
+function isGreaterThan(biggerValue: number, smallerValue: number): boolean {
   return biggerValue > smallerValue;
 }
 
@@ -39,7 +36,7 @@ export const bothConfirmation = async function (interest: Interest) {
       });
 
       if (
-        greaterThan(resultProperty.vacancyNumber, countActiveRentsOnProperty)
+        isGreaterThan(resultProperty.vacancyNumber, countActiveRentsOnProperty)
       ) {
         const createRent = prisma.rent.create({
           data: {
