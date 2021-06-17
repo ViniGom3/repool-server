@@ -1,4 +1,4 @@
-import { isGreaterThan } from "./subscribers";
+import { isGreaterThan, isSameUser } from "./subscribers";
 
 describe("isGreaterThan", () => {
   it("should isGreaterThan return true when the first argument is bigger than the second", () => {
@@ -20,5 +20,14 @@ describe("isGreaterThan", () => {
     const biggerValue = 5;
 
     expect(isGreaterThan(smallerValue, biggerValue)).toBe(false);
+  });
+});
+
+describe("isSameUser", () => {
+  it("should isSameUser return true when same id is passed as first and second arguments", () => {
+    const firstId = 10;
+    const secondId = 10;
+
+    expect(isSameUser(firstId, secondId)).toBe(true);
   });
 });
