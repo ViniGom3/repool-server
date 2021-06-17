@@ -418,17 +418,19 @@ router.get("/rent/property/:id/user", async (req, res) => {
     });
 
     if (!isSameUser(userId, result.ownerId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "get property and guest",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     res.json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
