@@ -1,3 +1,4 @@
+import { not } from "joi";
 import { checkRole, handleImage } from "./owner";
 import { isGreaterThan, isSameUser } from "./subscribers";
 
@@ -98,5 +99,41 @@ describe("HandleImage", () => {
     const onlyNewImages = ["imageF", "imageG", "imageH"];
 
     expect(handleImage(oldImages, newImages)).not.toEqual(onlyNewImages);
+  });
+
+  it("should NOT return array containing null value", () => {
+    const oldImages = ["imageA", "imageB", "imageC"];
+    const newImages = ["imageF", null, "imageH"];
+
+    const oldAndNewImages = [
+      "imageA",
+      "imageB",
+      "imageC",
+      "imageF",
+      null,
+      "imageH",
+    ];
+
+    expect(handleImage(oldImages, newImages)).not.toEqual(oldAndNewImages);
+  });
+
+  it("should NOT return an array containing duplicated urls", () => {
+    const oldImages = ["imageA", "imageB", "imageC", "imageX"];
+    const newImages = ["imageF", "imageG", "imageH", "imageX"];
+
+    const oldAndNewWithRepeatedmageUrl = [
+      "imageA",
+      "imageB",
+      "imageC",
+      "imageX",
+      "imageF",
+      "imageG",
+      "imageH",
+      "imageX",
+    ];
+
+    expect(handleImage(oldImages, newImages)).not.toEqual(
+      oldAndNewWithRepeatedmageUrl
+    );
   });
 });
