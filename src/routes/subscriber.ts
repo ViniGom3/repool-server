@@ -150,7 +150,11 @@ router.delete("/user", async (req, res) => {
     });
 
     if (!user) {
-      res.status(404).json({ error: "objeto não encontrado" });
+      throw new exception(
+        "user",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        FAILURE_MESSAGE.NOTFOUND
+      );
     }
 
     const deleteInterest = prisma.interest.deleteMany({
@@ -186,9 +190,9 @@ router.delete("/user", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
