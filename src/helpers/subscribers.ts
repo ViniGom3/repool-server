@@ -5,7 +5,10 @@ export const isSameUser = function (id, idLoggedUser): boolean {
   return id === idLoggedUser;
 };
 
-function isGreaterThan(biggerValue: number, smallerValue: number): boolean {
+export function isGreaterThan(
+  biggerValue: number,
+  smallerValue: number
+): boolean {
   return biggerValue > smallerValue;
 }
 
