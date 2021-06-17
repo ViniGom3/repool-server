@@ -118,17 +118,21 @@ router.post("/signin", async (req, res) => {
     const error = schemaValidator(signInSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "signin",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const result = await findByEmail(email);
 
     if (!result) {
-      res
-        .status(FAILURE_CODE_ERROR.NOTFOUND)
-        .json({ error: FAILURE_MESSAGE.NOTFOUND });
+      throw new exception(
+        "signin",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        FAILURE_MESSAGE.NOTFOUND
+      );
     } else {
       const { password: hash, id, role } = result;
 
@@ -137,17 +141,19 @@ router.post("/signin", async (req, res) => {
       const { password: passToRemove, ...user } = result;
 
       if (!isValid) {
-        res.status(401).json({ error: "Senha incorreta" });
+        throw new exception(
+          "signin",
+          FAILURE_CODE_ERROR.BADREQUEST,
+          FAILURE_MESSAGE.BADREQUEST
+        );
       } else {
         const jwt = await createJWT(id, role);
         res.json([user, jwt]);
       }
     }
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json(error.response);
   }
 });
 
