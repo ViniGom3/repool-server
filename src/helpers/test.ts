@@ -1,4 +1,4 @@
-import { checkRole } from "./owner";
+import { checkRole, handleImage } from "./owner";
 import { isGreaterThan, isSameUser } from "./subscribers";
 
 describe("isGreaterThan", () => {
@@ -62,5 +62,23 @@ describe("CheckRole", () => {
     const roleToCheck = "ROLE0";
 
     expect(checkRole(PermitedRoles, roleToCheck)).toBe(false);
+  });
+});
+
+describe("HandleImage", () => {
+  it("should return an array containing old and new image url", () => {
+    const oldImages = ["imageA", "imageB", "imageC"];
+    const newImages = ["imageF", "imageG", "imageH"];
+
+    const oldAndNewImages = [
+      "imageA",
+      "imageB",
+      "imageC",
+      "imageF",
+      "imageG",
+      "imageH",
+    ];
+
+    expect(handleImage(oldImages, newImages)).toEqual(oldAndNewImages);
   });
 });
