@@ -332,6 +332,9 @@ router.get("/:id/evaluate", async (req, res) => {
     res.json(favorites);
   } catch (error) {
     console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
