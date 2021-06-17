@@ -67,8 +67,11 @@ router.get("/full-user", async (req, res) => {
     });
     const { password, ...user } = result;
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
