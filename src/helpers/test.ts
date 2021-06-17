@@ -90,4 +90,13 @@ describe("HandleImage", () => {
 
     expect(handleImage(oldImages, newImages)).not.toEqual(onlyOldImages);
   });
+
+  it("should NOT return an array containing only new image url", () => {
+    const oldImages = ["imageA", "imageB", "imageC"];
+    const newImages = ["imageF", "imageG", "imageH"];
+
+    const onlyNewImages = ["imageF", "imageG", "imageH"];
+
+    expect(handleImage(oldImages, newImages)).not.toEqual(onlyNewImages);
+  });
 });
