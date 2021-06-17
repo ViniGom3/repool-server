@@ -86,7 +86,11 @@ router.patch("/user", async (req, res) => {
     const error = schemaValidator(updateUserSchemaValidation, req.body);
 
     if (!!error) {
-      throw new exception("user", FAILURE_CODE_ERROR.BADREQUEST, error.message);
+      throw new exception(
+        "update user",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const result = await prisma.user.update({
@@ -151,7 +155,7 @@ router.delete("/user", async (req, res) => {
 
     if (!user) {
       throw new exception(
-        "user",
+        "delete user",
         FAILURE_CODE_ERROR.NOTFOUND,
         FAILURE_MESSAGE.NOTFOUND
       );
