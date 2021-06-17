@@ -40,8 +40,8 @@ router.get("/users", async (req, res) => {
     });
 
     res.json(allUsers);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -104,8 +104,8 @@ router.get("/email", async (req, res) => {
     const user = await findEmail(email);
 
     res.json(!!user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -294,8 +294,8 @@ router.get("/:id/property", async (req, res) => {
 
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
