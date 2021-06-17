@@ -30,4 +30,11 @@ describe("isSameUser", () => {
 
     expect(isSameUser(firstId, secondId)).toBe(true);
   });
+
+  it("should isSameUser return false when same id is passed as first and second arguments but with diferent types", () => {
+    const firstId = 10;
+    const secondId = "10";
+
+    expect(isSameUser(firstId, secondId)).toBe(false);
+  });
 });
