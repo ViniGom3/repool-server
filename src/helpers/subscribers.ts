@@ -1,8 +1,10 @@
 import { Interest, Property } from "../classes";
 import { prisma } from "../database";
 
-export const isSameUser = function (id, idLoggedUser): boolean {
-  return id === idLoggedUser;
+type Id = number | string;
+
+export const isSameUser = function (firstId: Id, secondId: Id): boolean {
+  return firstId === secondId;
 };
 
 export function isGreaterThan(
