@@ -10,7 +10,10 @@ export function verifyRole(req, res, next) {
   next();
 }
 
-function checkRole(rolePermited: string[], roleToCheck: string): boolean {
+export function checkRole(
+  rolePermited: string[],
+  roleToCheck: string
+): boolean {
   return rolePermited.some((rolePermited) => rolePermited === roleToCheck);
 }
 
