@@ -46,6 +46,7 @@ export const propertySchemaValidation = Joi.object().keys({
     .pattern(/[0-9]+$/i)
     .min(1)
     .max(4),
+  img: Joi.string().valid(""),
 });
 
 export const updatePropertySchemaValidation = Joi.object().keys({
@@ -89,4 +90,5 @@ export const updatePropertySchemaValidation = Joi.object().keys({
   isPetFriendly: Joi.boolean(),
   isAdvertisement: Joi.boolean(),
   vacancyNumber: Joi.number(),
+  img: Joi.string().valid(""),
 });
