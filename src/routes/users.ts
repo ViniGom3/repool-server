@@ -92,7 +92,9 @@ router.post("/signup", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(error.status).json(error.response);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -154,7 +156,9 @@ router.post("/signin", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(error.status).json(error.response);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -264,7 +268,9 @@ router.get("/ad", async (req, res) => {
     res.json(result);
   } catch (error) {
     console.log(error);
-    res.status(error.status).json(error.response);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
