@@ -453,10 +453,13 @@ router.post("/property/:property_id/interest", async (req, res) => {
       },
     });
 
-    if (interest.interests.length !== 0)
-      res
-        .status(400)
-        .json({ error: "Interesse nesta propriedade já foi cadastrado" });
+    if (interest.interests.length !== 0) {
+      throw new exception(
+        "add interest",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        FAILURE_MESSAGE.BADREQUEST
+      );
+    }
 
     const result = await prisma.interest.create({
       data: {
@@ -513,9 +516,9 @@ router.patch("/property/:property_id/interest", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(interest);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
