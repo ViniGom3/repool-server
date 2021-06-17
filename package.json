@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "rimraf dist && tsc && npm run migrate &&  node ./dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "build": "rimraf dist && tsc",
     "compile": "tsc -w",
     "migrate": "npx prisma migrate deploy",
@@ -27,6 +28,7 @@
   "homepage": "https://github.com/ViniGom3/repool-server#readme",
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.23",
     "@types/node": "^15.0.2",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "eslint": "^7.25.0",
@@ -35,10 +37,14 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
     "git-commit-msg-linter": "^3.1.0",
+    "jest": "^27.0.4",
+    "jest-mock-extended": "^1.0.16",
     "nodemon": "^2.0.7",
     "prisma": "^2.22.0",
     "sucrase": "^3.18.1",
-    "ts-node": "^9.1.1"
+    "ts-jest": "^27.0.3",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.3.3"
   },
   "dependencies": {
     "@prisma/client": "^2.22.0",
@@ -50,7 +56,6 @@
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
-    "multer-cloud-storage": "^2.7.1",
-    "typescript": "^4.3.2"
+    "multer-cloud-storage": "^2.7.1"
   }
 }

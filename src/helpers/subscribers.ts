@@ -1,19 +1,16 @@
 import { Interest, Property } from "../classes";
 import { prisma } from "../database";
-import { FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "./responses";
 
-export const checkIfSameUser = function (id, idLoggedUser, res) {
-  if (id !== idLoggedUser)
-    res
-      .status(FAILURE_CODE_ERROR.FORBIDDEN)
-      .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+type Id = number | string;
+
+export const isSameUser = function (firstId: Id, secondId: Id): boolean {
+  return firstId === secondId;
 };
 
-export const isSameUser = function (id, idLoggedUser): boolean {
-  return id === idLoggedUser;
-};
-
-function isGreaterThan(biggerValue: number, smallerValue: number): boolean {
+export function isGreaterThan(
+  biggerValue: number,
+  smallerValue: number
+): boolean {
   return biggerValue > smallerValue;
 }
 

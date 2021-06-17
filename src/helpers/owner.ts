@@ -10,7 +10,10 @@ export function verifyRole(req, res, next) {
   next();
 }
 
-function checkRole(rolePermited: string[], roleToCheck: string): boolean {
+export function checkRole(
+  rolePermited: string[],
+  roleToCheck: string
+): boolean {
   return rolePermited.some((rolePermited) => rolePermited === roleToCheck);
 }
 
@@ -18,6 +21,6 @@ export function handleImage(
   oldImages: string[],
   newImages: string[]
 ): string[] {
-  const arrayFilled = [...oldImages, ...newImages];
+  const arrayFilled = [...new Set([...oldImages, ...newImages])];
   return arrayFilled.filter((x) => x);
 }
