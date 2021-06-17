@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { exception } from "express-exception-handler";
 
 import {
   findEmail,
@@ -53,15 +54,21 @@ router.post("/signup", async (req, res) => {
     const error = schemaValidator(signUpSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "signup",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const user = await findEmail(email);
 
     if (user) {
-      res.status(400).json({ error: "email já existe" });
+      throw new exception(
+        "signup",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "e-mail already exist"
+      );
     } else {
       const hash = await hashing(password);
 
@@ -82,11 +89,9 @@ router.post("/signup", async (req, res) => {
       const userAndJwt = [newUser, jwt];
       res.json(userAndJwt);
     }
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json(error.response);
   }
 });
 
