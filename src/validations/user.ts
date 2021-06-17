@@ -23,10 +23,9 @@ export const updateUserSchemaValidation = Joi.object().keys({
   name: Joi.string()
     .pattern(/^[a-zà-ú ,']+$/i)
     .min(3)
-    .max(50)
-    .required(),
-  tel: Joi.string().alphanum().min(8).max(13).required(),
-  cel: Joi.string().alphanum().min(9).max(14).required(),
+    .max(50),
+  tel: Joi.string().alphanum().min(8).max(13),
+  cel: Joi.string().alphanum().min(9).max(14),
   sex: Joi.string().valid("NOTKNOW", "MALE", "FEMALE", "NOTAPPLICABLE"),
   bio: Joi.string(),
 });
