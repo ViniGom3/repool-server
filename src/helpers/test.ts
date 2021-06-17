@@ -55,4 +55,12 @@ describe("CheckRole", () => {
 
     expect(checkRole(PermitedRoles, roleToCheck)).toBe(true);
   });
+
+  it("should return false when role passed as second argument is not contained in first argument", () => {
+    const PermitedRoles = ["ROLE1", "ROLE2"];
+
+    const roleToCheck = "ROLE0";
+
+    expect(checkRole(PermitedRoles, roleToCheck)).toBe(false);
+  });
 });
