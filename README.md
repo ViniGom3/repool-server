@@ -99,9 +99,19 @@ npx prisma db seed --preview-feature
 
 ## Test API's {#resource-test}
 
+### Unit test
+
+Para executar os testes contidos em src/helpers utilize:
+
+```
+npm run test
+```
+
+### Resource test
+
 API testes (de recurso apenas) podem ser feitos por meio da pasta client, na raiz do projeto. O arquivo user.http se refere a ações que podem ser executadas por qualquer usuário, subscriber.http se refere a ações que podem ser executados por qualquer usuário inscrito na plataforma e logado, owner.http são ações que podem ser executadas por usuário proprietários e admin.http, ações do administrador do sistema.
 
-Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, instalado. Para tanto, acesso este [link](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, instalado. Para tanto, acesso este [link](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
 
 ## Server tasks
 
