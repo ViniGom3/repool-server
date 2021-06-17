@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PrismaPromise, User } from "@prisma/client";
+import { exception } from "express-exception-handler";
 import { prisma } from "../database";
 import { upload } from "../middlewares/multer";
 import { Property } from "../classes";
@@ -85,9 +86,7 @@ router.patch("/user", async (req, res) => {
     const error = schemaValidator(updateUserSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception("user", FAILURE_CODE_ERROR.BADREQUEST, error.message);
     }
 
     const result = await prisma.user.update({
@@ -105,8 +104,9 @@ router.patch("/user", async (req, res) => {
 
     const { password, ...user } = result;
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json(error.response);
   }
 });
 
