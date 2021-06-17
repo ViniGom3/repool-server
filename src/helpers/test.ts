@@ -1,3 +1,4 @@
+import { checkRole } from "./owner";
 import { isGreaterThan, isSameUser } from "./subscribers";
 
 describe("isGreaterThan", () => {
@@ -43,5 +44,15 @@ describe("isSameUser", () => {
     const secondId = 5;
 
     expect(isSameUser(firstId, secondId)).toBe(false);
+  });
+});
+
+describe("CheckRole", () => {
+  it("should return true when role passed as second argument is contained in first argument", () => {
+    const PermitedRoles = ["ROLE1", "ROLE2"];
+
+    const roleToCheck = "ROLE1";
+
+    expect(checkRole(PermitedRoles, roleToCheck)).toBe(true);
   });
 });
