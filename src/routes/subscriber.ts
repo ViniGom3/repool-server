@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { PrismaPromise, User } from "@prisma/client";
 import { prisma } from "../database";
+import { upload } from "../middlewares/multer";
+import { Property } from "../classes";
 import {
   bothConfirmation,
   createJWT,
@@ -12,8 +14,6 @@ import {
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
 } from "../helpers";
-import { upload } from "../middlewares/multer";
-import { Property } from "../classes";
 import schemaValidator, {
   propertySchemaValidation,
   updateUserSchemaValidation,
@@ -41,8 +41,11 @@ router.get("/:id/user", async (req, res) => {
       },
     });
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
