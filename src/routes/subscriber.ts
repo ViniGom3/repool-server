@@ -106,7 +106,9 @@ router.patch("/user", async (req, res) => {
     res.json(user);
   } catch (error) {
     console.log(error);
-    res.status(error.status).json(error.response);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
