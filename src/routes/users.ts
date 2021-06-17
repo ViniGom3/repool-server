@@ -11,6 +11,7 @@ import {
   verify,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
+  isGreaterThan,
 } from "../helpers";
 import { prisma } from "../database";
 import { Pagination } from "../classes";
@@ -191,10 +192,13 @@ router.get("/ad", async (req, res) => {
     const maxPrice = handlePrice(maximumPrice);
     const minPrice = handlePrice(minimumPrice);
 
-    if (minPrice > maxPrice)
-      res
-        .status(400)
-        .json({ error: "minimum price cannot be greater than maximum price" });
+    if (isGreaterThan(minPrice, maxPrice)) {
+      throw new exception(
+        "ad",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "minimum price cannot be greater than maximum price"
+      );
+    }
 
     let result;
     if (!!search) {
@@ -258,11 +262,9 @@ router.get("/ad", async (req, res) => {
     }
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    res.status(error.status).json(error.response);
   }
 });
 
