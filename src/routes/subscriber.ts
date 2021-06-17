@@ -132,6 +132,9 @@ router.patch("/user/image", upload.single("avatar"), async (req, res) => {
     res.json(user);
   } catch (error) {
     console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -181,8 +184,11 @@ router.delete("/user", async (req, res) => {
       deleteUser,
     ]);
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -201,8 +207,11 @@ router.get("/favorites", async (req, res) => {
     });
 
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
@@ -264,8 +273,8 @@ router.patch("/property/:property_id/favorites", async (req, res) => {
 
     const { password, ...user } = result;
     res.json(user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -293,8 +302,8 @@ router.get("/evaluate", async (req, res) => {
     });
 
     res.json(evaluate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -312,8 +321,8 @@ router.get("/evaluates", async (req, res) => {
     });
 
     res.json(evaluates);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -346,8 +355,8 @@ router.get("/property/:id/rent", async (req, res) => {
 
     const propertyWithAggregate = Object.assign(query, agreggate);
     res.json(propertyWithAggregate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -370,8 +379,8 @@ router.get("/rent", async (req, res) => {
     });
 
     res.json(rent);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -407,8 +416,8 @@ router.get("/rent/property/:id/user", async (req, res) => {
     }
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -447,8 +456,8 @@ router.post("/property/:property_id/interest", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.CREATED).json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -492,8 +501,8 @@ router.patch("/property/:property_id/interest", async (req, res) => {
     }
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(interest);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -536,8 +545,8 @@ router.patch("/:id/interest", async (req, res) => {
 
     if (resultConfirmation) res.json(resultConfirmation);
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -576,8 +585,8 @@ router.delete("/property/:property_id/interest", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -613,8 +622,8 @@ router.delete("/:id/interest", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -650,8 +659,8 @@ router.patch("/rent/evaluate", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -685,8 +694,8 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -805,8 +814,8 @@ router.post("/property", upload.array("img"), async (req, res) => {
     const { password, ...ownerWithoutPassword } = owner;
 
     res.json([property, ownerWithoutPassword, jwt]);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -852,8 +861,8 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(rentUpdate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });

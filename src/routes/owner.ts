@@ -50,8 +50,8 @@ router.get("/interests", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -80,8 +80,8 @@ router.get("/interest", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -106,8 +106,8 @@ router.get("/rents", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -146,8 +146,8 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -172,8 +172,8 @@ router.get("/properties", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -212,8 +212,8 @@ router.get("/property/:id/interests", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -254,8 +254,8 @@ router.get("/property/:id/rents/active", async (req, res) => {
     const activeRents = result.rent.filter((element) => element.isActive);
 
     res.json(activeRents);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -300,8 +300,8 @@ router.get("/:id/property", async (req, res) => {
 
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -397,8 +397,8 @@ router.post("/property", upload.array("img"), async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -493,8 +493,8 @@ router.patch("/:id/property", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -533,8 +533,8 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     });
 
     res.json(propertyUpdated);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -583,8 +583,8 @@ router.delete("/:id/property", async (req, res) => {
       deleteInterest,
     ]);
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -634,8 +634,8 @@ router.patch("/:id/interest", async (req, res) => {
       res.json(resultConfirmation);
     }
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -659,8 +659,8 @@ router.get("/properties/mean", async (req, res) => {
     });
 
     res.json({ mean });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
