@@ -6,3 +6,10 @@ it("should isGreaterThan return true when the first argument is bigger than the 
 
   expect(isGreaterThan(biggerValue, smallerValue)).toBe(true);
 });
+
+it("should isGreaterThan return false when the first argument is smaller than the second", () => {
+  const smallerValue = 4;
+  const biggerValue = 9;
+
+  expect(isGreaterThan(smallerValue, biggerValue)).toBe(false);
+});
