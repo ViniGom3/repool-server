@@ -594,7 +594,7 @@ router.delete("/property/:property_id/interest", async (req, res) => {
     if (interest.interests.length === 0) {
       throw new exception(
         "delete interest",
-        FAILURE_CODE_ERROR.BADREQUEST,
+        FAILURE_CODE_ERROR.NOTFOUND,
         "not exist interest for delete"
       );
     }
@@ -627,15 +627,20 @@ router.delete("/:id/interest", async (req, res) => {
 
     // @ts-ignore
     if (!isSameUser(interest.userId, req.loggedUserId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "delete interest",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
-    if (interest)
-      res.status(400).json({
-        error: "Não interesse cadastrado para que possa ser deletado",
-      });
+    if (interest) {
+      throw new exception(
+        "delete interest",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        "not exist interest for delete"
+      );
+    }
 
     const result = await prisma.interest.delete({
       where: {
@@ -646,9 +651,9 @@ router.delete("/:id/interest", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
