@@ -875,13 +875,19 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     if (!query.rent[0].guestId) {
-      res.status(404).json({ error: "Rent não cadastrado" });
+      throw new exception(
+        "delete rent",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        "not exist rent"
+      );
     }
 
     if (!isSameUser(query.rent[0].guestId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update evaluate",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const rentUpdate = await prisma.rent.update({
@@ -896,9 +902,9 @@ router.delete("/:id/rent", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(rentUpdate);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
