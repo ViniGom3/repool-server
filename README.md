@@ -34,7 +34,7 @@ Abaixo, temos a pasta validations, onde estão os schemas de validação, para g
 
 Abaixo disso temos o arquivo app, que monta com o auxilio de middlewares e setupRouter a aplicação express que é iniciada em server. O arquivo middleware aplica o middlewares que estão na pasta middlwares enquanto que o arquivo setupRoutes carrega as apis que estão escritas na pasta routes.
 
-# Necessary files {#necessary-files}
+# Necessary files
 
 credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](https://cloud.google.com/storage/docs/getting-service-account?hl=pt), mas para isso é necessário criar um projeto no Google Console. Em seguida crie um bucket no Google Cloud Storage, onde os arquivos de midia, inseridos na aplicação, serão guardados, para criar um bucket [clique aqui](https://cloud.google.com/storage/docs/creating-buckets?hl=pt-br). Para mais informações acesses o [Guia de instruções](https://cloud.google.com/storage/docs/how-to?hl=pt-br).
 
@@ -42,6 +42,9 @@ credentials.json: credencial do Google Cloud Storage. Pode ser obtido [aqui](htt
 
 ```
 DATABASE_URL="postgresql://postgres:postgres@dominio:port/database?schema=public"
+
+MONGO_URL="mongodb+srv://username:password@cluster0.blabla.mongodb.net/database?retryWrites=true&w=majority"
+
 
 PORT=5050
 
@@ -57,7 +60,7 @@ GCS_KEYFILE=./credentials.json
 
 ```
 
-# 🚀 Getting Start {#getting-start}
+# 🚀 Getting Start
 
 Para rodar a aplicação backend, precisará de um SGBD PostgresSQL instalado, caso não tenha, e possua instalado, tanto o Docker quanto o docker-compose, pode utilizar o arquivo docker-compose presente na raiz do projeto, de nome **docker-compose.yml**:
 
@@ -97,7 +100,7 @@ Para preencher o banco de dados com dados aleatórios, utilize o comando:
 npx prisma db seed --preview-feature
 ```
 
-## Test API's {#resource-test}
+## Test API's
 
 ### Unit test
 
@@ -213,7 +216,7 @@ Para executar os testes, é necessário ter a extensão do VSCode, Rest Client, 
 
 ✔ create report
 
-# Folder Structure {#folder-structure}
+# Folder Structure
 
 ```
 .
