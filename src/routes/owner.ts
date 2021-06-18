@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { exception } from "express-exception-handler";
 import { Property } from "../classes";
 import { prisma } from "../database";
 import {
@@ -50,8 +51,8 @@ router.get("/interests", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -80,8 +81,8 @@ router.get("/interest", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -106,8 +107,8 @@ router.get("/rents", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -134,9 +135,11 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     if (!isSameUser(query.property.ownerId, ownerId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "delete rent",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const result = await prisma.rent.delete({
@@ -146,11 +149,11 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -172,8 +175,8 @@ router.get("/properties", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -212,8 +215,8 @@ router.get("/property/:id/interests", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -254,8 +257,8 @@ router.get("/property/:id/rents/active", async (req, res) => {
     const activeRents = result.rent.filter((element) => element.isActive);
 
     res.json(activeRents);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -300,8 +303,8 @@ router.get("/:id/property", async (req, res) => {
 
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -352,9 +355,11 @@ router.post("/property", upload.array("img"), async (req, res) => {
     const error = schemaValidator(propertySchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "add property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const pool = parseBoolean(hasPool);
@@ -397,11 +402,11 @@ router.post("/property", upload.array("img"), async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -436,9 +441,11 @@ router.patch("/:id/property", async (req, res) => {
     const error = schemaValidator(updatePropertySchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const propertyResult = await prisma.property.findUnique({
@@ -455,15 +462,20 @@ router.patch("/:id/property", async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
-    if (propertyResult._count.rent > vacancyNumber)
-      res.status(404).json({
-        error: "is not possible a vacancyNumber less than rents actives",
-      });
+    if (propertyResult._count.rent > vacancyNumber) {
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "is not possible a vacancy number less than active rents"
+      );
+    }
 
     const result = await prisma.property.update({
       where: {
@@ -493,11 +505,11 @@ router.patch("/:id/property", async (req, res) => {
     });
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -518,9 +530,11 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update property img",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const propertyUpdated: Property = await prisma.property.update({
@@ -533,11 +547,11 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     });
 
     res.json(propertyUpdated);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -554,9 +568,11 @@ router.delete("/:id/property", async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "delete property",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const deleteProperty = prisma.property.delete({
@@ -583,11 +599,11 @@ router.delete("/:id/property", async (req, res) => {
       deleteInterest,
     ]);
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -611,12 +627,20 @@ router.patch("/:id/interest", async (req, res) => {
       },
     });
 
-    if (!query) res.status(404).json({ error: "interest não encontrado" });
+    if (!query) {
+      throw new exception(
+        "update interest",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        FAILURE_MESSAGE.NOTFOUND
+      );
+    }
 
     if (!isSameUser(ownerId, query.Property.ownerId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update interest",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const result = await prisma.interest.update({
@@ -633,12 +657,13 @@ router.patch("/:id/interest", async (req, res) => {
     if (resultConfirmation) {
       res.json(resultConfirmation);
     }
+
     res.json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -659,8 +684,8 @@ router.get("/properties/mean", async (req, res) => {
     });
 
     res.json({ mean });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });

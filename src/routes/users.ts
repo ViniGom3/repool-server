@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { exception } from "express-exception-handler";
 
 import {
   findEmail,
@@ -10,6 +11,7 @@ import {
   verify,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
+  isGreaterThan,
 } from "../helpers";
 import { prisma } from "../database";
 import { Pagination } from "../classes";
@@ -38,8 +40,8 @@ router.get("/users", async (req, res) => {
     });
 
     res.json(allUsers);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -53,15 +55,21 @@ router.post("/signup", async (req, res) => {
     const error = schemaValidator(signUpSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "signup",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const user = await findEmail(email);
 
     if (user) {
-      res.status(400).json({ error: "email já existe" });
+      throw new exception(
+        "signup",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "e-mail already exist"
+      );
     } else {
       const hash = await hashing(password);
 
@@ -82,11 +90,11 @@ router.post("/signup", async (req, res) => {
       const userAndJwt = [newUser, jwt];
       res.json(userAndJwt);
     }
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -98,8 +106,8 @@ router.get("/email", async (req, res) => {
     const user = await findEmail(email);
 
     res.json(!!user);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -113,17 +121,21 @@ router.post("/signin", async (req, res) => {
     const error = schemaValidator(signInSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "signin",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const result = await findByEmail(email);
 
     if (!result) {
-      res
-        .status(FAILURE_CODE_ERROR.NOTFOUND)
-        .json({ error: FAILURE_MESSAGE.NOTFOUND });
+      throw new exception(
+        "signin",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        FAILURE_MESSAGE.NOTFOUND
+      );
     } else {
       const { password: hash, id, role } = result;
 
@@ -132,17 +144,21 @@ router.post("/signin", async (req, res) => {
       const { password: passToRemove, ...user } = result;
 
       if (!isValid) {
-        res.status(401).json({ error: "Senha incorreta" });
+        throw new exception(
+          "signin",
+          FAILURE_CODE_ERROR.BADREQUEST,
+          FAILURE_MESSAGE.BADREQUEST
+        );
       } else {
         const jwt = await createJWT(id, role);
         res.json([user, jwt]);
       }
     }
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -180,10 +196,13 @@ router.get("/ad", async (req, res) => {
     const maxPrice = handlePrice(maximumPrice);
     const minPrice = handlePrice(minimumPrice);
 
-    if (minPrice > maxPrice)
-      res
-        .status(400)
-        .json({ error: "minimum price cannot be greater than maximum price" });
+    if (isGreaterThan(minPrice, maxPrice)) {
+      throw new exception(
+        "ad",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "minimum price cannot be greater than maximum price"
+      );
+    }
 
     let result;
     if (!!search) {
@@ -247,11 +266,11 @@ router.get("/ad", async (req, res) => {
     }
 
     res.json(result);
-  } catch (err) {
-    console.log(err);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+  } catch (error) {
+    console.log(error);
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -281,8 +300,8 @@ router.get("/:id/property", async (req, res) => {
 
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -319,6 +338,9 @@ router.get("/:id/evaluate", async (req, res) => {
     res.json(favorites);
   } catch (error) {
     console.log(error);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
