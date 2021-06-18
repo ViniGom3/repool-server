@@ -707,9 +707,11 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
     const error = schemaValidator(updateEvaluateSchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "update evaluate",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        FAILURE_MESSAGE.BADREQUEST
+      );
     }
 
     const result = await prisma.rent.update({
@@ -725,9 +727,9 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
     res.json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
