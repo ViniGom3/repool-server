@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { exception } from "express-exception-handler";
 import { Property } from "../classes";
 import { prisma } from "../database";
 import {
@@ -134,9 +135,11 @@ router.delete("/:id/rent", async (req, res) => {
     });
 
     if (!isSameUser(query.property.ownerId, ownerId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "delete rent",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const result = await prisma.rent.delete({
@@ -148,9 +151,9 @@ router.delete("/:id/rent", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
