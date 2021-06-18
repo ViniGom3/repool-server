@@ -1,9 +1,8 @@
 import { Router } from "express";
-import { PrismaPromise, User } from "@prisma/client";
+import { PrismaPromise, Property, User } from "@prisma/client";
 import { exception } from "express-exception-handler";
 import { prisma } from "../database";
 import { upload } from "../middlewares/multer";
-import { Property } from "../classes";
 import {
   bothConfirmation,
   createJWT,
