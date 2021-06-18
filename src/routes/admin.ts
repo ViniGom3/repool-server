@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { prisma } from "../database";
-import { handleDateAgo, FAILURE_CODE_ERROR, FAILURE_MESSAGE } from "../helpers";
+import {
+  handleDateAgo,
+  logging,
+  FAILURE_CODE_ERROR,
+  FAILURE_MESSAGE,
+} from "../helpers";
 
 const router = Router();
 
@@ -18,7 +23,7 @@ router.get("/sex", async (req, res) => {
     const countBySex = { all, usersBySex };
     res.json(countBySex);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -53,7 +58,7 @@ router.get("/sex-month", async (req, res) => {
     const countSex = { all, usersBySexCreatedThirtyDaysAgo };
     res.json(countSex);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -74,7 +79,7 @@ router.get("/properties", async (req, res) => {
     const countProperty = { all, propertiesByUf };
     res.json(countProperty);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -109,7 +114,7 @@ router.get("/properties-month", async (req, res) => {
     const countProperty = { all, propertiesByUfCreatedThirtyDaysAgo };
     res.json(countProperty);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -143,7 +148,7 @@ router.get("/ad-month", async (req, res) => {
     const countProperty = { all, propertiesInAdCreatedThirtyDaysAgo };
     res.json(countProperty);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
