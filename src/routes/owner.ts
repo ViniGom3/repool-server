@@ -441,9 +441,11 @@ router.patch("/:id/property", async (req, res) => {
     const error = schemaValidator(updatePropertySchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const propertyResult = await prisma.property.findUnique({
@@ -460,15 +462,20 @@ router.patch("/:id/property", async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
-    if (propertyResult._count.rent > vacancyNumber)
-      res.status(404).json({
-        error: "is not possible a vacancyNumber less than rents actives",
-      });
+    if (propertyResult._count.rent > vacancyNumber) {
+      throw new exception(
+        "update property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        "is not possible a vacancy number less than active rents"
+      );
+    }
 
     const result = await prisma.property.update({
       where: {
@@ -500,9 +507,9 @@ router.patch("/:id/property", async (req, res) => {
     res.json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
