@@ -516,9 +516,9 @@ router.patch("/property/:property_id/interest", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(interest);
   } catch (error) {
     console.log(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    res
+      .status(FAILURE_CODE_ERROR.SERVERERROR)
+      .json({ error: FAILURE_MESSAGE.SERVERERROR });
   }
 });
 
