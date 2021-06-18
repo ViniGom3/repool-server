@@ -530,9 +530,11 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update property img",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const propertyUpdated: Property = await prisma.property.update({
@@ -547,9 +549,9 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
     res.json(propertyUpdated);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
