@@ -568,9 +568,11 @@ router.delete("/:id/property", async (req, res) => {
     });
 
     if (!isSameUser(propertyResult.ownerId, userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "delete property",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const deleteProperty = prisma.property.delete({
@@ -599,9 +601,9 @@ router.delete("/:id/property", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
