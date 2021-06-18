@@ -9,6 +9,7 @@ import {
   handlePrice,
   hashing,
   verify,
+  logging,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
   isGreaterThan,
@@ -41,7 +42,7 @@ router.get("/users", async (req, res) => {
 
     res.json(allUsers);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -91,7 +92,7 @@ router.post("/signup", async (req, res) => {
       res.json(userAndJwt);
     }
   } catch (error) {
-    console.log(error);
+    logging(error);
     const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
     const response = error.response || FAILURE_MESSAGE.SERVERERROR;
     res.status(status).json(response);
@@ -107,7 +108,7 @@ router.get("/email", async (req, res) => {
 
     res.json(!!user);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -155,7 +156,7 @@ router.post("/signin", async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    logging(error);
     const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
     const response = error.response || FAILURE_MESSAGE.SERVERERROR;
     res.status(status).json(response);
@@ -267,7 +268,7 @@ router.get("/ad", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.log(error);
+    logging(error);
     const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
     const response = error.response || FAILURE_MESSAGE.SERVERERROR;
     res.status(status).json(response);
@@ -301,7 +302,7 @@ router.get("/:id/property", async (req, res) => {
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -316,7 +317,7 @@ router.get("/ad/count", async (req, res) => {
 
     res.json(all);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
@@ -337,7 +338,7 @@ router.get("/:id/evaluate", async (req, res) => {
     });
     res.json(favorites);
   } catch (error) {
-    console.log(error);
+    logging(error);
     res
       .status(FAILURE_CODE_ERROR.SERVERERROR)
       .json({ error: FAILURE_MESSAGE.SERVERERROR });
