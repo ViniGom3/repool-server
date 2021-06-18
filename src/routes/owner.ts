@@ -355,9 +355,11 @@ router.post("/property", upload.array("img"), async (req, res) => {
     const error = schemaValidator(propertySchemaValidation, req.body);
 
     if (!!error) {
-      res.status(FAILURE_CODE_ERROR.BADREQUEST).json({
-        error: error.message,
-      });
+      throw new exception(
+        "add property",
+        FAILURE_CODE_ERROR.BADREQUEST,
+        error.message
+      );
     }
 
     const pool = parseBoolean(hasPool);
@@ -402,9 +404,9 @@ router.post("/property", upload.array("img"), async (req, res) => {
     res.json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
