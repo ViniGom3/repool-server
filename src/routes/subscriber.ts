@@ -471,9 +471,9 @@ router.post("/property/:property_id/interest", async (req, res) => {
     res.status(SUCCESS_CODE_ERROR.CREATED).json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
@@ -536,13 +536,19 @@ router.patch("/:id/interest", async (req, res) => {
     });
 
     if (!query) {
-      res.status(404).json({ error: "interest não encontrado" });
+      throw new exception(
+        "update interest",
+        FAILURE_CODE_ERROR.NOTFOUND,
+        FAILURE_MESSAGE.NOTFOUND
+      );
     }
 
     if (!isSameUser(userId, query.userId)) {
-      res
-        .status(FAILURE_CODE_ERROR.FORBIDDEN)
-        .json({ error: FAILURE_MESSAGE.FORBIDDEN });
+      throw new exception(
+        "update interest",
+        FAILURE_CODE_ERROR.FORBIDDEN,
+        FAILURE_MESSAGE.FORBIDDEN
+      );
     }
 
     const result = await prisma.interest.update({
@@ -560,9 +566,9 @@ router.patch("/:id/interest", async (req, res) => {
     res.json(result);
   } catch (error) {
     console.log(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
+    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
+    res.status(status).json(response);
   }
 });
 
