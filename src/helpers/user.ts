@@ -1,6 +1,7 @@
 import jsonwebtoken from "jsonwebtoken";
 import argon2 from "argon2";
 import { prisma } from "../database";
+import { logging } from "../helpers";
 
 export const findEmail = async (email) => {
   const user = await prisma.user.findUnique({
@@ -30,7 +31,7 @@ export function verifyJWT(req, res, next) {
 
   jsonwebtoken.verify(token, process.env.TOKEN_JWT, (error, decoded) => {
     if (error) {
-      console.log(error);
+      logging(error);
       return res.status(401).json({ error: "Falha na autenticação" });
     } else {
       req.loggedUserId = parseInt(decoded.id);
