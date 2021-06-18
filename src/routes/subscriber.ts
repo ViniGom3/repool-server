@@ -672,7 +672,7 @@ router.patch("/rent/evaluate", async (req, res) => {
       throw new exception(
         "update evaluate",
         FAILURE_CODE_ERROR.BADREQUEST,
-        FAILURE_MESSAGE.BADREQUEST
+        error.message
       );
     }
 
@@ -710,7 +710,7 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
       throw new exception(
         "update evaluate",
         FAILURE_CODE_ERROR.BADREQUEST,
-        FAILURE_MESSAGE.BADREQUEST
+        error.message
       );
     }
 
