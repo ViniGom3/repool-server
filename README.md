@@ -45,7 +45,6 @@ DATABASE_URL="postgresql://postgres:postgres@dominio:port/database?schema=public
 
 MONGO_URL="mongodb+srv://username:password@cluster0.blabla.mongodb.net/database?retryWrites=true&w=majority"
 
-
 PORT=5050
 
 TOKEN_JWT="INSERT-YOUR-JWT-SECRET-HERE"
@@ -60,7 +59,7 @@ GCS_KEYFILE=./credentials.json
 
 ```
 
-# 🚀 Getting Start
+# Getting Start
 
 Para rodar a aplicação backend, precisará de um SGBD PostgresSQL instalado, caso não tenha, e possua instalado, tanto o Docker quanto o docker-compose, pode utilizar o arquivo docker-compose presente na raiz do projeto, de nome **docker-compose.yml**:
 
@@ -71,6 +70,8 @@ docker-compose up
 ```
 
 E um container contendo uma instancia Postgres será baixado, e iniciado no Docker.
+
+Também precisará do MongoDB, para isso sugiro a utilização do [Mongo Atlas](https://docs.atlas.mongodb.com/getting-started/) que permite o uso em cloud do banco. Caso prefira, pode ter o Mongo [instalado na máquina](https://docs.mongodb.com/manual/installation/), ou em [docker](https://hub.docker.com/_/mongo).
 
 Em seguida, tendo o NodeJS instalado e execute:
 
