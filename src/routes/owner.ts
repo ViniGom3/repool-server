@@ -9,7 +9,6 @@ import {
   handleValue,
   isSameUser,
   parseBoolean,
-  logging,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
@@ -22,7 +21,7 @@ import schemaValidator, {
 
 const router = Router();
 
-router.get("/interests", async (req, res) => {
+router.get("/interests", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -53,14 +52,11 @@ router.get("/interests", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/interest", async (req, res) => {
+router.get("/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -83,14 +79,11 @@ router.get("/interest", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/rents", async (req, res) => {
+router.get("/rents", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -109,14 +102,11 @@ router.get("/rents", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.delete("/:id/rent", async (req, res) => {
+router.delete("/:id/rent", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -151,14 +141,11 @@ router.delete("/:id/rent", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.get("/properties", async (req, res) => {
+router.get("/properties", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -177,14 +164,11 @@ router.get("/properties", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/property/:id/interests", async (req, res) => {
+router.get("/property/:id/interests", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -217,14 +201,11 @@ router.get("/property/:id/interests", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/property/:id/rents/active", async (req, res) => {
+router.get("/property/:id/rents/active", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -259,14 +240,11 @@ router.get("/property/:id/rents/active", async (req, res) => {
 
     res.json(activeRents);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/:id/property", async (req, res) => {
+router.get("/:id/property", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -305,14 +283,11 @@ router.get("/:id/property", async (req, res) => {
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.post("/property", upload.array("img"), async (req, res) => {
+router.post("/property", upload.array("img"), async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -404,14 +379,11 @@ router.post("/property", upload.array("img"), async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/:id/property", async (req, res) => {
+router.patch("/:id/property", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -507,14 +479,11 @@ router.patch("/:id/property", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
+router.patch("/:id/property/img", upload.array("img"), async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -549,14 +518,11 @@ router.patch("/:id/property/img", upload.array("img"), async (req, res) => {
 
     res.json(propertyUpdated);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.delete("/:id/property", async (req, res) => {
+router.delete("/:id/property", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -601,14 +567,11 @@ router.delete("/:id/property", async (req, res) => {
     ]);
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/:id/interest", async (req, res) => {
+router.patch("/:id/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -661,14 +624,11 @@ router.patch("/:id/interest", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.get("/properties/mean", async (req, res) => {
+router.get("/properties/mean", async (req, res, next) => {
   try {
     // @ts-ignore
     const ownerId = req.loggedUserId;
@@ -686,10 +646,7 @@ router.get("/properties/mean", async (req, res) => {
 
     res.json({ mean });
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 

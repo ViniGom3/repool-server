@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { Users, Subscribers, Owners, Admin } from "./routes";
-import { verifyJWT, verifyRole, verifyAdmin } from "./helpers";
+import { verifyJWT, verifyRole, verifyAdmin} from "./helpers";
+import { ErrorMiddleware } from "./middlewares/errorMiddleware";
 
 export default (app: Express): void => {
   app.use("/user", Users);
@@ -13,4 +14,6 @@ export default (app: Express): void => {
 
   app.use(verifyAdmin);
   app.use("/admin", Admin);
+
+  app.use(ErrorMiddleware)
 };

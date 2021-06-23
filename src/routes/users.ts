@@ -9,7 +9,6 @@ import {
   handlePrice,
   hashing,
   verify,
-  logging,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
   isGreaterThan,
@@ -23,7 +22,7 @@ import schemaValidator, {
 
 const router = Router();
 
-router.get("/users", async (req, res) => {
+router.get("/users", async (req, res, next) => {
   try {
     const allUsers = await prisma.user.findMany({
       select: {
@@ -42,14 +41,11 @@ router.get("/users", async (req, res) => {
 
     res.json(allUsers);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res, next) => {
   try {
     const { name, email, password, tel, cel, sex, bio } = req.body;
 
@@ -92,15 +88,12 @@ router.post("/signup", async (req, res) => {
       res.json(userAndJwt);
     }
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
 //  TODO: REMOVE THIS API
-router.get("/email", async (req, res) => {
+router.get("/email", async (req, res, next) => {
   try {
     const { email } = req.body;
 
@@ -108,14 +101,11 @@ router.get("/email", async (req, res) => {
 
     res.json(!!user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.post("/signin", async (req, res) => {
+router.post("/signin", async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -156,14 +146,11 @@ router.post("/signin", async (req, res) => {
       }
     }
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.get("/ad", async (req, res) => {
+router.get("/ad", async (req, res, next) => {
   try {
     const { search } = req.query as unknown as { search: string };
     const {
@@ -268,14 +255,11 @@ router.get("/ad", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.get("/:id/property", async (req, res) => {
+router.get("/:id/property", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -302,14 +286,11 @@ router.get("/:id/property", async (req, res) => {
     const propertyWithAggregate = Object.assign(result, agreggate);
     res.json(propertyWithAggregate);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/ad/count", async (req, res) => {
+router.get("/ad/count", async (req, res, next) => {
   try {
     const all = await prisma.property.count({
       where: { isAdvertisement: true },
@@ -317,14 +298,11 @@ router.get("/ad/count", async (req, res) => {
 
     res.json(all);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/:id/evaluate", async (req, res) => {
+router.get("/:id/evaluate", async (req, res, next) => {
   const id = parseInt(req.params.id);
 
   try {
@@ -338,10 +316,7 @@ router.get("/:id/evaluate", async (req, res) => {
     });
     res.json(favorites);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
