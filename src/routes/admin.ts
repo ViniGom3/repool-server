@@ -2,14 +2,11 @@ import { Router } from "express";
 import { prisma } from "../database";
 import {
   handleDateAgo,
-  logging,
-  FAILURE_CODE_ERROR,
-  FAILURE_MESSAGE,
 } from "../helpers";
 
 const router = Router();
 
-router.get("/sex", async (req, res) => {
+router.get("/sex", async (req, res, next) => {
   try {
     const all = await prisma.user.count();
 
@@ -23,14 +20,11 @@ router.get("/sex", async (req, res) => {
     const countBySex = { all, usersBySex };
     res.json(countBySex);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/sex-month", async (req, res) => {
+router.get("/sex-month", async (req, res, next) => {
   try {
     const today = new Date();
     const thirtyDaysAgo = handleDateAgo(today);
@@ -58,14 +52,11 @@ router.get("/sex-month", async (req, res) => {
     const countSex = { all, usersBySexCreatedThirtyDaysAgo };
     res.json(countSex);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/properties", async (req, res) => {
+router.get("/properties", async (req, res, next) => {
   try {
     const all = await prisma.property.count();
 
@@ -79,14 +70,11 @@ router.get("/properties", async (req, res) => {
     const countProperty = { all, propertiesByUf };
     res.json(countProperty);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/properties-month", async (req, res) => {
+router.get("/properties-month", async (req, res, next) => {
   try {
     const today = new Date();
     const thirtyDaysAgo = handleDateAgo(today);
@@ -114,14 +102,11 @@ router.get("/properties-month", async (req, res) => {
     const countProperty = { all, propertiesByUfCreatedThirtyDaysAgo };
     res.json(countProperty);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/ad-month", async (req, res) => {
+router.get("/ad-month", async (req, res, next) => {
   try {
     const today = new Date();
     const thirtyDaysAgo = handleDateAgo(today);
@@ -148,10 +133,7 @@ router.get("/ad-month", async (req, res) => {
     const countProperty = { all, propertiesInAdCreatedThirtyDaysAgo };
     res.json(countProperty);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
