@@ -10,7 +10,6 @@ import {
   handleValue,
   isSameUser,
   parseBoolean,
-  logging,
   FAILURE_CODE_ERROR,
   FAILURE_MESSAGE,
   SUCCESS_CODE_ERROR,
@@ -23,7 +22,7 @@ import schemaValidator, {
 
 const router = Router();
 
-router.get("/:id/user", async (req, res) => {
+router.get("/:id/user", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const user = await prisma.user.findUnique({
@@ -43,14 +42,11 @@ router.get("/:id/user", async (req, res) => {
     });
     res.json(user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/full-user", async (req, res) => {
+router.get("/full-user", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -69,14 +65,11 @@ router.get("/full-user", async (req, res) => {
     const { password, ...user } = result;
     res.json(user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.patch("/user", async (req, res) => {
+router.patch("/user", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -109,14 +102,11 @@ router.patch("/user", async (req, res) => {
     const { password, ...user } = result;
     res.json(user);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/user/image", upload.single("avatar"), async (req, res) => {
+router.patch("/user/image", upload.single("avatar"), async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -135,14 +125,11 @@ router.patch("/user/image", upload.single("avatar"), async (req, res) => {
     const { password, ...user } = result;
     res.json(user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.delete("/user", async (req, res) => {
+router.delete("/user", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -193,14 +180,11 @@ router.delete("/user", async (req, res) => {
     ]);
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(transactional);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.get("/favorites", async (req, res) => {
+router.get("/favorites", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -216,15 +200,12 @@ router.get("/favorites", async (req, res) => {
 
     res.json(user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
 // TODO: change api path to "/:property_id/favorites"
-router.patch("/property/:property_id/favorites", async (req, res) => {
+router.patch("/property/:property_id/favorites", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -282,15 +263,12 @@ router.patch("/property/:property_id/favorites", async (req, res) => {
     const { password, ...user } = result;
     res.json(user);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
 // TODO: change api path to /evaluation
-router.get("/evaluate", async (req, res) => {
+router.get("/evaluate", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -311,15 +289,12 @@ router.get("/evaluate", async (req, res) => {
 
     res.json(evaluate);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
 // TODO: remove
-router.get("/evaluates", async (req, res) => {
+router.get("/evaluates", async (req, res, next) => {
   try {
     const evaluates = await prisma.rent.findMany({
       select: {
@@ -330,14 +305,11 @@ router.get("/evaluates", async (req, res) => {
 
     res.json(evaluates);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/property/:id/rent", async (req, res) => {
+router.get("/property/:id/rent", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -364,14 +336,11 @@ router.get("/property/:id/rent", async (req, res) => {
     const propertyWithAggregate = Object.assign(query, agreggate);
     res.json(propertyWithAggregate);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.get("/rent", async (req, res) => {
+router.get("/rent", async (req, res, next) => {
   try {
     // @ts-ignore
     const guestId = req.loggedUserId;
@@ -388,15 +357,12 @@ router.get("/rent", async (req, res) => {
 
     res.json(rent);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
 // TODO: remove
-router.get("/rent/property/:id/user", async (req, res) => {
+router.get("/rent/property/:id/user", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -427,14 +393,11 @@ router.get("/rent/property/:id/user", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.post("/property/:property_id/interest", async (req, res) => {
+router.post("/property/:property_id/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -470,14 +433,11 @@ router.post("/property/:property_id/interest", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.CREATED).json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/property/:property_id/interest", async (req, res) => {
+router.patch("/property/:property_id/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -515,14 +475,11 @@ router.patch("/property/:property_id/interest", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(interest);
   } catch (error) {
-    logging(error);
-    res
-      .status(FAILURE_CODE_ERROR.SERVERERROR)
-      .json({ error: FAILURE_MESSAGE.SERVERERROR });
+    next(error)
   }
 });
 
-router.patch("/:id/interest", async (req, res) => {
+router.patch("/:id/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -565,14 +522,11 @@ router.patch("/:id/interest", async (req, res) => {
     if (resultConfirmation) res.json(resultConfirmation);
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.delete("/property/:property_id/interest", async (req, res) => {
+router.delete("/property/:property_id/interest", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -608,14 +562,11 @@ router.delete("/property/:property_id/interest", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.delete("/:id/interest", async (req, res) => {
+router.delete("/:id/interest", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -650,14 +601,11 @@ router.delete("/:id/interest", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/rent/evaluate", async (req, res) => {
+router.patch("/rent/evaluate", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -689,14 +637,11 @@ router.patch("/rent/evaluate", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.patch("/rent/:id/evaluate", async (req, res) => {
+router.patch("/rent/:id/evaluate", async (req, res, next) => {
   try {
     const id = parseInt(req.params.id);
     const { value, comment } = req.body as unknown as {
@@ -726,14 +671,11 @@ router.patch("/rent/:id/evaluate", async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.post("/property", upload.array("img"), async (req, res) => {
+router.post("/property", upload.array("img"), async (req, res, next) => {
   try {
     // @ts-ignore
     const id = req.loggedUserId;
@@ -848,14 +790,11 @@ router.post("/property", upload.array("img"), async (req, res) => {
 
     res.json([property, ownerWithoutPassword, jwt]);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
-router.delete("/:id/rent", async (req, res) => {
+router.delete("/:id/rent", async (req, res, next) => {
   try {
     // @ts-ignore
     const userId = req.loggedUserId;
@@ -901,10 +840,7 @@ router.delete("/:id/rent", async (req, res) => {
 
     res.status(SUCCESS_CODE_ERROR.NOTCONTENT).json(rentUpdate);
   } catch (error) {
-    logging(error);
-    const status = error.status || FAILURE_CODE_ERROR.SERVERERROR;
-    const response = error.response || FAILURE_MESSAGE.SERVERERROR;
-    res.status(status).json(response);
+    next(error)
   }
 });
 
